@@ -11,18 +11,38 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export interface ChargePoints {
   id: Generated<number | null>;
-  last_heartbeat: string | null;
+  lastHeartbeat: string | null;
   name: string | null;
   status: Generated<string>;
 }
 
+export interface Events {
+  chargePointId: number;
+  data: string | null;
+  eventType: string;
+  id: Generated<number | null>;
+  timestamp: string;
+}
+
 export interface Migrations {
-  created_at: Generated<string | null>;
+  createdAt: Generated<string | null>;
   id: Generated<number | null>;
   name: string;
 }
 
+export interface Transactions {
+  chargePointId: number;
+  id: Generated<number | null>;
+  meterStart: number;
+  meterStop: number | null;
+  startTime: string;
+  status: Generated<string>;
+  stopTime: string | null;
+}
+
 export interface DB {
-  charge_points: ChargePoints;
+  chargePoints: ChargePoints;
+  events: Events;
   migrations: Migrations;
+  transactions: Transactions;
 }

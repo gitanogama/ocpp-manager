@@ -12,6 +12,7 @@ const db = new DB("app.db");
 class SQLiteStorage {
   constructor(private db: DB) {}
 
+  // deno-lint-ignore require-await
   async logMigration(migration: { name: string }) {
     const migrationName = migration.name.toLowerCase();
     try {
@@ -27,6 +28,7 @@ class SQLiteStorage {
     }
   }
 
+  // deno-lint-ignore require-await
   async unlogMigration(migration: { name: string }) {
     const migrationName = migration.name.toLowerCase();
     try {
@@ -40,6 +42,7 @@ class SQLiteStorage {
     }
   }
 
+  // deno-lint-ignore require-await
   async executed(): Promise<string[]> {
     try {
       const results = this.db.query("SELECT name FROM migrations") as Array<
