@@ -25,7 +25,7 @@ async function readInput(prompt: string): Promise<string> {
       .replace(/[-T:.Z]/g, "")
       .slice(0, 14);
     const formattedName = inputName.toLowerCase().replace(/\s+/g, "_");
-    const migrationsDir = join(__dirname, "../migrations");
+    const migrationsDir = join(__dirname, "../db/migrations");
     const migrationFileName = `${timestamp}_${formattedName}.sql`;
     const migrationFilePath = join(migrationsDir, migrationFileName);
 

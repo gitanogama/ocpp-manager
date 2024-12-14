@@ -9,19 +9,66 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
-export interface ChargePoints {
+export interface Authorizations {
+  expiryDate: string | null;
   id: Generated<number | null>;
-  lastHeartbeat: string | null;
-  name: string | null;
-  status: Generated<string>;
+  idTag: string;
+  parentIdTag: string | null;
+  status: string;
 }
 
-export interface Events {
-  chargePointId: number;
-  data: string | null;
-  eventType: string;
+export interface ChargingProfiles {
+  chargingProfileKind: string;
+  chargingProfilePurpose: string;
+  chargingSchedule: string;
   id: Generated<number | null>;
+  profileId: number;
+  recurrencyKind: string | null;
+  stackLevel: number;
+  transactionId: number | null;
+  validFrom: string | null;
+  validTo: string | null;
+}
+
+export interface CompositeSchedules {
+  chargingSchedule: string;
+  connectorId: number;
+  id: Generated<number | null>;
+  scheduleStart: string | null;
+  stationId: number;
+}
+
+export interface Configurations {
+  id: Generated<number | null>;
+  key: string;
+  value: string;
+}
+
+export interface Connectors {
+  connectorId: number;
+  id: Generated<number | null>;
+  stationId: number;
+  status: string;
+}
+
+export interface FirmwareUpdates {
+  id: Generated<number | null>;
+  progress: string | null;
+  stationId: number;
+  status: string;
+}
+
+export interface LocalAuthorizationList {
+  id: Generated<number | null>;
+  idTag: string;
+  listVersion: number;
+}
+
+export interface MeterValues {
+  id: Generated<number | null>;
+  sampledValue: string;
   timestamp: string;
+  transactionId: number;
 }
 
 export interface Migrations {
@@ -30,19 +77,65 @@ export interface Migrations {
   name: string;
 }
 
-export interface Transactions {
-  chargePointId: number;
+export interface Reservations {
+  connectorId: number;
+  expiryDate: string;
   id: Generated<number | null>;
+  idTag: string;
+  parentIdTag: string | null;
+  reservationId: number;
+}
+
+export interface Stations {
+  chargeBoxSerialNumber: string | null;
+  chargePointModel: string;
+  chargePointSerialNumber: string | null;
+  chargePointVendor: string;
+  firmwareVersion: string | null;
+  iccid: string | null;
+  id: Generated<number | null>;
+  imsi: string | null;
+  meterSerialNumber: string | null;
+  meterType: string | null;
+}
+
+export interface StatusNotifications {
+  connectorId: number | null;
+  errorCode: string;
+  id: Generated<number | null>;
+  info: string | null;
+  stationId: number;
+  status: string;
+  timestamp: string | null;
+  vendorErrorCode: string | null;
+  vendorId: string | null;
+}
+
+export interface Transactions {
+  connectorId: number;
+  id: Generated<number | null>;
+  idTag: string;
   meterStart: number;
   meterStop: number | null;
-  startTime: string;
-  status: Generated<string>;
-  stopTime: string | null;
+  reason: string | null;
+  startTimestamp: string;
+  stationId: number;
+  status: string;
+  stopTimestamp: string | null;
 }
 
 export interface DB {
-  chargePoints: ChargePoints;
-  events: Events;
+  authorizations: Authorizations;
+  chargingProfiles: ChargingProfiles;
+  compositeSchedules: CompositeSchedules;
+  configurations: Configurations;
+  connectors: Connectors;
+  firmwareUpdates: FirmwareUpdates;
+  localAuthorizationList: LocalAuthorizationList;
+  meterValues: MeterValues;
   migrations: Migrations;
+  reservations: Reservations;
+  stations: Stations;
+  statusNotifications: StatusNotifications;
   transactions: Transactions;
 }
