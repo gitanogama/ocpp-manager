@@ -1,0 +1,28 @@
+# Deno-specific
+deno.lock
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# SQLite database
+app.db
+
+# Node.js compatibility (optional, if using npm or third-party tools)
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# MacOS-specific
+.DS_Store
+
+# System files
+Thumbs.db
+*.swp

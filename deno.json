@@ -1,0 +1,10 @@
+{
+  "tasks": {
+    "dev": "deno run --watch ./src/main.ts",
+    "migrate:run": "deno run --allow-write --allow-read --allow-sys --allow-env ./src/db/migrations/run.ts",
+    "migrate:new": "deno run --allow-write --allow-read ./src/db/migrations/new.ts"
+  },
+  "imports": {
+    "@std/assert": "jsr:@std/assert@1"
+  }
+}
