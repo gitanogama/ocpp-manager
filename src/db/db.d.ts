@@ -9,7 +9,7 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
-export interface ChargerAuth {
+export interface Authorization {
   chargerId: number;
   createdAt: Generated<string | null>;
   expiryDate: string | null;
@@ -18,16 +18,6 @@ export interface ChargerAuth {
   parentIdTag: string | null;
   status: string;
   updatedAt: Generated<string | null>;
-}
-
-export interface ChargerData {
-  chargerId: number;
-  id: Generated<number | null>;
-  meterStart: number | null;
-  meterStop: number | null;
-  sampledValue: string | null;
-  timestamp: Generated<string | null>;
-  transactionId: number | null;
 }
 
 export interface Chargers {
@@ -42,7 +32,7 @@ export interface Chargers {
 }
 
 export interface ChargerStatus {
-  chargerId: number;
+  connectorId: number;
   errorCode: string | null;
   id: Generated<number | null>;
   info: string | null;
@@ -51,8 +41,34 @@ export interface ChargerStatus {
   vendorErrorCode: string | null;
 }
 
-export interface ChargerTransactions {
+export interface Connectors {
   chargerId: number;
+  connectorId: number;
+  createdAt: Generated<string | null>;
+  errorCode: string | null;
+  id: Generated<number | null>;
+  info: string | null;
+  status: Generated<string>;
+  updatedAt: Generated<string | null>;
+  vendorErrorCode: string | null;
+}
+
+export interface Migrations {
+  createdAt: Generated<string | null>;
+  id: Generated<number | null>;
+  name: string;
+}
+
+export interface Telemetry {
+  id: Generated<number | null>;
+  meterValue: number | null;
+  sampledValue: string | null;
+  timestamp: Generated<string | null>;
+  transactionId: number;
+}
+
+export interface Transactions {
+  connectorId: number;
   createdAt: Generated<string | null>;
   id: Generated<number | null>;
   idTag: string;
@@ -65,17 +81,12 @@ export interface ChargerTransactions {
   transactionId: number;
 }
 
-export interface Migrations {
-  createdAt: Generated<string | null>;
-  id: Generated<number | null>;
-  name: string;
-}
-
 export interface DB {
-  chargerAuth: ChargerAuth;
-  chargerData: ChargerData;
+  authorization: Authorization;
   chargers: Chargers;
   chargerStatus: ChargerStatus;
-  chargerTransactions: ChargerTransactions;
+  connectors: Connectors;
   migrations: Migrations;
+  telemetry: Telemetry;
+  transactions: Transactions;
 }

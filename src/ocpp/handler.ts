@@ -1,10 +1,9 @@
+import { authorize } from "./actions/authorize.ts";
+import { bootNotification } from "./actions/bootNotification.ts";
+import { heartbeat } from "./actions/heartbeat.ts";
+import { statusNotification } from "./actions/statusNotification.ts";
+import { GlobalContext } from "./context.ts";
 import {
-  AuthorizeReq,
-  AuthorizeConf,
-  BootNotificationReq,
-  BootNotificationConf,
-  StatusNotificationReq,
-  StatusNotificationConf,
   ChangeAvailabilityReq,
   ChangeAvailabilityConf,
   ChangeConfigurationReq,
@@ -15,8 +14,6 @@ import {
   DataTransferConf,
   GetConfigurationReq,
   GetConfigurationConf,
-  HeartbeatReq,
-  HeartbeatConf,
   MeterValuesReq,
   MeterValuesConf,
   StartTransactionReq,
@@ -34,52 +31,47 @@ import {
   OCPPMessage,
 } from "./zodDefinitions.ts";
 
-/**
- * This is the endpoint which receives all incoming messages from the charge points.
- */
-export const handler = (message: string): Response => {
+export const handler = async (
+  message: string,
+  globalContext: GlobalContext
+): Promise<(object | string | number)[]> => {
   try {
     const body = OCPPMessage.parse(JSON.parse(message));
 
     const messageType = body[0]; // 2 for request, 3 for response
+    const uniqueId = body[1]; // Unique ID for the request-response pair
     const action = body[2]; // The action (e.g., "BootNotification")
+    const payload = body[3]; // Payload
 
-    // Route the request based on action
+    let responsePayload = {};
+
     switch (action) {
       case "Authorize":
-        if (messageType === 2) {
-          // Request
-          const parsedData = AuthorizeReq.parse(body[3]);
-          console.log("Parsed Authorize.req:", parsedData);
-        } else if (messageType === 3) {
-          // Response
-          const parsedData = AuthorizeConf.parse(body[3]);
-          console.log("Parsed Authorize.conf:", parsedData);
-        }
+        responsePayload =
+          messageType === 2
+            ? await authorize.handleRequest(payload, globalContext)
+            : await authorize.handleResponse(payload);
         break;
 
       case "BootNotification":
-        if (messageType === 2) {
-          // Request
-          const parsedData = BootNotificationReq.parse(body[3]);
-          console.log("Parsed BootNotification.req:", parsedData);
-        } else if (messageType === 3) {
-          // Response
-          const parsedData = BootNotificationConf.parse(body[3]);
-          console.log("Parsed BootNotification.conf:", parsedData);
-        }
+        responsePayload =
+          messageType === 2
+            ? await bootNotification.handleRequest(payload, globalContext)
+            : await bootNotification.handleResponse(payload);
+        break;
+
+      case "Heartbeat":
+        responsePayload =
+          messageType === 2
+            ? await heartbeat.handleRequest(payload, globalContext)
+            : await heartbeat.handleResponse(payload);
         break;
 
       case "StatusNotification":
-        if (messageType === 2) {
-          // Request
-          const parsedData = StatusNotificationReq.parse(body[3]);
-          console.log("Parsed StatusNotification.req:", parsedData);
-        } else if (messageType === 3) {
-          // Response
-          const parsedData = StatusNotificationConf.parse(body[3]);
-          console.log("Parsed StatusNotification.conf:", parsedData);
-        }
+        responsePayload =
+          messageType === 2
+            ? await statusNotification.handleRequest(payload, globalContext)
+            : await statusNotification.handleResponse(payload);
         break;
 
       case "ChangeAvailability":
@@ -139,18 +131,6 @@ export const handler = (message: string): Response => {
           // Response
           const parsedData = GetConfigurationConf.parse(body[3]);
           console.log("Parsed GetConfiguration.conf:", parsedData);
-        }
-        break;
-
-      case "Heartbeat":
-        if (messageType === 2) {
-          // Request
-          const parsedData = HeartbeatReq.parse(body[3]);
-          console.log("Parsed Heartbeat.req:", parsedData);
-        } else if (messageType === 3) {
-          // Response
-          const parsedData = HeartbeatConf.parse(body[3]);
-          console.log("Parsed Heartbeat.conf:", parsedData);
         }
         break;
 
@@ -238,14 +218,19 @@ export const handler = (message: string): Response => {
         }
         break;
 
+      // Add more actions here as needed
       default:
-        console.error("Unknown action:", action);
-        break;
+        throw new Error(`Unknown action: ${action}`);
     }
 
-    return new Response("Message processed", { status: 200 });
+    // Return the proper OCPP response array
+    return [3, uniqueId, responsePayload];
   } catch (error) {
     console.error("Error processing message:", error);
-    return new Response("Failed to process message", { status: 400 });
+    return [
+      4,
+      "unique-error-id",
+      { errorCode: "InternalError", errorDescription: String(error) },
+    ];
   }
 };

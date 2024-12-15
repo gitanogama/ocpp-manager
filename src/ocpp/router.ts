@@ -2,14 +2,15 @@ import { Hono } from "jsr:@hono/hono";
 import { upgradeWebSocket } from "jsr:@hono/hono/deno";
 import { handler } from "./handler.ts"; // Your OCPP handler
 import { logger } from "../logger/logger.ts"; // Logger utility
+import { GlobalContext } from "./context.ts"; // Global Context utility
 
 export const router = new Hono().get(
   "/version/1.6",
-  upgradeWebSocket((c) => {
-    logger.info("WebSocket connection initiated", {
-      source: "router.ts",
-      data: { path: c.req.url },
-    });
+  upgradeWebSocket((_c) => {
+    logger.info("WebSocket connection initiated");
+
+    // Initialize a global context for the session
+    const globalContext: GlobalContext = new GlobalContext();
 
     return {
       async onMessage(event, ws) {
@@ -31,9 +32,7 @@ export const router = new Hono().get(
           });
 
           // Parse the incoming JSON message
-
-          // Call the OCPP handler function with parsed message
-          const response = await handler(message);
+          const response = await handler(message, globalContext);
 
           // Send the response back to the WebSocket client
           ws.send(JSON.stringify(response));
@@ -49,12 +48,21 @@ export const router = new Hono().get(
           });
 
           // Send error message back to client
-          ws.send(JSON.stringify({ error: "An error occurred" }));
+          ws.send(
+            JSON.stringify({
+              errorCode: "InternalError",
+              errorDescription: errorMessage,
+            })
+          );
         }
       },
-      onClose: () => {
+      onClose(event) {
+        // Cleanup actions when the connection is closed
         logger.info("WebSocket connection closed", {
           source: "router.ts",
+          reason: event.reason || "No reason provided",
+          wasClean: event.wasClean,
+          code: event.code,
         });
       },
     };
