@@ -5,7 +5,7 @@ import { logger } from "../logger/logger.ts"; // Logger utility
 import { GlobalContext } from "./context.ts"; // Global Context utility
 
 export const router = new Hono().get(
-  "/version/1.6",
+  "/version/1.6/*",
   upgradeWebSocket((_c) => {
     logger.info("WebSocket connection initiated");
 
