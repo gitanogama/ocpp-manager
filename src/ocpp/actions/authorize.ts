@@ -1,22 +1,13 @@
 // deno-lint-ignore-file require-await
 import { db } from "../../db/db.ts";
 import { GlobalContext } from "../context.ts";
-import {
-  AuthorizeReq,
-  AuthorizeConf,
-  BootNotificationReq,
-  BootNotificationConf,
-  HeartbeatReq,
-  HeartbeatConf,
-  StatusNotificationReq,
-  StatusNotificationConf,
-} from "../zodDefinitions.ts";
+import { AuthorizeReq, AuthorizeConf } from "../zodDefinitions.ts";
 import z from "npm:zod";
 
 export const authorize = {
   handleRequest: async (
     payload: unknown,
-    globalContext: GlobalContext
+    _globalContext: GlobalContext
   ): Promise<z.infer<typeof AuthorizeConf>> => {
     let parsedData: z.infer<typeof AuthorizeReq>;
 
@@ -35,17 +26,19 @@ export const authorize = {
       .executeTakeFirst();
 
     // Determine ID tag status
-    const idTagInfo: z.infer<typeof AuthorizeConf>["idTagInfo"] = (
-      !authRecord
-        ? { status: "Invalid" }
-        : authRecord.expiryDate && new Date(authRecord.expiryDate) < new Date()
-        ? { status: "Expired" }
-        : {
-            status: authRecord.status,
-            expiryDate: authRecord.expiryDate || undefined,
-            parentIdTag: authRecord.parentIdTag || undefined,
-          }
-    ) as any;
+    const idTagInfo: z.infer<typeof AuthorizeConf>["idTagInfo"] = !authRecord
+      ? { status: "Invalid" }
+      : authRecord.expiryDate && new Date(authRecord.expiryDate) < new Date()
+      ? { status: "Expired" }
+      : {
+          status: authRecord.status as
+            | "Accepted"
+            | "Blocked"
+            | "Expired"
+            | "Invalid",
+          expiryDate: authRecord.expiryDate || undefined,
+          parentIdTag: authRecord.parentIdTag || undefined,
+        };
 
     return { idTagInfo };
   },

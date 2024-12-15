@@ -21,8 +21,14 @@ export const statusNotification = {
       return {};
     }
 
-    const { connectorId, status, errorCode, info, vendorErrorCode, timestamp } =
-      parsedData;
+    const {
+      connectorId,
+      status,
+      errorCode,
+      info,
+      vendorErrorCode,
+      timestamp: _timestamp,
+    } = parsedData;
 
     const chargerId = globalContext.get("chargerId");
     if (!chargerId) {
