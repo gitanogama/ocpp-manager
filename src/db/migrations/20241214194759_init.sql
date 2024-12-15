@@ -1,131 +1,76 @@
--- Create table for Charging Stations
-CREATE TABLE IF NOT EXISTS stations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    chargeBoxSerialNumber TEXT,
-    chargePointModel TEXT NOT NULL,
-    chargePointSerialNumber TEXT,
-    chargePointVendor TEXT NOT NULL,
-    firmwareVersion TEXT,
-    iccid TEXT,
-    imsi TEXT,
-    meterSerialNumber TEXT,
-    meterType TEXT
+-- Table: chargers
+-- Stores information about each charger in the system.
+CREATE TABLE chargers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique identifier for the charger
+    serial_number TEXT NOT NULL UNIQUE,               -- Unique serial number of the charger
+    model TEXT NOT NULL,                              -- Model of the charger
+    vendor TEXT NOT NULL,                             -- Vendor of the charger
+    firmware_version TEXT,                            -- Firmware version of the charger
+    registration_status TEXT CHECK (registration_status IN ('Pending', 'Accepted', 'Rejected')) DEFAULT 'Pending', -- Status of the charger's registration
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,   -- Timestamp when the charger was registered
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP    -- Timestamp of the last update
 );
 
--- Create table for Connectors in each station
-CREATE TABLE IF NOT EXISTS connectors (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    station_id INTEGER NOT NULL,
-    connector_id INTEGER NOT NULL CHECK (connector_id > 0), -- Connector ID > 0
-    status TEXT CHECK(status IN ('Available', 'Unavailable', 'Faulted', 'Charging')) NOT NULL,
-    FOREIGN KEY(station_id) REFERENCES stations(id)
+-- Table: charger_auth
+-- Stores authentication details for chargers.
+CREATE TABLE charger_auth (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique identifier for the auth record
+    charger_id INTEGER NOT NULL REFERENCES chargers(id) ON DELETE CASCADE, -- Foreign key to chargers table
+    id_tag TEXT NOT NULL UNIQUE,                      -- ID tag for authorization
+    expiry_date TIMESTAMP,                            -- Expiry date of the ID tag
+    parent_id_tag TEXT,                               -- Parent ID tag, if applicable
+    status TEXT CHECK (status IN ('Accepted', 'Blocked', 'Expired', 'Invalid')) NOT NULL, -- Status of the ID tag
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,   -- Timestamp when the auth was created
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP    -- Timestamp of the last update
 );
 
--- Create table for Transactions
-CREATE TABLE IF NOT EXISTS transactions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    station_id INTEGER NOT NULL,
-    connector_id INTEGER NOT NULL,
-    idTag TEXT NOT NULL,
-    meterStart INTEGER NOT NULL,
-    meterStop INTEGER,
-    startTimestamp TEXT NOT NULL,
-    stopTimestamp TEXT,
-    reason TEXT CHECK(reason IN ('DeAuthorized', 'EmergencyStop', 'EVDisconnected', 'HardReset', 'Local', 'Other', 'PowerLoss', 'Reboot', 'Remote', 'SoftReset', 'UnlockCommand')),
-    status TEXT CHECK(status IN ('Started', 'Stopped')) NOT NULL,
-    FOREIGN KEY(station_id) REFERENCES stations(id),
-    FOREIGN KEY(connector_id) REFERENCES connectors(id)
+-- Table: charger_status
+-- Stores the latest status information sent by each charger.
+CREATE TABLE charger_status (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique identifier for the status record
+    charger_id INTEGER NOT NULL REFERENCES chargers(id) ON DELETE CASCADE, -- Foreign key to chargers table
+    status TEXT NOT NULL CHECK (status IN (
+        'Available', 'Preparing', 'Charging', 'SuspendedEVSE', 
+        'SuspendedEV', 'Finishing', 'Reserved', 'Unavailable', 'Faulted'
+    )),                                               -- Current status of the charger
+    error_code TEXT CHECK (error_code IN (
+        'ConnectorLockFailure', 'EVCommunicationError', 'GroundFailure',
+        'HighTemperature', 'InternalError', 'LocalListConflict', 'NoError',
+        'OtherError', 'OverCurrentFailure', 'OverVoltage', 'PowerMeterFailure',
+        'PowerSwitchFailure', 'ReaderFailure', 'ResetFailure', 'UnderVoltage', 'WeakSignal'
+    )),                                               -- Last error reported (if any)
+    info TEXT,                                        -- Additional information about the status
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    -- Timestamp of the status update
+    vendor_error_code TEXT                            -- Vendor-specific error code (if any)
 );
 
--- Create table for Charging Profiles
-CREATE TABLE IF NOT EXISTS charging_profiles (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    profile_id INTEGER NOT NULL,
-    transaction_id INTEGER,
-    stack_level INTEGER NOT NULL,
-    charging_profile_purpose TEXT CHECK(charging_profile_purpose IN ('ChargePointMaxProfile', 'TxDefaultProfile', 'TxProfile')) NOT NULL,
-    charging_profile_kind TEXT CHECK(charging_profile_kind IN ('Absolute', 'Recurring', 'Relative')) NOT NULL,
-    recurrency_kind TEXT CHECK(recurrency_kind IN ('Daily', 'Weekly')),
-    valid_from TEXT,
-    valid_to TEXT,
-    charging_schedule TEXT NOT NULL, -- A JSON or TEXT field storing the schedule
-    FOREIGN KEY(transaction_id) REFERENCES transactions(id)
+-- Table: charger_data
+-- Stores detailed telemetry data from chargers (e.g., meter values, sampled values).
+CREATE TABLE charger_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique identifier for the data record
+    charger_id INTEGER NOT NULL REFERENCES chargers(id) ON DELETE CASCADE, -- Foreign key to chargers table
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    -- Timestamp of the data point
+    meter_start INTEGER CHECK (meter_start >= 0),     -- Meter reading at the start of the transaction (Wh)
+    meter_stop INTEGER CHECK (meter_stop >= 0),       -- Meter reading at the end of the transaction (Wh)
+    sampled_value TEXT,                               -- JSON-encoded array of sampled values
+    transaction_id INTEGER                            -- Associated transaction ID (if applicable)
 );
 
--- Create table for Authorizations (IdTagInfo)
-CREATE TABLE IF NOT EXISTS authorizations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    idTag TEXT NOT NULL,
-    status TEXT CHECK(status IN ('Accepted', 'Blocked', 'Expired', 'Invalid')) NOT NULL,
-    expiryDate TEXT,
-    parentIdTag TEXT
-);
-
--- Create table for Meter Values
-CREATE TABLE IF NOT EXISTS meter_values (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    transaction_id INTEGER NOT NULL,
-    timestamp TEXT NOT NULL,
-    sampled_value TEXT NOT NULL, -- A JSON or TEXT field storing the sampled value details
-    FOREIGN KEY(transaction_id) REFERENCES transactions(id)
-);
-
--- Create table for Status Notifications (for errors and connector status updates)
-CREATE TABLE IF NOT EXISTS status_notifications (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    station_id INTEGER NOT NULL,
-    connector_id INTEGER,
-    error_code TEXT CHECK(error_code IN ('ConnectorLockFailure', 'EVCommunicationError', 'GroundFailure', 'HighTemperature', 'InternalError', 'LocalListConflict', 'NoError', 'OtherError', 'OverCurrentFailure', 'OverVoltage', 'PowerMeterFailure', 'PowerSwitchFailure', 'ReaderFailure', 'ResetFailure', 'UnderVoltage', 'WeakSignal')) NOT NULL,
-    info TEXT,
-    status TEXT CHECK(status IN ('Available', 'Unavailable', 'Faulted', 'Charging', 'SuspendedEVSE', 'SuspendedEV', 'Finishing', 'Reserved')) NOT NULL,
-    timestamp TEXT,
-    vendor_id TEXT,
-    vendor_error_code TEXT,
-    FOREIGN KEY(station_id) REFERENCES stations(id),
-    FOREIGN KEY(connector_id) REFERENCES connectors(id)
-);
-
--- Create table for Reserved Connectors (for ReserveNow)
-CREATE TABLE IF NOT EXISTS reservations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    connector_id INTEGER NOT NULL,
-    idTag TEXT NOT NULL,
-    parentIdTag TEXT,
-    reservation_id INTEGER NOT NULL,
-    expiry_date TEXT NOT NULL,
-    FOREIGN KEY(connector_id) REFERENCES connectors(id)
-);
-
--- Create table for Firmware Updates
-CREATE TABLE IF NOT EXISTS firmware_updates (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    station_id INTEGER NOT NULL,
-    status TEXT CHECK(status IN ('Started', 'InProgress', 'Completed', 'Failed')) NOT NULL,
-    progress TEXT, -- Can be a simple string or a percentage
-    FOREIGN KEY(station_id) REFERENCES stations(id)
-);
-
--- Create table for Local Authorization List (for SendLocalList)
-CREATE TABLE IF NOT EXISTS local_authorization_list (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    idTag TEXT UNIQUE NOT NULL,
-    list_version INTEGER NOT NULL
-);
-
--- Create table for GetCompositeSchedule
-CREATE TABLE IF NOT EXISTS composite_schedules (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    station_id INTEGER NOT NULL,
-    connector_id INTEGER NOT NULL,
-    schedule_start TEXT, -- Optional, start time of the schedule
-    charging_schedule TEXT NOT NULL, -- JSON or TEXT field for energy consumption profile
-    FOREIGN KEY(station_id) REFERENCES stations(id),
-    FOREIGN KEY(connector_id) REFERENCES connectors(id)
-);
-
--- Table for Configuration Keys
-CREATE TABLE IF NOT EXISTS configurations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    key TEXT UNIQUE NOT NULL,
-    value TEXT NOT NULL
+-- Table: charger_transactions
+-- Stores transactional information about charging sessions.
+CREATE TABLE charger_transactions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique identifier for the transaction
+    charger_id INTEGER NOT NULL REFERENCES chargers(id) ON DELETE CASCADE, -- Foreign key to chargers table
+    transaction_id INTEGER NOT NULL UNIQUE,           -- Unique transaction ID
+    id_tag TEXT NOT NULL,                             -- ID tag associated with the transaction
+    meter_start INTEGER CHECK (meter_start >= 0),     -- Meter reading at the start of the transaction (Wh)
+    meter_stop INTEGER CHECK (meter_stop >= 0),       -- Meter reading at the end of the transaction (Wh)
+    start_time TIMESTAMP NOT NULL,                    -- Timestamp when the transaction started
+    stop_time TIMESTAMP,                              -- Timestamp when the transaction stopped
+    reason TEXT CHECK (reason IN (
+        'DeAuthorized', 'EmergencyStop', 'EVDisconnected', 'HardReset', 
+        'Local', 'Other', 'PowerLoss', 'Reboot', 'Remote', 'SoftReset', 'UnlockCommand'
+    )),                                               -- Reason for stopping the transaction (if any)
+    status TEXT CHECK (status IN ('Active', 'Completed', 'Interrupted', 'Failed')) DEFAULT 'Active', -- Transaction status
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP    -- Timestamp when the transaction was created
 );

@@ -1,6 +1,6 @@
 import { Hono } from "jsr:@hono/hono";
 import { upgradeWebSocket } from "jsr:@hono/hono/deno";
-import { handleIncomingOCPP } from "./methods.ts"; // Your OCPP handler
+import { handler } from "./handler.ts"; // Your OCPP handler
 import { logger } from "../logger/logger.ts"; // Logger utility
 
 export const router = new Hono().get(
@@ -33,7 +33,7 @@ export const router = new Hono().get(
           // Parse the incoming JSON message
 
           // Call the OCPP handler function with parsed message
-          const response = await handleIncomingOCPP(message);
+          const response = await handler(message);
 
           // Send the response back to the WebSocket client
           ws.send(JSON.stringify(response));

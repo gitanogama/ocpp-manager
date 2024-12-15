@@ -1,5 +1,43 @@
 import { z } from "npm:zod";
 
+// Define MessageType as a number (2 for request, 3 for response)
+const MessageType = z
+  .number()
+  .int()
+  .refine((val) => val === 2 || val === 3, {
+    message: "Invalid message type",
+  });
+
+// Define Action as an enum of all possible actions
+const Action = z.enum([
+  "Authorize",
+  "BootNotification",
+  "StatusNotification",
+  "ChangeAvailability",
+  "ChangeConfiguration",
+  "ClearCache",
+  "DataTransfer",
+  "GetConfiguration",
+  "Heartbeat",
+  "MeterValues",
+  "StartTransaction",
+  "StopTransaction",
+  "RemoteStartTransaction",
+  "RemoteStopTransaction",
+  "Reset",
+  "UnlockConnector",
+]);
+
+// OCPP message schema as a tuple
+export const OCPPMessage = z.tuple([
+  MessageType,
+  z.string(), // messageId
+  Action,
+  z.any(), // payload, to be refined later
+]);
+
+// ===
+
 /**
  * IdToken - Identifier for authorization.
  */

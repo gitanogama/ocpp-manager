@@ -31,18 +31,16 @@ import {
   ResetConf,
   UnlockConnectorReq,
   UnlockConnectorConf,
-} from "./ocpp.ts";
+  OCPPMessage,
+} from "./zodDefinitions.ts";
 
 /**
  * This is the endpoint which receives all incoming messages from the charge points.
  */
-export const handleIncomingOCPP = (message: string): Response => {
+export const handler = (message: string): Response => {
   try {
-    const body = JSON.parse(message);
+    const body = OCPPMessage.parse(JSON.parse(message));
 
-    console.log("Received message:", body);
-
-    // Extract message type and action from the body array
     const messageType = body[0]; // 2 for request, 3 for response
     const action = body[2]; // The action (e.g., "BootNotification")
 

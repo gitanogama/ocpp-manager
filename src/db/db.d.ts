@@ -9,65 +9,59 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
-export interface Authorizations {
+export interface ChargerAuth {
+  chargerId: number;
+  createdAt: Generated<string | null>;
   expiryDate: string | null;
   id: Generated<number | null>;
   idTag: string;
   parentIdTag: string | null;
   status: string;
+  updatedAt: Generated<string | null>;
 }
 
-export interface ChargingProfiles {
-  chargingProfileKind: string;
-  chargingProfilePurpose: string;
-  chargingSchedule: string;
+export interface ChargerData {
+  chargerId: number;
   id: Generated<number | null>;
-  profileId: number;
-  recurrencyKind: string | null;
-  stackLevel: number;
+  meterStart: number | null;
+  meterStop: number | null;
+  sampledValue: string | null;
+  timestamp: Generated<string | null>;
   transactionId: number | null;
-  validFrom: string | null;
-  validTo: string | null;
 }
 
-export interface CompositeSchedules {
-  chargingSchedule: string;
-  connectorId: number;
+export interface Chargers {
+  createdAt: Generated<string | null>;
+  firmwareVersion: string | null;
   id: Generated<number | null>;
-  scheduleStart: string | null;
-  stationId: number;
+  model: string;
+  registrationStatus: Generated<string | null>;
+  serialNumber: string;
+  updatedAt: Generated<string | null>;
+  vendor: string;
 }
 
-export interface Configurations {
+export interface ChargerStatus {
+  chargerId: number;
+  errorCode: string | null;
   id: Generated<number | null>;
-  key: string;
-  value: string;
-}
-
-export interface Connectors {
-  connectorId: number;
-  id: Generated<number | null>;
-  stationId: number;
+  info: string | null;
   status: string;
+  timestamp: Generated<string | null>;
+  vendorErrorCode: string | null;
 }
 
-export interface FirmwareUpdates {
-  id: Generated<number | null>;
-  progress: string | null;
-  stationId: number;
-  status: string;
-}
-
-export interface LocalAuthorizationList {
+export interface ChargerTransactions {
+  chargerId: number;
+  createdAt: Generated<string | null>;
   id: Generated<number | null>;
   idTag: string;
-  listVersion: number;
-}
-
-export interface MeterValues {
-  id: Generated<number | null>;
-  sampledValue: string;
-  timestamp: string;
+  meterStart: number | null;
+  meterStop: number | null;
+  reason: string | null;
+  startTime: string;
+  status: Generated<string | null>;
+  stopTime: string | null;
   transactionId: number;
 }
 
@@ -77,65 +71,11 @@ export interface Migrations {
   name: string;
 }
 
-export interface Reservations {
-  connectorId: number;
-  expiryDate: string;
-  id: Generated<number | null>;
-  idTag: string;
-  parentIdTag: string | null;
-  reservationId: number;
-}
-
-export interface Stations {
-  chargeBoxSerialNumber: string | null;
-  chargePointModel: string;
-  chargePointSerialNumber: string | null;
-  chargePointVendor: string;
-  firmwareVersion: string | null;
-  iccid: string | null;
-  id: Generated<number | null>;
-  imsi: string | null;
-  meterSerialNumber: string | null;
-  meterType: string | null;
-}
-
-export interface StatusNotifications {
-  connectorId: number | null;
-  errorCode: string;
-  id: Generated<number | null>;
-  info: string | null;
-  stationId: number;
-  status: string;
-  timestamp: string | null;
-  vendorErrorCode: string | null;
-  vendorId: string | null;
-}
-
-export interface Transactions {
-  connectorId: number;
-  id: Generated<number | null>;
-  idTag: string;
-  meterStart: number;
-  meterStop: number | null;
-  reason: string | null;
-  startTimestamp: string;
-  stationId: number;
-  status: string;
-  stopTimestamp: string | null;
-}
-
 export interface DB {
-  authorizations: Authorizations;
-  chargingProfiles: ChargingProfiles;
-  compositeSchedules: CompositeSchedules;
-  configurations: Configurations;
-  connectors: Connectors;
-  firmwareUpdates: FirmwareUpdates;
-  localAuthorizationList: LocalAuthorizationList;
-  meterValues: MeterValues;
+  chargerAuth: ChargerAuth;
+  chargerData: ChargerData;
+  chargers: Chargers;
+  chargerStatus: ChargerStatus;
+  chargerTransactions: ChargerTransactions;
   migrations: Migrations;
-  reservations: Reservations;
-  stations: Stations;
-  statusNotifications: StatusNotifications;
-  transactions: Transactions;
 }
