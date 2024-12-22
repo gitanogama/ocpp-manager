@@ -14,7 +14,7 @@ export class GlobalContext {
   }
 
   getAll(): Readonly<typeof this.context> {
-    return { ...this.context }; // Return a shallow copy to prevent direct modification
+    return { ...this.context };
   }
 
   set<K extends keyof typeof this.context>(

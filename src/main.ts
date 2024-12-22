@@ -1,45 +1,49 @@
 import { db } from "./db/db.ts";
 import { Hono } from "jsr:@hono/hono";
 import { logger } from "jsr:@hono/hono/logger";
-import { ocpp } from "./ocpp/server.ts";
+import { serveStatic } from "jsr:@hono/hono/deno";
+import { ocpp } from "./ocpp/ocpp.ts";
 
-const app = new Hono();
+const app = new Hono()
+  .use(logger())
+  .use(
+    "/*",
+    serveStatic({
+      root: "./src/app/build",
+    })
+  )
+  .route("/ocpp", ocpp)
+  .get("/test", async (c) => {
+    // Fetch chargers and join additional data
+    const chargers = await db
+      .selectFrom("chargers")
+      .leftJoin("authorization", "chargers.id", "authorization.chargerId")
+      .leftJoin("connectors", "chargers.id", "connectors.chargerId")
+      .leftJoin("chargerStatus", "connectors.id", "chargerStatus.connectorId")
+      .select([
+        "chargers.id as chargerId",
+        "chargers.model",
+        "chargers.vendor",
+        "chargers.serialNumber",
+        "chargers.registrationStatus",
+        "chargers.firmwareVersion",
+        "chargers.updatedAt as chargerUpdatedAt",
+        "authorization.idTag",
+        "authorization.status as authStatus",
+        "authorization.expiryDate",
+        "connectors.connectorId",
+        "connectors.status as connectorStatus",
+        "connectors.errorCode as connectorErrorCode",
+        "connectors.info as connectorInfo",
+        "connectors.updatedAt as connectorUpdatedAt",
+        "chargerStatus.status as currentStatus",
+        "chargerStatus.errorCode",
+        "chargerStatus.info",
+        "chargerStatus.timestamp as statusTimestamp",
+      ])
+      .execute();
 
-app.use(logger());
-
-app.route("/", ocpp);
-
-app.get("/", async (c) => {
-  // Fetch chargers and join additional data
-  const chargers = await db
-    .selectFrom("chargers")
-    .leftJoin("authorization", "chargers.id", "authorization.chargerId")
-    .leftJoin("connectors", "chargers.id", "connectors.chargerId")
-    .leftJoin("chargerStatus", "connectors.id", "chargerStatus.connectorId")
-    .select([
-      "chargers.id as chargerId",
-      "chargers.model",
-      "chargers.vendor",
-      "chargers.serialNumber",
-      "chargers.registrationStatus",
-      "chargers.firmwareVersion",
-      "chargers.updatedAt as chargerUpdatedAt",
-      "authorization.idTag",
-      "authorization.status as authStatus",
-      "authorization.expiryDate",
-      "connectors.connectorId",
-      "connectors.status as connectorStatus",
-      "connectors.errorCode as connectorErrorCode",
-      "connectors.info as connectorInfo",
-      "connectors.updatedAt as connectorUpdatedAt",
-      "chargerStatus.status as currentStatus",
-      "chargerStatus.errorCode",
-      "chargerStatus.info",
-      "chargerStatus.timestamp as statusTimestamp",
-    ])
-    .execute();
-
-  const html = `
+    const html = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -156,8 +160,8 @@ app.get("/", async (c) => {
     </html>
   `;
 
-  return c.html(html);
-});
+    return c.html(html);
+  });
 
 // Handle approve action
 app.post("/approve/:id", async (c) => {
@@ -168,7 +172,7 @@ app.post("/approve/:id", async (c) => {
     .where("id", "=", id)
     .execute();
 
-  return c.redirect("/");
+  return c.redirect("/test");
 });
 
 // Handle unapprove action
@@ -180,8 +184,7 @@ app.post("/unapprove/:id", async (c) => {
     .where("id", "=", id)
     .execute();
 
-  return c.redirect("/");
+  return c.redirect("/test");
 });
 
-// Start the server
 Deno.serve({ port: 3000 }, app.fetch);
