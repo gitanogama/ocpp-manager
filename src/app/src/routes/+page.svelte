@@ -1,3 +1,7 @@
-<title>Hi there</title>
+<script lang="ts">
+	import { onMount } from 'svelte';
 
-<p>Hi there is this a fucking joke?!</p>
+	onMount(() => {
+		window.location.href = '/monitoring';
+	});
+</script>

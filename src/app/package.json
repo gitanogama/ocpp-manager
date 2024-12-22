@@ -12,6 +12,9 @@
 		"format": "prettier --write .",
 		"lint": "prettier --check . && eslint ."
 	},
+	"dependencies": {
+		"daisyui": "^4.12.22"
+	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.3",
 		"@sveltejs/kit": "^2.0.0",
