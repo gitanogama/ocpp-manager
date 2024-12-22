@@ -1,5 +1,5 @@
 // deno-lint-ignore-file require-await
-import { db } from "../../db/db.ts";
+import { db } from "../../../db/db.ts";
 import { GlobalContext } from "../context.ts";
 import {
   StatusNotificationReq,

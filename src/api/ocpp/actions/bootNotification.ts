@@ -1,6 +1,6 @@
 // deno-lint-ignore-file require-await
 import { z } from "npm:zod";
-import { db } from "../../db/db.ts";
+import { db } from "../../../db/db.ts";
 import {
   BootNotificationConf,
   BootNotificationReq,

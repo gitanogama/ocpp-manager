@@ -2,7 +2,7 @@ import { createLogger, transports, format, Logform } from "npm:winston";
 import { ensureDir } from "https://deno.land/std@0.200.0/fs/mod.ts";
 import { join } from "https://deno.land/std@0.200.0/path/mod.ts";
 
-const logDir = join(Deno.cwd(), "src", "logger", "logs");
+export const logDir = join(Deno.cwd(), "logs");
 await ensureDir(logDir);
 const logFile = join(logDir, `${new Date().toISOString().split("T")[0]}.log`);
 

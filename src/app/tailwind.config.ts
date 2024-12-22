@@ -10,5 +10,13 @@ export default {
 		extend: {}
 	},
 
-	plugins: [typography, forms, containerQueries, require('daisyui')]
+	plugins: [typography, forms, containerQueries, require('daisyui')],
+	daisyui: {
+		themes: 'light',
+		darkTheme: false,
+		base: true,
+		styled: true,
+		utils: true,
+		logs: false
+	}
 } satisfies Config;
