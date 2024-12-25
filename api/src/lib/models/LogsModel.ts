@@ -1,7 +1,7 @@
 import { join } from "node:path";
 import { mkdir, readdir, stat, readFile } from "node:fs/promises";
 import { ReadableStream } from "node:stream/web";
-import { logDir } from "../globals/logger";
+import { logDir } from "../lib/globals/logger";
 
 export class LogsModel {
   static async streamLogs(

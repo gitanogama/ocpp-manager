@@ -1,5 +1,5 @@
 import type { MiddlewareHandler } from "hono";
-import { logger } from "../globals/logger";
+import { logger } from "../lib/globals/logger";
 
 export const customLogger: MiddlewareHandler = async (c, next) => {
   const start = Date.now(); // Capture start time for elapsed time calculation

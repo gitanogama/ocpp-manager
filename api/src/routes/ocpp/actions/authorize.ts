@@ -1,7 +1,7 @@
 import z from "zod";
 import type { GlobalContext } from "../context";
 import { AuthorizeConf, AuthorizeReq } from "../zodDefinitions";
-import { db } from "../../../db/db";
+import { db } from "../../../lib/db/db";
 
 export const authorize = {
   handleRequest: async (

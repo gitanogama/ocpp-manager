@@ -1,43 +1,40 @@
+import path from "path";
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { createNodeWebSocket } from "@hono/node-ws";
-import { api } from "./routes/index";
-import { logger } from "./globals/logger";
-import { customLogger } from "./middlewares/customLogger";
 import { serveStatic } from "@hono/node-server/serve-static";
-import path from "path";
-import { log } from "console";
+import { api } from "./routes/index";
+import { logger } from "./lib/globals/logger";
+import { customLogger } from "./middlewares/customLogger";
 
-const staticPath = "./build";
-const staticPathFallbackFile = path.join(staticPath, "index.html");
-log(staticPath, staticPathFallbackFile);
+export function createApp() {
+  const staticPath = "./build";
+  const staticPathFallbackFile = path.join(staticPath, "index.html");
 
-const app = new Hono().use(customLogger);
+  const app = new Hono()
+    .use(customLogger)
+    .use("*", serveStatic({ root: staticPath }));
 
-const { injectWebSocket, upgradeWebSocket } = createNodeWebSocket({ app });
+  const nodeWs = createNodeWebSocket({ app });
 
-app
-  .route("/api", api({ upgradeWebSocket }))
-  .use(
-    "*",
-    serveStatic({
-      root: staticPath,
-    })
-  )
-  .get("*", serveStatic({ path: staticPathFallbackFile }));
+  const typedApp = app.route("/api", api(nodeWs));
 
-injectWebSocket(
-  serve(
-    {
-      fetch: app.fetch,
-      port: 4000,
-    },
-    (info) => {
-      logger.http(`Listening on http://0.0.0.0:${info.port}`);
-    }
-  )
-);
-console.log("Serving static files from:", staticPath);
+  typedApp.use("*", serveStatic({ path: staticPathFallbackFile }));
 
-export { app, upgradeWebSocket };
-export type AppType = typeof app;
+  nodeWs.injectWebSocket(
+    serve(
+      {
+        fetch: app.fetch,
+        port: 4000,
+      },
+      (info) => {
+        logger.http(`Listening on http://0.0.0.0:${info.port}`);
+      }
+    )
+  );
+
+  return typedApp;
+}
+
+export const app = createApp();
+export type AppType = ReturnType<typeof createApp>;

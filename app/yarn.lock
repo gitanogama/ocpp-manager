@@ -200,10 +200,12 @@
   dependencies:
     levn "^0.4.1"
 
-"@hono/client@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@hono/client/-/client-0.0.3.tgz#d1e724a4b34301655bd91dbfdc3d7280915c905b"
-  integrity sha512-1TrYdppLelv39uCqevePjKUeyf4AoKYWQ+/qfNtRzY8OPBur78XA1Gtv3Pi08uXT6GOuQN5fi3IFUwMsxnEhcQ==
+"@hono/node-ws@^1.0.5":
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/@hono/node-ws/-/node-ws-1.0.5.tgz#ff8e7627e5465f258f401db7f958f6ef20323381"
+  integrity sha512-p1q3Q+ThKZ28xNB0mZa2MAMPBMhX8rbk6CYs/XYbTAhLa/pccsORUoNQjEEXqTB0liRDj4WJpMaSY4qWXsAPuA==
+  dependencies:
+    ws "^8.17.0"
 
 "@humanfs/core@^0.19.1":
   version "0.19.1"
@@ -2111,6 +2113,11 @@ wrap-ansi@^8.1.0:
     ansi-styles "^6.1.0"
     string-width "^5.0.1"
     strip-ansi "^7.0.1"
+
+ws@^8.17.0:
+  version "8.18.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.18.0.tgz#0d7505a6eafe2b0e712d232b42279f53bc289bbc"
+  integrity sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==
 
 yaml@^1.10.2:
   version "1.10.2"

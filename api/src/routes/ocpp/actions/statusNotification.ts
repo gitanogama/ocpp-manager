@@ -4,7 +4,7 @@ import {
   StatusNotificationConf,
   StatusNotificationReq,
 } from "../zodDefinitions";
-import { db } from "../../../db/db";
+import { db } from "../../../lib/db/db";
 
 export const statusNotification = {
   handleRequest: async (
