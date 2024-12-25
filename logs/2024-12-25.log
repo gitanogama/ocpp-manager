@@ -4749,3 +4749,705 @@
 2024-12-25 20:27:42 [HTTP] Listening on http://0.0.0.0:4000
 2024-12-25 20:28:02 [HTTP] Listening on http://0.0.0.0:4000
 2024-12-25 20:28:05 [HTTP] Listening on http://0.0.0.0:4000
+2024-12-25 20:41:24 [HTTP] Listening on http://0.0.0.0:4000
+2024-12-25 20:45:59 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:45:59 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 5ms
+2024-12-25 20:46:00 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:00 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 2ms
+2024-12-25 20:46:01 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:01 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 1ms
+2024-12-25 20:46:03 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:03 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 3ms
+2024-12-25 20:46:03 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:03 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 3ms
+2024-12-25 20:46:04 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:04 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 3ms
+2024-12-25 20:46:05 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:05 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 1ms
+2024-12-25 20:46:06 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:06 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 2ms
+2024-12-25 20:46:06 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:06 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 1ms
+2024-12-25 20:46:07 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:07 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 1ms
+2024-12-25 20:46:08 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:08 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 2ms
+2024-12-25 20:46:08 [HTTP] --> GET http://192.168.10.154:4000/api/logs/stream?maxLines
+2024-12-25 20:46:08 [HTTP] <-- GET http://192.168.10.154:4000/api/logs/stream?maxLines 200 1ms
+2024-12-25 20:46:19 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 20:46:23 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 20:46:23 [INFO] WebSocket connection initiated
+2024-12-25 20:46:23 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 20:46:23 [ERROR] Error processing WebSocket message | {
+  "data": {
+    "error": "Unsupported WebSocket message type"
+  }
+}
+2024-12-25 20:46:29 [ERROR] Error processing WebSocket message | {
+  "data": {
+    "error": "Unsupported WebSocket message type"
+  }
+}
+2024-12-25 20:46:41 [ERROR] Error processing WebSocket message | {
+  "data": {
+    "error": "Unsupported WebSocket message type"
+  }
+}
+2024-12-25 20:47:53 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 20:48:07 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 20:48:07 [INFO] WebSocket connection initiated
+2024-12-25 20:48:07 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 2ms
+2024-12-25 20:48:07 [ERROR] Error processing WebSocket message | {
+  "data": {
+    "error": "Unsupported WebSocket message type"
+  }
+}
+2024-12-25 20:48:14 [ERROR] Error processing WebSocket message | {
+  "data": {
+    "error": "Unsupported WebSocket message type"
+  }
+}
+2024-12-25 20:48:20 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 20:48:35 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 20:48:35 [INFO] WebSocket connection initiated
+2024-12-25 20:48:35 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 20:48:35 [ERROR] Error processing WebSocket message | {
+  "data": {
+    "error": "Unsupported WebSocket message type"
+  }
+}
+2024-12-25 20:48:41 [ERROR] Error processing WebSocket message | {
+  "data": {
+    "error": "Unsupported WebSocket message type"
+  }
+}
+2024-12-25 20:48:53 [ERROR] Error processing WebSocket message | {
+  "data": {
+    "error": "Unsupported WebSocket message type"
+  }
+}
+2024-12-25 20:49:26 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 20:49:41 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 20:49:41 [INFO] WebSocket connection initiated
+2024-12-25 20:49:41 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 20:49:41 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 20:49:41 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 20:49:47 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 20:49:47 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 20:49:59 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 20:49:59 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 20:54:41 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 20:54:41 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 20:54:47 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 20:54:47 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 20:54:59 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 20:54:59 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 20:59:41 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 20:59:41 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 20:59:47 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 20:59:47 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 20:59:59 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 20:59:59 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 21:04:41 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 21:04:41 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 21:04:47 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 21:04:47 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 21:04:59 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 21:04:59 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 21:09:41 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 21:09:41 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 21:09:47 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 21:09:47 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 21:09:59 [INFO] Message received from client | {
+  "data": {
+    "message": "{}"
+  }
+}
+2024-12-25 21:09:59 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "[\n  {\n    \"code\": \"invalid_type\",\n    \"expected\": \"array\",\n    \"received\": \"object\",\n    \"path\": [],\n    \"message\": \"Expected array, received object\"\n  }\n]"
+      }
+    ]
+  }
+}
+2024-12-25 21:14:07 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:14:21 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:14:21 [INFO] WebSocket connection initiated
+2024-12-25 21:14:21 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:14:22 [INFO] Raw message received from client | {
+  "raw": {}
+}
+2024-12-25 21:14:22 [INFO] Parsed message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:14:22 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "SyntaxError: \"[object Object]\" is not valid JSON"
+      }
+    ]
+  }
+}
+2024-12-25 21:14:28 [INFO] Raw message received from client | {
+  "raw": {}
+}
+2024-12-25 21:14:28 [INFO] Parsed message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:14:28 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "SyntaxError: \"[object Object]\" is not valid JSON"
+      }
+    ]
+  }
+}
+2024-12-25 21:14:40 [INFO] Raw message received from client | {
+  "raw": {}
+}
+2024-12-25 21:14:40 [INFO] Parsed message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:14:40 [INFO] Response sent to client | {
+  "data": {
+    "response": [
+      4,
+      "unique-error-id",
+      {
+        "errorCode": "InternalError",
+        "errorDescription": "SyntaxError: \"[object Object]\" is not valid JSON"
+      }
+    ]
+  }
+}
+2024-12-25 21:14:57 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:15:12 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:15:12 [INFO] WebSocket connection initiated
+2024-12-25 21:15:12 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:15:12 [INFO] Received object message | {
+  "rawMessage": {}
+}
+2024-12-25 21:15:12 [INFO] Parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:15:12 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:15:12 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:15:14 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:15:28 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:15:28 [INFO] WebSocket connection initiated
+2024-12-25 21:15:28 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:15:29 [INFO] Received object message | {
+  "rawMessage": {}
+}
+2024-12-25 21:15:29 [INFO] Parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:15:29 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:15:29 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:15:32 [INFO] Received object message | {
+  "rawMessage": {}
+}
+2024-12-25 21:15:32 [INFO] Parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:15:32 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:15:32 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:15:38 [INFO] Received object message | {
+  "rawMessage": {}
+}
+2024-12-25 21:15:38 [INFO] Parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:15:38 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:15:38 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:17:39 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:17:43 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:17:45 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:17:53 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:17:53 [INFO] WebSocket connection initiated
+2024-12-25 21:17:53 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 7ms
+2024-12-25 21:17:53 [INFO] Received raw WebSocket message | {
+  "type": "object",
+  "content": {}
+}
+2024-12-25 21:17:53 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:17:53 [INFO] Successfully parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:17:53 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:17:53 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:18:00 [INFO] Received raw WebSocket message | {
+  "type": "object",
+  "content": {}
+}
+2024-12-25 21:18:00 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:18:00 [INFO] Successfully parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:18:00 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:18:00 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:18:05 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:18:17 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:18:20 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:18:20 [INFO] WebSocket connection initiated
+2024-12-25 21:18:20 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:20:03 [INFO] Received raw WebSocket message | {
+  "type": "object",
+  "content": {}
+}
+2024-12-25 21:20:03 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:20:03 [INFO] Successfully parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:20:03 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:20:03 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:20:03 [INFO] Received raw WebSocket message | {
+  "type": "object",
+  "content": {}
+}
+2024-12-25 21:20:03 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:20:03 [INFO] Successfully parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:20:03 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:20:03 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:20:03 [INFO] Received raw WebSocket message | {
+  "type": "object",
+  "content": {}
+}
+2024-12-25 21:20:03 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:20:03 [INFO] Successfully parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:20:03 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:20:03 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:20:03 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:20:03 [INFO] WebSocket connection initiated
+2024-12-25 21:20:03 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:20:03 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:20:03 [INFO] WebSocket connection initiated
+2024-12-25 21:20:03 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 0ms
+2024-12-25 21:20:03 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:20:03 [INFO] WebSocket connection initiated
+2024-12-25 21:20:03 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:20:11 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:20:11 [INFO] WebSocket connection initiated
+2024-12-25 21:20:11 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:20:11 [INFO] Received raw WebSocket message | {
+  "type": "object",
+  "content": {}
+}
+2024-12-25 21:20:11 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:20:11 [INFO] Successfully parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:20:11 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:20:11 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:20:17 [INFO] Received raw WebSocket message | {
+  "type": "object",
+  "content": {}
+}
+2024-12-25 21:20:17 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:20:17 [INFO] Successfully parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:20:17 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:20:17 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:20:29 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:20:44 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:20:44 [INFO] WebSocket connection initiated
+2024-12-25 21:20:44 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:20:44 [INFO] Received raw WebSocket message | {
+  "type": "object",
+  "content": {}
+}
+2024-12-25 21:20:44 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:20:44 [INFO] Successfully parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:20:44 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:20:44 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:20:50 [INFO] Received raw WebSocket message | {
+  "type": "object",
+  "content": {}
+}
+2024-12-25 21:20:50 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:20:50 [INFO] Successfully parsed JSON message | {
+  "parsedMessage": {}
+}
+2024-12-25 21:20:50 [ERROR] Message validation failed: Expected an array | {
+  "receivedType": "object",
+  "receivedMessage": {}
+}
+2024-12-25 21:20:50 [ERROR] Error processing WebSocket message | {
+  "error": "Expected array, received non-array structure"
+}
+2024-12-25 21:21:01 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:21:04 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:21:09 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:21:16 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:21:16 [INFO] WebSocket connection initiated
+2024-12-25 21:21:16 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:21:16 [INFO] Received raw WebSocket message | {
+  "content": "[2,\"531532192\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+}
+2024-12-25 21:21:16 [INFO] Message is an object | {
+  "rawMessage": {}
+}
+2024-12-25 21:21:16 [ERROR] Error processing WebSocket message | {
+  "error": "Assignment to constant variable."
+}
+2024-12-25 21:21:21 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:21:23 [HTTP] Listening on http://0.0.0.0:3000
+2024-12-25 21:21:30 [HTTP] --> GET http://localhost/api/ocpp/version/1.6
+2024-12-25 21:21:30 [INFO] WebSocket connection initiated
+2024-12-25 21:21:30 [HTTP] <-- GET http://localhost/api/ocpp/version/1.6 200 1ms
+2024-12-25 21:21:31 [INFO] Received raw WebSocket message | {
+  "content": "[2,\"531532192\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+}
+2024-12-25 21:21:31 [INFO] Response sent to client | {
+  "response": [
+    3,
+    "531532192",
+    {
+      "currentTime": "2024-12-25T20:21:31.100Z",
+      "interval": 300,
+      "status": "Accepted"
+    }
+  ]
+}
+2024-12-25 21:21:31 [INFO] Received raw WebSocket message | {
+  "content": "[2,\"531532193\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+}
+2024-12-25 21:21:31 [INFO] Response sent to client | {
+  "response": [
+    3,
+    "531532193",
+    {
+      "currentTime": "2024-12-25T20:21:31.202Z",
+      "interval": 300,
+      "status": "Accepted"
+    }
+  ]
+}
+2024-12-25 21:21:31 [INFO] Received raw WebSocket message | {
+  "content": "[2,\"531532194\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-25T20:21:30.059Z\"}]"
+}
+2024-12-25 21:21:31 [INFO] Response sent to client | {
+  "response": [
+    3,
+    "531532194",
+    {}
+  ]
+}
+2024-12-25 21:21:31 [INFO] Received raw WebSocket message | {
+  "content": "[2,\"531532195\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-25T20:21:30.059Z\"}]"
+}
+2024-12-25 21:21:31 [INFO] Response sent to client | {
+  "response": [
+    3,
+    "531532195",
+    {}
+  ]
+}

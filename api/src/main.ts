@@ -25,7 +25,7 @@ export function createApp() {
     serve(
       {
         fetch: app.fetch,
-        port: 4000,
+        port: 3000,
       },
       (info) => {
         logger.http(`Listening on http://0.0.0.0:${info.port}`);

@@ -3,6 +3,7 @@ import type { NodeWebSocket } from "@hono/node-ws";
 import { logger } from "../../lib/globals/logger";
 import { GlobalContext } from "./context";
 import { handler } from "./handler";
+import type { MessageEvent } from "ws";
 
 export const ocpp = ({ upgradeWebSocket }: NodeWebSocket) => {
   const app = new Hono().get(
@@ -12,29 +13,25 @@ export const ocpp = ({ upgradeWebSocket }: NodeWebSocket) => {
       const globalContext = new GlobalContext();
 
       return {
-        async onMessage(evt, ws) {
+        async onMessage(evt: MessageEvent, ws) {
           try {
-            let message: string;
-            if (typeof evt === "string") {
-              message = evt;
-            } else if (evt instanceof Buffer) {
-              message = evt.toString();
-            } else {
-              throw new Error("Unsupported WebSocket message type");
-            }
-
-            logger.info("Message received from client", { data: { message } });
+            const message: string = evt.data.toString();
+            logger.info("Received raw WebSocket message", {
+              content: message,
+            });
 
             const response = await handler(message, globalContext);
-            ws.send(JSON.stringify(response));
 
-            logger.info("Response sent to client", { data: { response } });
+            ws.send(JSON.stringify(response));
+            logger.info("Response sent to client", { response });
           } catch (err) {
             const errorMessage =
               err instanceof Error ? err.message : String(err);
+
             logger.error("Error processing WebSocket message", {
-              data: { error: errorMessage },
+              error: errorMessage,
             });
+
             ws.send(
               JSON.stringify({
                 errorCode: "InternalError",
@@ -42,10 +39,6 @@ export const ocpp = ({ upgradeWebSocket }: NodeWebSocket) => {
               })
             );
           }
-        },
-
-        onClose(_ws, _event) {
-          logger.info("WebSocket connection closed");
         },
       };
     })
