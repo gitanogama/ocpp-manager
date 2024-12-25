@@ -33,7 +33,6 @@ export const ocpp = ({
             }
 
             logger.info("Message received from client", {
-              source: "router.ts",
               data: { message },
             });
 
@@ -41,14 +40,12 @@ export const ocpp = ({
 
             ws.send(JSON.stringify(response));
             logger.info("Response sent to client", {
-              source: "router.ts",
               data: { response },
             });
           } catch (err) {
             const errorMessage =
               err instanceof Error ? err.message : String(err);
             logger.error("Error processing WebSocket message", {
-              source: "router.ts",
               data: { error: errorMessage },
             });
 
