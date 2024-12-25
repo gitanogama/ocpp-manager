@@ -1,11 +1,7 @@
-// deno-lint-ignore-file require-await
 import { z } from "zod";
-import { db } from "../../../db/db.ts";
-import {
-  BootNotificationConf,
-  BootNotificationReq,
-} from "../zodDefinitions.ts";
-import { GlobalContext } from "../context.ts";
+import type { GlobalContext } from "../context";
+import { BootNotificationConf, BootNotificationReq } from "../zodDefinitions";
+import { db } from "../../../db/db";
 
 export const bootNotification = {
   handleRequest: async (

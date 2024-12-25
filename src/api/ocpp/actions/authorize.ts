@@ -1,8 +1,7 @@
-// deno-lint-ignore-file require-await
-import { db } from "../../../db/db.ts";
-import { GlobalContext } from "../context.ts";
-import { AuthorizeReq, AuthorizeConf } from "../zodDefinitions.ts";
 import z from "zod";
+import type { GlobalContext } from "../context";
+import { AuthorizeConf, AuthorizeReq } from "../zodDefinitions";
+import { db } from "../../../db/db";
 
 export const authorize = {
   handleRequest: async (

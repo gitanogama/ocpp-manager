@@ -1,36 +1,36 @@
-import { ensureDir } from "https://deno.land/std@0.200.0/fs/ensure_dir";
-import { join } from "https://deno.land/std@0.200.0/path/join";
+import { promises as fs } from "fs";
+import path from "path";
+
+const logDir: string = path.join(process.cwd(), "logs");
 
 export class LogsModel {
-  private static readonly RETRY_DELAY = 100; // ms
-  private static readonly MAX_RETRIES = 5;
+  static RETRY_DELAY = 100; // ms
+  static MAX_RETRIES = 5;
 
-  static async showLatestLines(linesCount = 100): Promise<string[]> {
-    await ensureDir(logDir);
+  static async showLatestLines(linesCount: number = 100): Promise<string[]> {
+    await this.ensureDir(logDir);
     const latestLog = await this.getLatestLogFile();
     if (!latestLog) return [];
 
-    const filePath = join(logDir, latestLog);
+    const filePath = path.join(logDir, latestLog);
     let attempts = 0;
     let lines: string[] = [];
 
     while (attempts < this.MAX_RETRIES) {
       try {
-        const fileContent = await Deno.readTextFile(filePath);
+        const fileContent: string = await fs.readFile(filePath, "utf8");
         lines = fileContent
           .split("\n")
-          .filter((line) => line.trim())
+          .filter((line: string) => line.trim())
           .slice(-linesCount);
 
-        // If we got some content, break the retry loop
         if (lines.length > 0) break;
-
-        // If no content, wait and retry
-        await new Promise((resolve) => setTimeout(resolve, this.RETRY_DELAY));
+        await this.delay(this.RETRY_DELAY);
         attempts++;
       } catch (error) {
-        if (error instanceof Deno.errors.PermissionDenied) throw error;
-        await new Promise((resolve) => setTimeout(resolve, this.RETRY_DELAY));
+        if (error instanceof Error && error.message.includes("EACCES"))
+          throw error;
+        await this.delay(this.RETRY_DELAY);
         attempts++;
       }
     }
@@ -39,24 +39,21 @@ export class LogsModel {
   }
 
   static async downloadAllAsStream(): Promise<ReadableStream<Uint8Array>> {
-    await ensureDir(logDir);
-    const files = await this.getSortedLogFiles();
+    await this.ensureDir(logDir);
+    const files: string[] = await this.getSortedLogFiles();
 
     async function* streamGenerator() {
-      const encoder = new TextEncoder();
-
       for (const file of files) {
-        const filePath = join(logDir, file);
+        const filePath: string = path.join(logDir, file);
         let lastSize = 0;
         let stable = false;
         let stableCount = 0;
 
         while (!stable) {
           try {
-            const stats = await Deno.stat(filePath);
+            const stats = await fs.stat(filePath);
             const currentSize = stats.size;
 
-            // If file size hasn't changed in 3 checks, consider it stable
             if (currentSize === lastSize) {
               stableCount++;
               if (stableCount >= 3) {
@@ -67,22 +64,20 @@ export class LogsModel {
               lastSize = currentSize;
             }
 
-            // Read the entire file content
-            const content = await Deno.readTextFile(filePath);
-            yield encoder.encode(content);
+            const content: string = await fs.readFile(filePath, "utf8");
+            yield Buffer.from(content);
 
             if (!stable) {
-              await new Promise((resolve) => setTimeout(resolve, 100));
+              await LogsModel.delay(100);
             }
           } catch (error) {
-            if (error instanceof Deno.errors.PermissionDenied) throw error;
-            // For other errors, wait briefly and continue
-            await new Promise((resolve) => setTimeout(resolve, 100));
+            if (error instanceof Error && error.message.includes("EACCES"))
+              throw error;
+            await LogsModel.delay(100);
           }
         }
 
-        // Add a newline between files
-        yield encoder.encode("\n");
+        yield Buffer.from("\n");
       }
     }
 
@@ -100,24 +95,41 @@ export class LogsModel {
     });
   }
 
-  private static async getLatestLogFile(): Promise<string | null> {
-    const files = await this.getSortedLogFiles();
+  static async getLatestLogFile(): Promise<string | null> {
+    const files: string[] = await this.getSortedLogFiles();
     return files.length > 0 ? files[files.length - 1] : null;
   }
 
-  private static async getSortedLogFiles(): Promise<string[]> {
+  static async getSortedLogFiles(): Promise<string[]> {
     const entries: string[] = [];
-    for await (const entry of Deno.readDir(logDir)) {
-      if (entry.isFile && entry.name.endsWith(".log")) {
+    const dirContents = await fs.readdir(logDir, { withFileTypes: true });
+
+    for (const entry of dirContents) {
+      if (entry.isFile() && entry.name.endsWith(".log")) {
         entries.push(entry.name);
       }
     }
 
-    // Sort oldest -> newest
     return entries.sort((a, b) => {
       const dateA = a.split(".")[0];
       const dateB = b.split(".")[0];
       return new Date(dateA).getTime() - new Date(dateB).getTime();
     });
+  }
+
+  static async ensureDir(dirPath: string): Promise<void> {
+    try {
+      await fs.mkdir(dirPath, { recursive: true });
+    } catch (error) {
+      if (error instanceof Error && error.message.includes("EEXIST")) {
+        return;
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  static delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }

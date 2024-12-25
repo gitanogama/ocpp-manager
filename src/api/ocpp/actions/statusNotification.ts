@@ -1,12 +1,10 @@
-// deno-lint-ignore-file require-await
-import { db } from "../../../db/db.ts";
-import { GlobalContext } from "../context.ts";
-import {
-  StatusNotificationReq,
-  StatusNotificationConf,
-} from "../zodDefinitions.ts";
-
 import z from "zod";
+import type { GlobalContext } from "../context";
+import {
+  StatusNotificationConf,
+  StatusNotificationReq,
+} from "../zodDefinitions";
+import { db } from "../../../db/db";
 
 export const statusNotification = {
   handleRequest: async (

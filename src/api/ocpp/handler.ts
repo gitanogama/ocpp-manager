@@ -1,35 +1,35 @@
-import { authorize } from "./actions/authorize.ts";
-import { bootNotification } from "./actions/bootNotification.ts";
-import { heartbeat } from "./actions/heartbeat.ts";
-import { statusNotification } from "./actions/statusNotification.ts";
-import { GlobalContext } from "./context.ts";
+import { authorize } from "./actions/authorize";
+import { bootNotification } from "./actions/bootNotification";
+import { heartbeat } from "./actions/heartbeat";
+import { statusNotification } from "./actions/statusNotification";
+import type { GlobalContext } from "./context";
 import {
-  ChangeAvailabilityReq,
   ChangeAvailabilityConf,
-  ChangeConfigurationReq,
+  ChangeAvailabilityReq,
   ChangeConfigurationConf,
-  ClearCacheReq,
+  ChangeConfigurationReq,
   ClearCacheConf,
-  DataTransferReq,
+  ClearCacheReq,
   DataTransferConf,
-  GetConfigurationReq,
+  DataTransferReq,
   GetConfigurationConf,
-  MeterValuesReq,
+  GetConfigurationReq,
   MeterValuesConf,
-  StartTransactionReq,
-  StartTransactionConf,
-  StopTransactionReq,
-  StopTransactionConf,
-  RemoteStartTransactionReq,
-  RemoteStartTransactionConf,
-  RemoteStopTransactionReq,
-  RemoteStopTransactionConf,
-  ResetReq,
-  ResetConf,
-  UnlockConnectorReq,
-  UnlockConnectorConf,
+  MeterValuesReq,
   OCPPMessage,
-} from "./zodDefinitions.ts";
+  RemoteStartTransactionConf,
+  RemoteStartTransactionReq,
+  RemoteStopTransactionConf,
+  RemoteStopTransactionReq,
+  ResetConf,
+  ResetReq,
+  StartTransactionConf,
+  StartTransactionReq,
+  StopTransactionConf,
+  StopTransactionReq,
+  UnlockConnectorConf,
+  UnlockConnectorReq,
+} from "./zodDefinitions";
 
 export const handler = async (
   message: string,

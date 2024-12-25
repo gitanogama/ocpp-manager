@@ -1,10 +1,10 @@
 import { Hono } from "hono";
-import { upgradeWebSocket } from "hono/deno";
-import { handler } from "./handler.ts";
-import { logger } from "../../globals/logger.ts";
-import { GlobalContext } from "./context.ts";
+import { GlobalContext } from "./context";
+import { handler } from "./handler";
+import { logger } from "../../globals/logger";
+import { upgradeWebSocket } from "hono/cloudflare-workers";
 
-const index = new Hono().get(
+export const ocpp = new Hono().get(
   "/version/1.6/*",
   upgradeWebSocket((_c) => {
     logger.info("WebSocket connection initiated");
@@ -62,5 +62,3 @@ const index = new Hono().get(
     };
   })
 );
-
-export default index;
