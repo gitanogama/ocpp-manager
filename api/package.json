@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "npx tsx watch --inspect=0.0.0.0:59929 ./src/main.ts",
     "kysely-codegen": "kysely-codegen --camel-case --dialect sqlite --out-file ./src/lib/db/DBTypes.d.ts",
+    "migrate:new": "npx tsx ./src/lib/db/new.ts",
+    "migrate:run": "npx tsx ./src/lib/db/run.ts",
     "format": "prettier --write ."
   },
   "dependencies": {
