@@ -1,7 +1,7 @@
 // deno-lint-ignore-file require-await
 import { GlobalContext } from "../context.ts";
 import { HeartbeatReq, HeartbeatConf } from "../zodDefinitions.ts";
-import z from "npm:zod";
+import z from "zod";
 
 export const heartbeat = {
   handleRequest: async (

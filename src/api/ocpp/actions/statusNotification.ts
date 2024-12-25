@@ -6,7 +6,7 @@ import {
   StatusNotificationConf,
 } from "../zodDefinitions.ts";
 
-import z from "npm:zod";
+import z from "zod";
 
 export const statusNotification = {
   handleRequest: async (

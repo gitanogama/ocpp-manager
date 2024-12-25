@@ -1,28 +1,28 @@
-# Deno-specific
-deno.lock
-*.tsbuildinfo
+# dev
+.yarn/
+!.yarn/releases
+.vscode/*
+!.vscode/launch.json
+!.vscode/*.code-snippets
+.idea/workspace.xml
+.idea/usage.statistics.xml
+.idea/shelf
 
-# Logs
+# deps
+node_modules/
+
+# env
+.env
+.env.production
+
+# logs
 logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# SQLite database
-app.db
-
-# Node.js compatibility (optional, if using npm or third-party tools)
-node_modules/
-package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# MacOS-specific
+# misc
 .DS_Store
-
-# System files
-Thumbs.db
-*.swp

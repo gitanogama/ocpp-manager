@@ -1,15 +1,14 @@
-import { Hono } from "jsr:@hono/hono";
-import { upgradeWebSocket } from "jsr:@hono/hono/deno";
-import { handler } from "./handler.ts"; // Your OCPP handler
-import { logger } from "../../globals/logger.ts"; // Logger utility
-import { GlobalContext } from "./context.ts"; // Global Context utility
+import { Hono } from "hono";
+import { upgradeWebSocket } from "hono/deno";
+import { handler } from "./handler.ts";
+import { logger } from "../../globals/logger.ts";
+import { GlobalContext } from "./context.ts";
 
 const index = new Hono().get(
   "/version/1.6/*",
   upgradeWebSocket((_c) => {
     logger.info("WebSocket connection initiated");
 
-    // Initialize a global context for the session
     const globalContext: GlobalContext = new GlobalContext();
 
     return {
@@ -17,7 +16,6 @@ const index = new Hono().get(
         try {
           let message: string;
 
-          // Handle Blob or String messages
           if (event.data instanceof Blob) {
             message = await event.data.text();
           } else if (typeof event.data === "string") {
@@ -31,10 +29,8 @@ const index = new Hono().get(
             data: { message },
           });
 
-          // Parse the incoming JSON message
           const response = await handler(message, globalContext);
 
-          // Send the response back to the WebSocket client
           ws.send(JSON.stringify(response));
           logger.info("Response sent to client", {
             source: "router.ts",
@@ -47,7 +43,6 @@ const index = new Hono().get(
             data: { error: errorMessage },
           });
 
-          // Send error message back to client
           ws.send(
             JSON.stringify({
               errorCode: "InternalError",
@@ -57,7 +52,6 @@ const index = new Hono().get(
         }
       },
       onClose(event) {
-        // Cleanup actions when the connection is closed
         logger.info("WebSocket connection closed", {
           source: "router.ts",
           reason: event.reason || "No reason provided",

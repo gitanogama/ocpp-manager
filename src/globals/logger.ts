@@ -1,10 +1,18 @@
-import { createLogger, transports, format, Logform } from "npm:winston";
-import { ensureDir } from "https://deno.land/std@0.200.0/fs/mod.ts";
-import { join } from "https://deno.land/std@0.200.0/path/mod.ts";
+import { createLogger, transports, format } from "winston";
+import fs from "fs";
+import path from "path";
+import type { TransformableInfo } from "logform";
 
-export const logDir = join(Deno.cwd(), "logs");
-await ensureDir(logDir);
-const logFile = join(logDir, `${new Date().toISOString().split("T")[0]}.log`);
+export const logDir = path.join(process.cwd(), "logs");
+
+if (!fs.existsSync(logDir)) {
+  fs.mkdirSync(logDir, { recursive: true });
+}
+
+const logFile = path.join(
+  logDir,
+  `${new Date().toISOString().split("T")[0]}.log`
+);
 
 function formatMeta(meta: unknown): string {
   if (!meta || Object.keys(meta).length === 0) return "";
@@ -15,7 +23,7 @@ export const logger = createLogger({
   level: "debug",
   format: format.combine(
     format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-    format.printf((info: Logform.TransformableInfo) => {
+    format.printf((info: TransformableInfo) => {
       const { timestamp, level, message, ...meta } = info;
       return `${timestamp} [${level.toUpperCase()}] ${message}${formatMeta(
         meta
@@ -26,7 +34,7 @@ export const logger = createLogger({
     new transports.Console({
       format: format.combine(
         format.timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
-        format.printf((info: Logform.TransformableInfo) => {
+        format.printf((info: TransformableInfo) => {
           const { timestamp, level, message, ...meta } = info;
           return `${timestamp} [${level.toUpperCase()}] ${message}${formatMeta(
             meta
@@ -34,6 +42,7 @@ export const logger = createLogger({
         })
       ),
     }),
+
     new transports.File({
       filename: logFile,
       maxFiles: 14,

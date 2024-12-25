@@ -1,0 +1,15 @@
+{
+    "configurations": [
+      {
+        "name": "Debug Hono API",
+        "cwd": "${workspaceFolder}",
+        "type": "node",
+        "request": "attach",
+        "port": 59929,
+        "resolveSourceMapLocations": null,
+        "attachExistingChildren": false,
+        "autoAttachChildProcesses": false
+      }
+    ]
+  }
+  

@@ -1,92 +1,125 @@
-import { Umzug } from "npm:umzug";
-import { join } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { ensureDirSync } from "https://deno.land/std@0.224.0/fs/mod.ts";
-import { DB } from "https://deno.land/x/sqlite@v3.9.1/mod.ts";
+// migrate.ts (Node.js / TypeScript example)
+
+import { Umzug } from "umzug";
+import path from "path";
+import fs from "fs";
+import DatabaseClass from "better-sqlite3";
+
+type Database = InstanceType<typeof DatabaseClass>;
+
+// If you need to ensure that a directory exists:
+function ensureDirSync(dirPath: string) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
+  }
+}
 
 const MIGRATIONS_DIR = "./src/db/migrations";
 ensureDirSync(MIGRATIONS_DIR);
 
+// Setup the SQLite DB connection
 console.log("🚀 Setting up SQLite database...");
-const db = new DB("app.db");
+const db = new DatabaseClass("app.db");
 
+// Helper function for standardizing how we run queries
+// better-sqlite3 requires using .prepare(...).run(...) or .all(...)
+function runQuery(db: Database, sql: string, params?: any[]) {
+  try {
+    const stmt = db.prepare(sql);
+    if (!params || params.length === 0) {
+      return stmt.run();
+    } else {
+      return stmt.run(...params);
+    }
+  } catch (error: any) {
+    console.error("❌ Query error:", error.message);
+    throw error;
+  }
+}
+
+function allQuery(db: Database, sql: string, params?: any[]) {
+  try {
+    const stmt = db.prepare(sql);
+    if (!params || params.length === 0) {
+      return stmt.all();
+    } else {
+      return stmt.all(...params);
+    }
+  } catch (error: any) {
+    console.error("❌ Query error:", error.message);
+    throw error;
+  }
+}
+
+// Custom storage class for Umzug using better-sqlite3
 class SQLiteStorage {
-  constructor(private db: DB) {}
+  constructor(private db: Database) {}
 
-  // deno-lint-ignore require-await
   async logMigration(migration: { name: string }) {
     const migrationName = migration.name.toLowerCase();
     try {
-      this.db.query("INSERT INTO migrations (name) VALUES (?)", [
+      runQuery(this.db, "INSERT INTO migrations (name) VALUES (?)", [
         migrationName,
       ]);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("❌ Error logging migration:", error.message);
-      } else {
-        console.error("❌ Unknown error logging migration:", error);
-      }
+    } catch (error: any) {
+      console.error("❌ Error logging migration:", error.message);
+      throw error;
     }
   }
 
-  // deno-lint-ignore require-await
   async unlogMigration(migration: { name: string }) {
     const migrationName = migration.name.toLowerCase();
     try {
-      this.db.query("DELETE FROM migrations WHERE name = ?", [migrationName]);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error("❌ Error removing migration log:", error.message);
-      } else {
-        console.error("❌ Unknown error removing migration log:", error);
-      }
+      runQuery(this.db, "DELETE FROM migrations WHERE name = ?", [
+        migrationName,
+      ]);
+    } catch (error: any) {
+      console.error("❌ Error removing migration log:", error.message);
+      throw error;
     }
   }
 
-  // deno-lint-ignore require-await
   async executed(): Promise<string[]> {
     try {
-      const results = this.db.query("SELECT name FROM migrations") as Array<
-        [string]
-      >;
-      return results.map(([name]) => name);
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(
-          "❌ Error retrieving executed migrations:",
-          error.message
-        );
-      } else {
-        console.error(
-          "❌ Unknown error retrieving executed migrations:",
-          error
-        );
-      }
+      const rows = allQuery(this.db, "SELECT name FROM migrations") as Array<{
+        name: string;
+      }>;
+      return rows.map((r) => r.name);
+    } catch (error: any) {
+      console.error("❌ Error retrieving executed migrations:", error.message);
       return [];
     }
   }
 }
 
+// Create the migrations table if it doesn’t exist
 console.log("⏳ Setting up migrations table...");
-db.query(`
+runQuery(
+  db,
+  `
   CREATE TABLE IF NOT EXISTS migrations (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
-`);
+`
+);
 
 console.log(`📂 Searching for migrations in: ${MIGRATIONS_DIR}`);
 
+// Create the Umzug instance
 const umzug = new Umzug({
   migrations: {
-    glob: join(MIGRATIONS_DIR, "*.sql"),
-    resolve: ({ name, path }) => ({
+    // Use path.join for cross-platform safety
+    glob: path.join(MIGRATIONS_DIR, "*.sql"),
+    // A custom resolver to handle .sql files
+    resolve: ({ name, path: filePath }) => ({
       name,
-      path,
+      path: filePath,
       up: async () => {
-        const sql = await Deno.readTextFile(path!);
-
-        // Split the SQL file into individual queries by ';'
+        // Read the .sql file contents
+        const sql = fs.readFileSync(filePath!, "utf8");
+        // Split into individual queries by ';'
         const queries = sql
           .split(";")
           .map((query) => query.trim())
@@ -94,27 +127,24 @@ const umzug = new Umzug({
 
         try {
           console.log(`🔄 Applying migration: ${name}`);
-          db.query("BEGIN TRANSACTION");
+          // Start a transaction
+          runQuery(db, "BEGIN TRANSACTION");
 
           // Execute each query individually
           for (const query of queries) {
             if (query) {
-              db.query(query); // Execute each query
-              console.log(`  - Executed query: ${query.slice(0, 30)}...`); // Logging part of the query
+              runQuery(db, query);
+              console.log(`  - Executed query: ${query.slice(0, 30)}...`);
             }
           }
 
           // Commit the transaction
-          db.query("COMMIT");
+          runQuery(db, "COMMIT");
           console.log(`✅ Migration ${name} applied successfully.`);
-        } catch (error) {
-          db.query("ROLLBACK");
-
-          if (error instanceof Error) {
-            console.error(`❌ Migration ${name} failed: ${error.message}`);
-          } else {
-            console.error(`❌ Migration ${name} failed: Unknown error`);
-          }
+        } catch (error: any) {
+          runQuery(db, "ROLLBACK");
+          console.error(`❌ Migration ${name} failed: ${error.message}`);
+          throw error;
         }
       },
     }),
@@ -124,30 +154,35 @@ const umzug = new Umzug({
   logger: console,
 });
 
-try {
-  console.log("⏳ Running migrations...");
-  const start = Date.now();
+async function runMigrations() {
+  try {
+    console.log("⏳ Running migrations...");
+    const start = Date.now();
 
-  const migrations = await umzug.up();
+    const migrations = await umzug.up();
 
-  if (migrations.length > 0) {
-    console.log("✅ Applied migrations:");
-    migrations.forEach((m) => {
-      console.log(`  - Name: ${m.name}, Path: ${m.path}`);
-    });
-  } else {
-    console.log("✅ No migrations to apply.");
-  }
+    if (migrations.length > 0) {
+      console.log("✅ Applied migrations:");
+      migrations.forEach((m) => {
+        console.log(`  - Name: ${m.name}, Path: ${m.path}`);
+      });
+    } else {
+      console.log("✅ No migrations to apply.");
+    }
 
-  const duration = Date.now() - start;
-  console.log(`✅ Migrations complete in ${duration}ms.`);
-} catch (error) {
-  if (error instanceof Error) {
+    const duration = Date.now() - start;
+    console.log(`✅ Migrations complete in ${duration}ms.`);
+  } catch (error: any) {
     console.error("❌ Migration failed:", error.message);
-  } else {
-    console.error("❌ Migration failed: Unknown error:", error);
+  } finally {
+    db.close();
+    console.log("🔒 Database connection closed.");
   }
-} finally {
-  db.close();
-  console.log("🔒 Database connection closed.");
 }
+
+// Run migrations if this file is executed directly via Node/ts-node
+if (require.main === module) {
+  runMigrations();
+}
+
+// Otherwise, you can import { runMigrations } from './migrate.js' in other parts of your code.

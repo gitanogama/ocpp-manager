@@ -1,47 +1,75 @@
-import { join, dirname } from "https://deno.land/std@0.224.0/path/mod.ts";
-import { ensureDirSync } from "https://deno.land/std@0.224.0/fs/mod.ts";
+// create-migration.ts (Node.js ESM + TypeScript / JavaScript)
 
-const __filename = new URL(import.meta.url).pathname;
-const __dirname = dirname(__filename);
+import fs from "fs";
+import path from "path";
+import readline from "readline";
+import { fileURLToPath } from "url";
 
-async function readInput(prompt: string): Promise<string> {
-  const buf = new Uint8Array(1024);
-  Deno.stdout.writeSync(new TextEncoder().encode(prompt));
-  const n = await Deno.stdin.read(buf);
-
-  // Handle the case where n is null
-  if (n === null) {
-    throw new Error("Failed to read input. Please try again.");
+/**
+ * A small helper that ensures a directory exists.
+ * Similar to Deno's ensureDirSync, but for Node.
+ */
+function ensureDirSync(dirPath: string) {
+  if (!fs.existsSync(dirPath)) {
+    fs.mkdirSync(dirPath, { recursive: true });
   }
-
-  return new TextDecoder().decode(buf.subarray(0, n)).trim();
 }
+
+/**
+ * A helper to read user input from the command line (stdin).
+ * Replaces the Deno.stdin approach.
+ */
+function readInput(prompt: string): Promise<string> {
+  return new Promise((resolve) => {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+    rl.question(prompt, (answer: string) => {
+      rl.close();
+      resolve(answer.trim());
+    });
+  });
+}
+
+// In ESM, we can emulate __filename/__dirname with the following:
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 (async () => {
   try {
+    // 1) Prompt user for the migration name
     const inputName = await readInput("Enter migration name: ");
+
+    // 2) Create a timestamp in the same style
     const timestamp = new Date()
       .toISOString()
       .replace(/[-T:.Z]/g, "")
       .slice(0, 14);
+
+    // 3) Convert name to lowercase, replace spaces with underscores
     const formattedName = inputName.toLowerCase().replace(/\s+/g, "_");
-    const migrationsDir = join(__dirname, "../db/migrations");
+
+    // 4) Construct paths
+    const migrationsDir = path.join(__dirname, "../db/migrations");
     const migrationFileName = `${timestamp}_${formattedName}.sql`;
-    const migrationFilePath = join(migrationsDir, migrationFileName);
+    const migrationFilePath = path.join(migrationsDir, migrationFileName);
 
-    ensureDirSync(migrationsDir); // Ensure the migrations directory exists
+    // 5) Ensure the migrations directory exists
+    ensureDirSync(migrationsDir);
 
-    await Deno.writeTextFile(
+    // 6) Write an initial SQL comment to the file
+    await fs.promises.writeFile(
       migrationFilePath,
       "-- Write your SQL migration here\n"
     );
+
+    // 7) Log success
     console.log(`✅ Created new migration: ${migrationFilePath}`);
   } catch (error) {
     if (error instanceof Error) {
-      // Handle the error safely
       console.error("❌ An error occurred:", error.message);
     } else {
-      // Fallback for unknown error types
       console.error("❌ An unknown error occurred:", error);
     }
   }

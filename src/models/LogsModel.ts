@@ -1,13 +1,16 @@
-import { join } from "https://deno.land/std@0.200.0/path/mod.ts";
-import { ensureDir } from "https://deno.land/std@0.200.0/fs/mod.ts";
-import { logDir } from "../globals/logger.ts";
+import { join } from "node:path";
+import { mkdir, readdir, stat, readFile } from "node:fs/promises";
+import { ReadableStream } from "node:stream/web";
+import { logDir } from "../globals/logger";
 
 export class LogsModel {
   static async streamLogs(
     maxLines?: number
   ): Promise<ReadableStream<Uint8Array>> {
-    await ensureDir(logDir);
+    await mkdir(logDir, { recursive: true });
+
     const files = await this.getSortedLogFiles();
+
     files.reverse();
 
     async function* streamGenerator() {
@@ -26,7 +29,7 @@ export class LogsModel {
 
         while (!stable) {
           try {
-            const stats = await Deno.stat(filePath);
+            const stats = await stat(filePath);
             const currentSize = stats.size;
 
             if (currentSize === lastSize) {
@@ -39,7 +42,7 @@ export class LogsModel {
               lastSize = currentSize;
             }
 
-            const content = await Deno.readTextFile(filePath);
+            const content = await readFile(filePath, "utf8");
             const lines = content.split("\n").filter((line) => line.trim());
             lines.reverse();
 
@@ -48,7 +51,9 @@ export class LogsModel {
                 ? maxLines - totalLinesStreamed
                 : lines.length;
 
-            if (remainingLines <= 0) break;
+            if (remainingLines <= 0) {
+              break;
+            }
 
             const selectedLines = lines.slice(0, remainingLines);
             totalLinesStreamed += selectedLines.length;
@@ -61,15 +66,18 @@ export class LogsModel {
             if (!stable) {
               await new Promise((resolve) => setTimeout(resolve, 100));
             }
-          } catch (error) {
-            if (error instanceof Deno.errors.PermissionDenied) throw error;
+          } catch (error: any) {
+            if (error.code === "EACCES") {
+              throw error;
+            }
+
             await new Promise((resolve) => setTimeout(resolve, 100));
           }
         }
       }
     }
 
-    return new ReadableStream({
+    return new ReadableStream<Uint8Array>({
       async start(controller) {
         try {
           for await (const chunk of streamGenerator()) {
@@ -85,8 +93,9 @@ export class LogsModel {
 
   private static async getSortedLogFiles(): Promise<string[]> {
     const entries: string[] = [];
-    for await (const entry of Deno.readDir(logDir)) {
-      if (entry.isFile && entry.name.endsWith(".log")) {
+
+    for (const entry of await readdir(logDir, { withFileTypes: true })) {
+      if (entry.isFile() && entry.name.endsWith(".log")) {
         entries.push(entry.name);
       }
     }

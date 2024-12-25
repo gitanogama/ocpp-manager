@@ -1,17 +1,22 @@
-import { Hono } from "jsr:@hono/hono";
-import { logger } from "jsr:@hono/hono/logger";
-import { serveStatic } from "jsr:@hono/hono/deno";
-import { api } from "./api/index.ts";
+import { Hono } from "hono";
+import { logger } from "hono/logger";
+import { serve } from "@hono/node-server";
+import { api } from "./api/index";
 
-const app = new Hono()
-  .use(logger())
-  .use(
-    "/*",
-    serveStatic({
-      root: "./src/app/build",
-    })
-  )
-  .route("/api", api)
-  .get("*", serveStatic({ path: "./src/app/build/index.html" }));
+const app = new Hono();
 
-Deno.serve({ port: 3000 }, app.fetch);
+app.use(logger());
+
+app.route("/api", api);
+
+serve(
+  {
+    fetch: app.fetch,
+    port: 3000,
+  },
+  (info) => {
+    console.log(`Listening on http://${info.address}:${info.port}`);
+  }
+);
+
+export type AppType = typeof app;

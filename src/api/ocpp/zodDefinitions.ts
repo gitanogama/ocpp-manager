@@ -1,4 +1,4 @@
-import { z } from "npm:zod";
+import { z } from "zod";
 
 // Define MessageType as a number (2 for request, 3 for response)
 const MessageType = z
