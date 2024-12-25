@@ -21,6 +21,7 @@
     "@types/ws": "^8.5.13",
     "better-sqlite3": "^11.7.0",
     "chalk": "^5.4.1",
+    "kysely": "^0.27.5",
     "kysely-codegen": "^0.17.0",
     "tsx": "^4.7.1",
     "umzug": "^3.8.2",

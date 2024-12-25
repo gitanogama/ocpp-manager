@@ -11,46 +11,49 @@ export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
 
 export interface Authorization {
   chargerId: number;
-  createdAt: Generated<string | null>;
-  expiryDate: string | null;
+  createdAt: Generated<string>;
+  expiryDate: Generated<string | null>;
   id: Generated<number | null>;
   idTag: string;
-  parentIdTag: string | null;
+  parentIdTag: Generated<string | null>;
   status: string;
-  updatedAt: Generated<string | null>;
+  updatedAt: Generated<string>;
 }
 
 export interface Chargers {
-  createdAt: Generated<string | null>;
-  firmwareVersion: string | null;
+  createdAt: Generated<string>;
+  firmwareVersion: Generated<string | null>;
   id: Generated<number | null>;
+  lastHeartbeat: Generated<string | null>;
   model: string;
-  registrationStatus: Generated<string | null>;
+  registrationStatus: Generated<string>;
   serialNumber: string;
-  updatedAt: Generated<string | null>;
+  status: Generated<string>;
+  updatedAt: Generated<string>;
   vendor: string;
 }
 
 export interface ChargerStatus {
   connectorId: number;
-  errorCode: string | null;
+  errorCode: Generated<string | null>;
+  heartbeatTimestamp: Generated<string | null>;
   id: Generated<number | null>;
-  info: string | null;
+  info: Generated<string | null>;
   status: string;
-  timestamp: Generated<string | null>;
-  vendorErrorCode: string | null;
+  vendorErrorCode: Generated<string | null>;
 }
 
 export interface Connectors {
   chargerId: number;
   connectorId: number;
-  createdAt: Generated<string | null>;
-  errorCode: string | null;
+  createdAt: Generated<string>;
+  errorCode: Generated<string | null>;
   id: Generated<number | null>;
-  info: string | null;
+  info: Generated<string | null>;
+  maxCurrent: Generated<number>;
   status: Generated<string>;
-  updatedAt: Generated<string | null>;
-  vendorErrorCode: string | null;
+  updatedAt: Generated<string>;
+  vendorErrorCode: Generated<string | null>;
 }
 
 export interface Migrations {
@@ -59,26 +62,37 @@ export interface Migrations {
   name: string;
 }
 
-export interface Telemetry {
+export interface Settings {
+  heartbeatInterval: Generated<number>;
   id: Generated<number | null>;
-  meterValue: number | null;
-  sampledValue: string | null;
-  timestamp: Generated<string | null>;
+  systemMaintenance: Generated<number>;
+  updatedAt: Generated<string>;
+}
+
+export interface Telemetry {
+  current: Generated<number>;
+  id: Generated<number | null>;
+  meterValue: number;
+  sampledValue: Generated<string | null>;
+  timestamp: Generated<string>;
   transactionId: number;
+  voltage: Generated<number>;
 }
 
 export interface Transactions {
   connectorId: number;
-  createdAt: Generated<string | null>;
+  createdAt: Generated<string>;
   id: Generated<number | null>;
   idTag: string;
-  meterStart: number | null;
+  meterStart: number;
   meterStop: number | null;
-  reason: string | null;
+  paymentStatus: Generated<string>;
+  reason: Generated<string | null>;
   startTime: string;
-  status: Generated<string | null>;
+  status: Generated<string>;
   stopTime: string | null;
   transactionId: number;
+  userId: number;
 }
 
 export interface DB {
@@ -87,6 +101,7 @@ export interface DB {
   chargerStatus: ChargerStatus;
   connectors: Connectors;
   migrations: Migrations;
+  settings: Settings;
   telemetry: Telemetry;
   transactions: Transactions;
 }

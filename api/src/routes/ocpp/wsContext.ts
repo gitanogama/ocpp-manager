@@ -1,4 +1,4 @@
-export class GlobalContext {
+export class wsContext {
   private context: {
     serialNumber?: string;
     chargerId?: number;

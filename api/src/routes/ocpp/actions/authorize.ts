@@ -1,30 +1,26 @@
 import z from "zod";
-import type { GlobalContext } from "../context";
+import type { wsContext } from "../wsContext";
 import { AuthorizeConf, AuthorizeReq } from "../zodDefinitions";
-import { db } from "../../../lib/db/db";
+import type { ActionHandler } from ".";
+import { Authorization } from "../../../lib/models/Authorization";
 
-export const authorize = {
+export const authorize: ActionHandler = {
   handleRequest: async (
     payload: unknown,
-    _globalContext: GlobalContext
+    _wsCtx: wsContext
   ): Promise<z.infer<typeof AuthorizeConf>> => {
     let parsedData: z.infer<typeof AuthorizeReq>;
 
-    // Validate the request payload
     try {
       parsedData = AuthorizeReq.parse(payload);
     } catch {
       return { idTagInfo: { status: "Invalid" } };
     }
 
-    // Fetch authorization info from the `authorization` table
-    const authRecord = await db
-      .selectFrom("authorization")
-      .select(["idTag", "expiryDate", "parentIdTag", "status"])
-      .where("idTag", "=", parsedData.idTag)
-      .executeTakeFirst();
+    const authRecord = await Authorization.findOne({
+      eb: (eb) => eb("idTag", "=", parsedData.idTag),
+    });
 
-    // Determine ID tag status
     const idTagInfo: z.infer<typeof AuthorizeConf>["idTagInfo"] = !authRecord
       ? { status: "Invalid" }
       : authRecord.expiryDate && new Date(authRecord.expiryDate) < new Date()
@@ -42,7 +38,10 @@ export const authorize = {
     return { idTagInfo };
   },
 
-  handleResponse: async (payload: unknown): Promise<string> => {
+  handleResponse: async (
+    payload: unknown,
+    _wsCtx: wsContext
+  ): Promise<string> => {
     try {
       AuthorizeConf.parse(payload);
       return "Accepted";

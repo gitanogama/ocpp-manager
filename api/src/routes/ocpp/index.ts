@@ -1,7 +1,7 @@
 import { Hono, type Context } from "hono";
 import type { NodeWebSocket } from "@hono/node-ws";
 import { logger } from "../../lib/globals/logger";
-import { GlobalContext } from "./context";
+import { wsContext } from "./wsContext";
 import { handler } from "./handler";
 import type { MessageEvent } from "ws";
 import { getConnInfo } from "@hono/node-server/conninfo";
@@ -17,7 +17,7 @@ export const ocpp = ({ upgradeWebSocket }: NodeWebSocket) => {
         ip: clientIp,
       });
 
-      const globalContext = new GlobalContext();
+      const globalContext = new wsContext();
 
       return {
         async onMessage(evt: MessageEvent, ws) {

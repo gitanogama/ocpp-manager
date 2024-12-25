@@ -2,7 +2,7 @@ import { authorize } from "./actions/authorize";
 import { bootNotification } from "./actions/bootNotification";
 import { heartbeat } from "./actions/heartbeat";
 import { statusNotification } from "./actions/statusNotification";
-import type { GlobalContext } from "./context";
+import type { wsContext } from "./wsContext";
 import {
   ChangeAvailabilityConf,
   ChangeAvailabilityReq,
@@ -33,7 +33,7 @@ import {
 
 export const handler = async (
   message: string,
-  globalContext: GlobalContext
+  wsCtx: wsContext
 ): Promise<(object | string | number)[]> => {
   try {
     const body = OCPPMessage.parse(JSON.parse(message));
@@ -49,29 +49,29 @@ export const handler = async (
       case "Authorize":
         responsePayload =
           messageType === 2
-            ? await authorize.handleRequest(payload, globalContext)
-            : await authorize.handleResponse(payload);
+            ? await authorize.handleRequest(payload, wsCtx)
+            : await authorize.handleResponse(payload, wsCtx);
         break;
 
       case "BootNotification":
         responsePayload =
           messageType === 2
-            ? await bootNotification.handleRequest(payload, globalContext)
-            : await bootNotification.handleResponse(payload);
+            ? await bootNotification.handleRequest(payload, wsCtx)
+            : await bootNotification.handleResponse(payload, wsCtx);
         break;
 
       case "Heartbeat":
         responsePayload =
           messageType === 2
-            ? await heartbeat.handleRequest(payload, globalContext)
-            : await heartbeat.handleResponse(payload);
+            ? await heartbeat.handleRequest(payload, wsCtx)
+            : await heartbeat.handleResponse(payload, wsCtx);
         break;
 
       case "StatusNotification":
         responsePayload =
           messageType === 2
-            ? await statusNotification.handleRequest(payload, globalContext)
-            : await statusNotification.handleResponse(payload);
+            ? await statusNotification.handleRequest(payload, wsCtx)
+            : await statusNotification.handleResponse(payload, wsCtx);
         break;
 
       case "ChangeAvailability":
@@ -223,7 +223,6 @@ export const handler = async (
         throw new Error(`Unknown action: ${action}`);
     }
 
-    // Return the proper OCPP response array
     return [3, uniqueId, responsePayload];
   } catch (error) {
     console.error("Error processing message:", error);

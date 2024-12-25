@@ -1,11 +1,13 @@
 import z from "zod";
-import type { GlobalContext } from "../context";
+import type { wsContext } from "../wsContext";
 import { HeartbeatConf, HeartbeatReq } from "../zodDefinitions";
+import type { ActionHandler } from ".";
+import { Chargers } from "../../../lib/models/Chargers";
 
-export const heartbeat = {
+export const heartbeat: ActionHandler = {
   handleRequest: async (
     payload: unknown,
-    _globalContext: GlobalContext
+    globalContext: wsContext
   ): Promise<z.infer<typeof HeartbeatConf>> => {
     try {
       HeartbeatReq.parse(payload);
@@ -13,7 +15,26 @@ export const heartbeat = {
       // Ignoring validation errors as per OCPP behavior
     }
 
-    return { currentTime: new Date().toISOString() };
+    // Get the current charger ID from the global context
+    const chargerId = globalContext.get("chargerId");
+    const currentTime = new Date().toISOString();
+
+    if (chargerId) {
+      // Update the lastHeartbeat for the charger
+
+      const charger = await Chargers.findOne({
+        eb: (eb) => eb("id", "=", chargerId),
+      });
+
+      if (charger) {
+        await charger.update({
+          lastHeartbeat: currentTime,
+          status: "Online",
+        });
+      }
+    }
+
+    return { currentTime };
   },
 
   handleResponse: async (payload: unknown): Promise<string> => {

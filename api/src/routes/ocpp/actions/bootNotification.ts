@@ -1,12 +1,14 @@
 import { z } from "zod";
-import type { GlobalContext } from "../context";
+import type { wsContext } from "../wsContext";
 import { BootNotificationConf, BootNotificationReq } from "../zodDefinitions";
-import { db } from "../../../lib/db/db";
+import type { ActionHandler } from ".";
+import { Chargers } from "../../../lib/models/Chargers";
+import { Settings } from "../../../lib/models/Settings";
 
-export const bootNotification = {
+export const bootNotification: ActionHandler = {
   handleRequest: async (
     payload: unknown,
-    globalContext: GlobalContext
+    wsCtx: wsContext
   ): Promise<z.infer<typeof BootNotificationConf>> => {
     let parsedData: z.infer<typeof BootNotificationReq>;
 
@@ -20,36 +22,55 @@ export const bootNotification = {
       };
     }
 
-    const upsertResult = await db
-      .insertInto("chargers")
-      .values({
-        serialNumber: parsedData.chargePointSerialNumber || "",
+    const currentTime = new Date().toISOString();
+
+    // Use `chargePointSerialNumber` consistently
+    const serialNumber = parsedData.chargePointSerialNumber || "";
+
+    // Check if the charger already exists
+    let charger = await Chargers.findOne({
+      eb: (eb) => eb("serialNumber", "=", serialNumber),
+    });
+
+    if (charger) {
+      // Update the existing charger
+      await charger.update({
         model: parsedData.chargePointModel,
         vendor: parsedData.chargePointVendor,
-        firmwareVersion: parsedData.firmwareVersion || null,
+        firmwareVersion: parsedData.firmwareVersion,
+        lastHeartbeat: currentTime,
+        status: "Online", // Update to online during repeated boots
+        updatedAt: currentTime,
+      });
+    } else {
+      // Insert a new charger
+      charger = await Chargers.insert({
+        serialNumber,
+        model: parsedData.chargePointModel,
+        vendor: parsedData.chargePointVendor,
+        firmwareVersion: parsedData.firmwareVersion,
         registrationStatus: "Pending",
-        updatedAt: new Date().toISOString(),
-      })
-      .onConflict((oc) =>
-        oc.column("serialNumber").doUpdateSet({
-          model: parsedData.chargePointModel,
-          vendor: parsedData.chargePointVendor,
-          firmwareVersion: parsedData.firmwareVersion || null,
-          updatedAt: new Date().toISOString(),
-        })
-      )
-      .returning(["id", "registrationStatus"])
-      .execute();
-
-    const currentStatus = upsertResult[0]?.registrationStatus || "Pending";
-
-    if (upsertResult[0]?.id) {
-      globalContext.set("chargerId", upsertResult[0].id);
+        lastHeartbeat: currentTime,
+        status: "Online",
+        updatedAt: currentTime,
+      });
     }
 
+    // Get the registration status
+    const currentStatus = charger?.registrationStatus || "Pending";
+
+    // Set the charger ID in the WebSocket context
+    if (charger?.id) {
+      wsCtx.set("chargerId", charger.id);
+    }
+
+    // Fetch settings
+    const settings = await Settings.findOneOrThrow();
+
+    // Return the response
     return {
-      currentTime: new Date().toISOString(),
-      interval: 300,
+      currentTime,
+      interval: settings.heartbeatInterval,
       status: currentStatus === "Pending" ? "Pending" : "Accepted",
     };
   },
