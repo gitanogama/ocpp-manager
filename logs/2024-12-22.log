@@ -1,0 +1,1691 @@
+2024-12-22 16:56:24 [INFO] WebSocket connection closed | {
+  "source": "router.ts",
+  "reason": "No reason provided",
+  "wasClean": false,
+  "code": 0
+}
+2024-12-22 16:56:25 [INFO] WebSocket connection initiated
+2024-12-22 16:56:25 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531952\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 16:56:25 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531952",
+      {
+        "currentTime": "2024-12-22T15:56:25.815Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 16:56:26 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531953\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:24.795Z\"}]"
+  }
+}
+2024-12-22 16:56:26 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531953",
+      {}
+    ]
+  }
+}
+2024-12-22 16:56:26 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531954\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:24.795Z\"}]"
+  }
+}
+2024-12-22 16:56:26 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531954",
+      {}
+    ]
+  }
+}
+2024-12-22 16:56:27 [INFO] WebSocket connection closed | {
+  "source": "router.ts",
+  "reason": "No reason provided",
+  "wasClean": false,
+  "code": 0
+}
+2024-12-22 16:56:30 [INFO] WebSocket connection initiated
+2024-12-22 16:56:30 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531955\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 16:56:30 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531955",
+      {
+        "currentTime": "2024-12-22T15:56:30.983Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 16:56:31 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531956\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:29.890Z\"}]"
+  }
+}
+2024-12-22 16:56:31 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531956",
+      {}
+    ]
+  }
+}
+2024-12-22 16:56:31 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531957\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:29.891Z\"}]"
+  }
+}
+2024-12-22 16:56:31 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531957",
+      {}
+    ]
+  }
+}
+2024-12-22 16:56:32 [INFO] WebSocket connection closed | {
+  "source": "router.ts",
+  "reason": "No reason provided",
+  "wasClean": false,
+  "code": 0
+}
+2024-12-22 16:56:35 [INFO] WebSocket connection initiated
+2024-12-22 16:56:35 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531958\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 16:56:35 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531958",
+      {
+        "currentTime": "2024-12-22T15:56:35.981Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 16:56:36 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531959\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:34.901Z\"}]"
+  }
+}
+2024-12-22 16:56:36 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531959",
+      {}
+    ]
+  }
+}
+2024-12-22 16:56:36 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531960\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:34.902Z\"}]"
+  }
+}
+2024-12-22 16:56:36 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531960",
+      {}
+    ]
+  }
+}
+2024-12-22 16:56:38 [INFO] WebSocket connection closed | {
+  "source": "router.ts",
+  "reason": "No reason provided",
+  "wasClean": false,
+  "code": 0
+}
+2024-12-22 16:56:40 [INFO] WebSocket connection initiated
+2024-12-22 16:56:40 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531961\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 16:56:41 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531961",
+      {
+        "currentTime": "2024-12-22T15:56:41.001Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 16:56:41 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531962\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:39.929Z\"}]"
+  }
+}
+2024-12-22 16:56:41 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531962",
+      {}
+    ]
+  }
+}
+2024-12-22 16:56:41 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531963\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:39.929Z\"}]"
+  }
+}
+2024-12-22 16:56:41 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531963",
+      {}
+    ]
+  }
+}
+2024-12-22 16:56:54 [INFO] WebSocket connection closed | {
+  "source": "router.ts",
+  "reason": "No reason provided",
+  "wasClean": false,
+  "code": 0
+}
+2024-12-22 16:56:54 [INFO] WebSocket connection initiated
+2024-12-22 16:56:54 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531964\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 16:56:54 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531964",
+      {
+        "currentTime": "2024-12-22T15:56:54.892Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 16:56:55 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531965\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:53.809Z\"}]"
+  }
+}
+2024-12-22 16:56:55 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531965",
+      {}
+    ]
+  }
+}
+2024-12-22 16:56:55 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531966\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:56:53.809Z\"}]"
+  }
+}
+2024-12-22 16:56:55 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531966",
+      {}
+    ]
+  }
+}
+2024-12-22 16:59:20 [INFO] WebSocket connection initiated
+2024-12-22 16:59:20 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531967\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 16:59:20 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531967",
+      {
+        "currentTime": "2024-12-22T15:59:20.556Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 16:59:20 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531968\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:59:19.472Z\"}]"
+  }
+}
+2024-12-22 16:59:20 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531968",
+      {}
+    ]
+  }
+}
+2024-12-22 16:59:20 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531969\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T15:59:19.472Z\"}]"
+  }
+}
+2024-12-22 16:59:20 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531969",
+      {}
+    ]
+  }
+}
+2024-12-22 17:04:20 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531970\",\"Heartbeat\",{}]"
+  }
+}
+2024-12-22 17:04:20 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531970",
+      {
+        "currentTime": "2024-12-22T16:04:20.582Z"
+      }
+    ]
+  }
+}
+2024-12-22 17:06:12 [INFO] WebSocket connection initiated
+2024-12-22 17:06:12 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531971\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:06:12 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531971",
+      {
+        "currentTime": "2024-12-22T16:06:12.341Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:06:12 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531972\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:06:11.282Z\"}]"
+  }
+}
+2024-12-22 17:06:12 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531972",
+      {}
+    ]
+  }
+}
+2024-12-22 17:06:12 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531973\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:06:11.282Z\"}]"
+  }
+}
+2024-12-22 17:06:12 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531973",
+      {}
+    ]
+  }
+}
+2024-12-22 17:06:43 [INFO] WebSocket connection initiated
+2024-12-22 17:06:44 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531974\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:06:44 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531974",
+      {
+        "currentTime": "2024-12-22T16:06:44.141Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:06:44 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531975\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:06:43.033Z\"}]"
+  }
+}
+2024-12-22 17:06:44 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531975",
+      {}
+    ]
+  }
+}
+2024-12-22 17:06:44 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531976\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:06:43.033Z\"}]"
+  }
+}
+2024-12-22 17:06:44 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531976",
+      {}
+    ]
+  }
+}
+2024-12-22 17:10:33 [INFO] WebSocket connection initiated
+2024-12-22 17:10:33 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531977\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:10:33 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531977",
+      {
+        "currentTime": "2024-12-22T16:10:33.559Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:10:33 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531978\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:10:32.469Z\"}]"
+  }
+}
+2024-12-22 17:10:33 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531978",
+      {}
+    ]
+  }
+}
+2024-12-22 17:10:33 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531979\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:10:32.469Z\"}]"
+  }
+}
+2024-12-22 17:10:33 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531979",
+      {}
+    ]
+  }
+}
+2024-12-22 17:10:49 [INFO] WebSocket connection initiated
+2024-12-22 17:10:50 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531980\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:10:50 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531980",
+      {
+        "currentTime": "2024-12-22T16:10:50.142Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:10:50 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531981\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:10:49.039Z\"}]"
+  }
+}
+2024-12-22 17:10:50 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531981",
+      {}
+    ]
+  }
+}
+2024-12-22 17:10:50 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531982\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:10:49.040Z\"}]"
+  }
+}
+2024-12-22 17:10:50 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531982",
+      {}
+    ]
+  }
+}
+2024-12-22 17:11:20 [INFO] WebSocket connection initiated
+2024-12-22 17:11:20 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531983\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:11:20 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531983",
+      {
+        "currentTime": "2024-12-22T16:11:20.248Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:11:20 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531984\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:11:19.144Z\"}]"
+  }
+}
+2024-12-22 17:11:20 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531984",
+      {}
+    ]
+  }
+}
+2024-12-22 17:11:20 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531985\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:11:19.144Z\"}]"
+  }
+}
+2024-12-22 17:11:20 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531985",
+      {}
+    ]
+  }
+}
+2024-12-22 17:13:02 [INFO] WebSocket connection initiated
+2024-12-22 17:13:02 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531986\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:13:02 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531986",
+      {
+        "currentTime": "2024-12-22T16:13:02.632Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:13:02 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531987\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:13:01.569Z\"}]"
+  }
+}
+2024-12-22 17:13:02 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531987",
+      {}
+    ]
+  }
+}
+2024-12-22 17:13:02 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531988\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:13:01.569Z\"}]"
+  }
+}
+2024-12-22 17:13:02 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531988",
+      {}
+    ]
+  }
+}
+2024-12-22 17:14:06 [INFO] WebSocket connection initiated
+2024-12-22 17:14:06 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531989\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:14:06 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531989",
+      {
+        "currentTime": "2024-12-22T16:14:06.844Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:14:07 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531990\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:14:05.779Z\"}]"
+  }
+}
+2024-12-22 17:14:07 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531990",
+      {}
+    ]
+  }
+}
+2024-12-22 17:14:07 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531991\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:14:05.779Z\"}]"
+  }
+}
+2024-12-22 17:14:07 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531991",
+      {}
+    ]
+  }
+}
+2024-12-22 17:14:57 [INFO] WebSocket connection initiated
+2024-12-22 17:14:57 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531992\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:14:57 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531992",
+      {
+        "currentTime": "2024-12-22T16:14:57.631Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:14:57 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531993\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:14:56.569Z\"}]"
+  }
+}
+2024-12-22 17:14:57 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531993",
+      {}
+    ]
+  }
+}
+2024-12-22 17:14:57 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531994\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:14:56.569Z\"}]"
+  }
+}
+2024-12-22 17:14:57 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531994",
+      {}
+    ]
+  }
+}
+2024-12-22 17:19:41 [INFO] WebSocket connection initiated
+2024-12-22 17:19:41 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531995\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:19:41 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531995",
+      {
+        "currentTime": "2024-12-22T16:19:41.850Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:19:42 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531996\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:19:40.789Z\"}]"
+  }
+}
+2024-12-22 17:19:42 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531996",
+      {}
+    ]
+  }
+}
+2024-12-22 17:19:42 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531997\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:19:40.790Z\"}]"
+  }
+}
+2024-12-22 17:19:42 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531997",
+      {}
+    ]
+  }
+}
+2024-12-22 17:20:25 [INFO] WebSocket connection initiated
+2024-12-22 17:20:25 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531998\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:20:25 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531998",
+      {
+        "currentTime": "2024-12-22T16:20:25.857Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:20:26 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531531999\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:20:24.799Z\"}]"
+  }
+}
+2024-12-22 17:20:26 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531531999",
+      {}
+    ]
+  }
+}
+2024-12-22 17:20:26 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532000\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:20:24.799Z\"}]"
+  }
+}
+2024-12-22 17:20:26 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532000",
+      {}
+    ]
+  }
+}
+2024-12-22 17:20:46 [INFO] WebSocket connection initiated
+2024-12-22 17:20:46 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532001\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:20:46 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532001",
+      {
+        "currentTime": "2024-12-22T16:20:46.850Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:20:47 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532002\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:20:45.799Z\"}]"
+  }
+}
+2024-12-22 17:20:47 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532002",
+      {}
+    ]
+  }
+}
+2024-12-22 17:20:47 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532003\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:20:45.799Z\"}]"
+  }
+}
+2024-12-22 17:20:47 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532003",
+      {}
+    ]
+  }
+}
+2024-12-22 17:21:58 [INFO] WebSocket connection initiated
+2024-12-22 17:21:58 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532004\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:21:58 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532004",
+      {
+        "currentTime": "2024-12-22T16:21:58.297Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:21:58 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532005\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:21:57.233Z\"}]"
+  }
+}
+2024-12-22 17:21:58 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532005",
+      {}
+    ]
+  }
+}
+2024-12-22 17:21:58 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532006\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:21:57.233Z\"}]"
+  }
+}
+2024-12-22 17:21:58 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532006",
+      {}
+    ]
+  }
+}
+2024-12-22 17:23:12 [INFO] WebSocket connection initiated
+2024-12-22 17:23:12 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532007\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:23:12 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532007",
+      {
+        "currentTime": "2024-12-22T16:23:12.614Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:23:12 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532008\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:23:11.506Z\"}]"
+  }
+}
+2024-12-22 17:23:12 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532008",
+      {}
+    ]
+  }
+}
+2024-12-22 17:23:12 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532009\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:23:11.506Z\"}]"
+  }
+}
+2024-12-22 17:23:12 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532009",
+      {}
+    ]
+  }
+}
+2024-12-22 17:27:19 [INFO] WebSocket connection initiated
+2024-12-22 17:27:19 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532010\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:27:19 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532010",
+      {
+        "currentTime": "2024-12-22T16:27:19.400Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:27:19 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532011\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:27:18.343Z\"}]"
+  }
+}
+2024-12-22 17:27:19 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532011",
+      {}
+    ]
+  }
+}
+2024-12-22 17:27:19 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532012\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:27:18.343Z\"}]"
+  }
+}
+2024-12-22 17:27:19 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532012",
+      {}
+    ]
+  }
+}
+2024-12-22 17:27:51 [INFO] WebSocket connection initiated
+2024-12-22 17:27:51 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532013\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:27:51 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532013",
+      {
+        "currentTime": "2024-12-22T16:27:51.443Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:27:51 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532014\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:27:50.383Z\"}]"
+  }
+}
+2024-12-22 17:27:51 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532014",
+      {}
+    ]
+  }
+}
+2024-12-22 17:27:51 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532015\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:27:50.383Z\"}]"
+  }
+}
+2024-12-22 17:27:51 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532015",
+      {}
+    ]
+  }
+}
+2024-12-22 17:28:10 [INFO] WebSocket connection initiated
+2024-12-22 17:28:10 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532016\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:28:10 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532016",
+      {
+        "currentTime": "2024-12-22T16:28:10.732Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:28:10 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532017\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:28:09.711Z\"}]"
+  }
+}
+2024-12-22 17:28:10 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532017",
+      {}
+    ]
+  }
+}
+2024-12-22 17:28:11 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532018\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:28:09.711Z\"}]"
+  }
+}
+2024-12-22 17:28:11 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532018",
+      {}
+    ]
+  }
+}
+2024-12-22 17:28:40 [INFO] WebSocket connection initiated
+2024-12-22 17:28:40 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532019\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:28:40 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532019",
+      {
+        "currentTime": "2024-12-22T16:28:40.872Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:28:41 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532020\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:28:39.853Z\"}]"
+  }
+}
+2024-12-22 17:28:41 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532020",
+      {}
+    ]
+  }
+}
+2024-12-22 17:28:41 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532021\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:28:39.853Z\"}]"
+  }
+}
+2024-12-22 17:28:41 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532021",
+      {}
+    ]
+  }
+}
+2024-12-22 17:29:10 [INFO] WebSocket connection initiated
+2024-12-22 17:29:11 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532022\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:29:11 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532022",
+      {
+        "currentTime": "2024-12-22T16:29:11.198Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:29:11 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532023\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:29:10.133Z\"}]"
+  }
+}
+2024-12-22 17:29:11 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532023",
+      {}
+    ]
+  }
+}
+2024-12-22 17:29:11 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532024\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:29:10.134Z\"}]"
+  }
+}
+2024-12-22 17:29:11 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532024",
+      {}
+    ]
+  }
+}
+2024-12-22 17:30:42 [INFO] WebSocket connection initiated
+2024-12-22 17:30:42 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532025\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:30:42 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532025",
+      {
+        "currentTime": "2024-12-22T16:30:42.202Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:30:42 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532026\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:30:41.143Z\"}]"
+  }
+}
+2024-12-22 17:30:42 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532026",
+      {}
+    ]
+  }
+}
+2024-12-22 17:30:42 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532027\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:30:41.143Z\"}]"
+  }
+}
+2024-12-22 17:30:42 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532027",
+      {}
+    ]
+  }
+}
+2024-12-22 17:31:03 [INFO] WebSocket connection initiated
+2024-12-22 17:31:03 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532028\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:31:03 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532028",
+      {
+        "currentTime": "2024-12-22T16:31:03.427Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:31:03 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532029\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:31:02.374Z\"}]"
+  }
+}
+2024-12-22 17:31:03 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532029",
+      {}
+    ]
+  }
+}
+2024-12-22 17:31:03 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532030\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:31:02.374Z\"}]"
+  }
+}
+2024-12-22 17:31:03 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532030",
+      {}
+    ]
+  }
+}
+2024-12-22 17:34:54 [INFO] WebSocket connection initiated
+2024-12-22 17:34:54 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532031\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:34:54 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532031",
+      {
+        "currentTime": "2024-12-22T16:34:54.982Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:34:55 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532032\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:34:53.925Z\"}]"
+  }
+}
+2024-12-22 17:34:55 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532032",
+      {}
+    ]
+  }
+}
+2024-12-22 17:34:55 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532033\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:34:53.926Z\"}]"
+  }
+}
+2024-12-22 17:34:55 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532033",
+      {}
+    ]
+  }
+}
+2024-12-22 17:35:15 [INFO] WebSocket connection initiated
+2024-12-22 17:35:15 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532034\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:35:15 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532034",
+      {
+        "currentTime": "2024-12-22T16:35:15.841Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:35:16 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532035\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:35:14.824Z\"}]"
+  }
+}
+2024-12-22 17:35:16 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532035",
+      {}
+    ]
+  }
+}
+2024-12-22 17:35:16 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532036\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:35:14.824Z\"}]"
+  }
+}
+2024-12-22 17:35:16 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532036",
+      {}
+    ]
+  }
+}
+2024-12-22 17:35:46 [INFO] WebSocket connection initiated
+2024-12-22 17:35:46 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532037\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:35:46 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532037",
+      {
+        "currentTime": "2024-12-22T16:35:46.423Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:35:46 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532038\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:35:45.370Z\"}]"
+  }
+}
+2024-12-22 17:35:46 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532038",
+      {}
+    ]
+  }
+}
+2024-12-22 17:35:46 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532039\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:35:45.370Z\"}]"
+  }
+}
+2024-12-22 17:35:46 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532039",
+      {}
+    ]
+  }
+}
+2024-12-22 17:36:06 [INFO] WebSocket connection initiated
+2024-12-22 17:36:06 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532040\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:36:06 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532040",
+      {
+        "currentTime": "2024-12-22T16:36:06.307Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:36:06 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532041\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:36:05.251Z\"}]"
+  }
+}
+2024-12-22 17:36:06 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532041",
+      {}
+    ]
+  }
+}
+2024-12-22 17:36:06 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532042\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:36:05.251Z\"}]"
+  }
+}
+2024-12-22 17:36:06 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532042",
+      {}
+    ]
+  }
+}
+2024-12-22 17:36:21 [INFO] WebSocket connection initiated
+2024-12-22 17:36:22 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532043\",\"BootNotification\",{\"chargePointVendor\":\"go-e\",\"chargePointModel\":\"go-eCharger\",\"chargePointSerialNumber\":\"051705\",\"firmwareVersion\":\"57.1\"}]"
+  }
+}
+2024-12-22 17:36:22 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532043",
+      {
+        "currentTime": "2024-12-22T16:36:22.198Z",
+        "interval": 300,
+        "status": "Accepted"
+      }
+    ]
+  }
+}
+2024-12-22 17:36:22 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532044\",\"StatusNotification\",{\"connectorId\":0,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:36:21.143Z\"}]"
+  }
+}
+2024-12-22 17:36:22 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532044",
+      {}
+    ]
+  }
+}
+2024-12-22 17:36:22 [INFO] Message received from client | {
+  "source": "router.ts",
+  "data": {
+    "message": "[2,\"531532045\",\"StatusNotification\",{\"connectorId\":1,\"errorCode\":\"NoError\",\"status\":\"Available\",\"timestamp\":\"2024-12-22T16:36:21.145Z\"}]"
+  }
+}
+2024-12-22 17:36:22 [INFO] Response sent to client | {
+  "source": "router.ts",
+  "data": {
+    "response": [
+      3,
+      "531532045",
+      {}
+    ]
+  }
+}

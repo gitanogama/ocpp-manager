@@ -2,7 +2,7 @@
     "configurations": [
       {
         "name": "Debug Hono API",
-        "cwd": "${workspaceFolder}",
+        "cwd": "${workspaceFolder}/api",
         "type": "node",
         "request": "attach",
         "port": 59929,
