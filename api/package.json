@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx tsx watch --inspect=0.0.0.0:59929 ./src/main.ts",
-    "kysely-codegen": "DATABASE_URL=postgresql://root:password@127.0.0.1/app kysely-codegen --camel-case --dialect postgres --out-file ./src/typings/db.d.ts",
+    "kysely-codegen": "kysely-codegen --camel-case --dialect sqlite --out-file ./src/lib/db/DBTypes.d.ts",
     "format": "prettier --write ."
   },
   "dependencies": {

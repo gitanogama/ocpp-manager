@@ -1,11 +1,10 @@
 import { CamelCasePlugin, Kysely, SqliteDialect } from "kysely";
 import Database from "better-sqlite3";
 import type { DB } from "./DBTypes";
+import { env } from "../globals/env";
 
-// Initialize the SQLite database using better-sqlite3
-const sqliteDb = new Database("app.db");
+const sqliteDb = new Database(env.get("DATABASE_URL"));
 
-// Initialize the Kysely instance
 export const db = new Kysely<DB>({
   dialect: new SqliteDialect({ database: sqliteDb }),
   plugins: [new CamelCasePlugin()],
