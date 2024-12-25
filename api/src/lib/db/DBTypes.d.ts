@@ -13,7 +13,7 @@ export interface Authorization {
   chargerId: number;
   createdAt: Generated<string>;
   expiryDate: Generated<string | null>;
-  id: Generated<number | null>;
+  id: Generated<number>;
   idTag: string;
   parentIdTag: Generated<string | null>;
   status: string;
@@ -23,7 +23,7 @@ export interface Authorization {
 export interface Chargers {
   createdAt: Generated<string>;
   firmwareVersion: Generated<string | null>;
-  id: Generated<number | null>;
+  id: Generated<number>;
   lastHeartbeat: Generated<string | null>;
   model: string;
   registrationStatus: Generated<string>;
@@ -37,7 +37,7 @@ export interface ChargerStatus {
   connectorId: number;
   errorCode: Generated<string | null>;
   heartbeatTimestamp: Generated<string | null>;
-  id: Generated<number | null>;
+  id: Generated<number>;
   info: Generated<string | null>;
   status: string;
   vendorErrorCode: Generated<string | null>;
@@ -48,7 +48,7 @@ export interface Connectors {
   connectorId: number;
   createdAt: Generated<string>;
   errorCode: Generated<string | null>;
-  id: Generated<number | null>;
+  id: Generated<number>;
   info: Generated<string | null>;
   maxCurrent: Generated<number>;
   status: Generated<string>;
@@ -64,14 +64,14 @@ export interface Migrations {
 
 export interface Settings {
   heartbeatInterval: Generated<number>;
-  id: Generated<number | null>;
+  id: Generated<number>;
   systemMaintenance: Generated<number>;
   updatedAt: Generated<string>;
 }
 
 export interface Telemetry {
   current: Generated<number>;
-  id: Generated<number | null>;
+  id: Generated<number>;
   meterValue: number;
   sampledValue: Generated<string | null>;
   timestamp: Generated<string>;
@@ -82,7 +82,7 @@ export interface Telemetry {
 export interface Transactions {
   connectorId: number;
   createdAt: Generated<string>;
-  id: Generated<number | null>;
+  id: Generated<number>;
   idTag: string;
   meterStart: number;
   meterStop: number | null;

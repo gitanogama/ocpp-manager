@@ -1,4 +1,4 @@
 import { hc } from 'hono/client';
 import type { AppType } from './types';
 
-const client = hc<AppType>('http://localhost:4000/').api;
+export const hClient = hc<AppType>('http://localhost:3000').api;

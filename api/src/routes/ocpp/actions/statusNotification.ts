@@ -8,6 +8,7 @@ import {
 import type { ActionHandler } from ".";
 import { Connectors } from "../../../lib/models/Connectors";
 import { ChargerStatus } from "../../../lib/models/ChargerStatus";
+import { Chargers } from "../../../lib/models/Chargers"; // Import Chargers model to verify charger existence
 
 export const statusNotification: ActionHandler = {
   handleRequest: async (
@@ -39,6 +40,15 @@ export const statusNotification: ActionHandler = {
     const currentTime = new Date().toISOString();
     const timestamp = reportedTimestamp || currentTime;
 
+    // Ensure the charger exists before proceeding
+    const chargerExists = await Chargers.findOne({
+      eb: (eb) => eb("id", "=", chargerId),
+    });
+    if (!chargerExists) {
+      throw new Error(`Charger with ID ${chargerId} does not exist`);
+    }
+
+    // Check if the connector exists
     let connector = await Connectors.findOne({
       eb: (eb) =>
         eb.and([
@@ -48,6 +58,7 @@ export const statusNotification: ActionHandler = {
     });
 
     if (connector) {
+      // Update the existing connector
       await connector.update({
         status,
         errorCode: errorCode || null,
@@ -56,6 +67,7 @@ export const statusNotification: ActionHandler = {
         updatedAt: currentTime,
       });
     } else {
+      // Insert a new connector
       connector = await Connectors.insert({
         chargerId,
         connectorId,
@@ -67,11 +79,13 @@ export const statusNotification: ActionHandler = {
       });
     }
 
+    // Check if chargerStatus exists for the connector
     let chargerStatus = await ChargerStatus.findOne({
       eb: (eb) => eb("connectorId", "=", connectorId),
     });
 
     if (chargerStatus) {
+      // Update the existing chargerStatus
       await chargerStatus.update({
         status,
         errorCode: errorCode || null,
@@ -80,6 +94,7 @@ export const statusNotification: ActionHandler = {
         heartbeatTimestamp: timestamp,
       });
     } else {
+      // Insert a new chargerStatus
       chargerStatus = await ChargerStatus.insert({
         connectorId,
         status,

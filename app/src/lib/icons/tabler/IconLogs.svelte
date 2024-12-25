@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { class: className = '' }: { class: string } = $props();
+	let { class: className = '' }: { class?: string } = $props();
 </script>
 
 <svg
@@ -12,7 +12,7 @@
 	stroke-width="2"
 	stroke-linecap="round"
 	stroke-linejoin="round"
-	class="icon icon-tabler icons-tabler-outline icon-tabler-logs {className}"
+	class="icon icon-tabler icons-tabler-outline icon-tabler-logs {className || ''}"
 	><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 12h.01" /><path
 		d="M4 6h.01"
 	/><path d="M4 18h.01" /><path d="M8 18h2" /><path d="M8 12h2" /><path d="M8 6h2" /><path

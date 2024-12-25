@@ -1,6 +1,6 @@
 -- Table: chargers
 CREATE TABLE chargers (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique charger ID
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,             -- Unique charger ID
     serial_number TEXT NOT NULL UNIQUE,               -- Unique serial number
     model TEXT NOT NULL,                              -- Charger model
     vendor TEXT NOT NULL,                             -- Vendor/manufacturer
@@ -18,7 +18,7 @@ CREATE TABLE chargers (
 
 -- Table: connectors
 CREATE TABLE connectors (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique connector ID
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,             -- Unique connector ID
     charger_id INTEGER NOT NULL REFERENCES chargers(id) ON DELETE CASCADE, -- Links to chargers
     connector_id INTEGER NOT NULL,                    -- Connector number
     status TEXT NOT NULL CHECK (status IN (
@@ -36,7 +36,7 @@ CREATE TABLE connectors (
 
 -- Table: charger_status
 CREATE TABLE charger_status (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique status ID
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,             -- Unique status ID
     connector_id INTEGER NOT NULL REFERENCES connectors(id) ON DELETE CASCADE, -- Links to connectors
     status TEXT NOT NULL,                             -- Connector status
     error_code TEXT DEFAULT '',                       -- Error code (if any)
@@ -48,7 +48,7 @@ CREATE TABLE charger_status (
 
 -- Table: transactions
 CREATE TABLE transactions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique transaction ID
+    id  INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,             -- Unique transaction ID
     connector_id INTEGER NOT NULL REFERENCES connectors(id) ON DELETE CASCADE, -- Links to connectors
     transaction_id INTEGER NOT NULL UNIQUE,           -- Unique OCPP transaction ID
     id_tag TEXT NOT NULL,                             -- Authorization ID tag
@@ -69,7 +69,7 @@ CREATE TABLE transactions (
 
 -- Table: telemetry
 CREATE TABLE telemetry (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique telemetry ID
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,             -- Unique telemetry ID
     transaction_id INTEGER NOT NULL REFERENCES transactions(transaction_id) ON DELETE CASCADE, -- Links to transactions
     timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, -- Telemetry timestamp
     meter_value INTEGER NOT NULL CHECK (meter_value >= 0), -- Meter reading
@@ -80,7 +80,7 @@ CREATE TABLE telemetry (
 
 -- Table: authorization
 CREATE TABLE authorization (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique authorization ID
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,             -- Unique authorization ID
     charger_id INTEGER NOT NULL REFERENCES chargers(id) ON DELETE CASCADE, -- Links to chargers
     id_tag TEXT NOT NULL UNIQUE,                      -- Authorization ID tag
     expiry_date TIMESTAMP DEFAULT NULL,               -- Expiry date of the authorization
@@ -94,7 +94,7 @@ CREATE TABLE authorization (
 
 -- Table: settings
 CREATE TABLE settings (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,             -- Unique settings ID
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,             -- Unique settings ID
     system_maintenance BOOLEAN NOT NULL DEFAULT false, -- Indicates if the system is under maintenance
     heartbeat_interval INTEGER NOT NULL DEFAULT 300,  -- Default interval (in seconds) for charger heartbeats
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP -- Timestamp of the last update

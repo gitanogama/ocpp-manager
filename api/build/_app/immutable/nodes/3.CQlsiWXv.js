@@ -1,0 +1,1 @@
+import"../chunks/disclose-version.Bg9kRutz.js";import"../chunks/legacy.CjaeNba4.js";import{B as o}from"../chunks/BasePage.BdjcuQGV.js";function m(t){o(t,{title:"Administration"})}export{m as component};

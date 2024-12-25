@@ -9,7 +9,7 @@
 </script>
 
 <div class="ml-10 {className}">
-	<p class="text-4xl font-bold">{title}</p>
+	<p class="mb-10 text-4xl font-bold">{title}</p>
 
 	<div>
 		{@render children?.()}

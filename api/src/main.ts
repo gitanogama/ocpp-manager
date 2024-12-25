@@ -6,12 +6,14 @@ import { serveStatic } from "@hono/node-server/serve-static";
 import { api } from "./routes/index";
 import { logger } from "./lib/globals/logger";
 import { customLogger } from "./middlewares/customLogger";
+import { cors } from "hono/cors";
 
 export function createApp() {
   const staticPath = "./build";
   const staticPathFallbackFile = path.join(staticPath, "index.html");
 
   const app = new Hono()
+    .use(cors())
     .use(customLogger)
     .use("*", serveStatic({ root: staticPath }));
 
