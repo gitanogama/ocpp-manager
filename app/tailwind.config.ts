@@ -1,5 +1,3 @@
-import containerQueries from '@tailwindcss/container-queries';
-import forms from '@tailwindcss/forms';
 import typography from '@tailwindcss/typography';
 import type { Config } from 'tailwindcss';
 
@@ -10,7 +8,7 @@ export default {
 		extend: {}
 	},
 
-	plugins: [typography, forms, containerQueries, require('daisyui')],
+	plugins: [typography, require('daisyui')],
 	daisyui: {
 		themes: 'light',
 		darkTheme: false,

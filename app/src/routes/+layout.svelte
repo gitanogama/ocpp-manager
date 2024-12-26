@@ -11,7 +11,6 @@
 	import IconLogs from '$lib/icons/tabler/IconLogs.svelte';
 	import { QueryClientProvider } from '@tanstack/svelte-query';
 	import { queryClient } from '$lib/queryClient';
-	import { hClient } from '$lib/hClient';
 
 	let { children } = $props();
 	let time = $state(new Date());
@@ -54,7 +53,7 @@
 		{#if loaded}
 			<aside
 				class={`${
-					isSidebarMinimized ? 'w-36' : 'w-96'
+					isSidebarMinimized ? 'w-24' : 'w-72'
 				} bg-base-200 text-base-content transition-width flex-shrink-0 duration-300`}
 			>
 				<div class="flex h-full flex-col p-4">
@@ -79,7 +78,7 @@
 								class:justify-center={isSidebarMinimized}
 								class="item flex items-center text-lg font-bold"
 							>
-								<Logo class="size-10" />
+								<Logo class="size-6" />
 
 								<p class:hidden={isSidebarMinimized} class="ml-4 text-nowrap">OCPP Manager</p>
 							</a>
@@ -91,7 +90,7 @@
 								class:justify-center={isSidebarMinimized}
 								class="item flex items-center text-lg font-bold"
 							>
-								<IconUniverse class=" size-10" />
+								<IconUniverse class=" size-6" />
 
 								<p class:hidden={isSidebarMinimized} class="ml-4 text-nowrap">Monitoring</p>
 							</a>
@@ -103,7 +102,7 @@
 								class:justify-center={isSidebarMinimized}
 								class="item flex items-center text-lg font-bold"
 							>
-								<IconInvoice class="size-10" />
+								<IconInvoice class="size-6" />
 
 								<p class:hidden={isSidebarMinimized} class="ml-4 text-nowrap">Invoices</p>
 							</a>
@@ -115,7 +114,7 @@
 								class:justify-center={isSidebarMinimized}
 								class="item flex items-center text-lg font-bold"
 							>
-								<IconAdjustments class="size-10" />
+								<IconAdjustments class="size-6" />
 								<p class:hidden={isSidebarMinimized} class="ml-4 text-nowrap">Administration</p>
 							</a>
 						</li>
@@ -126,7 +125,7 @@
 								class:justify-center={isSidebarMinimized}
 								class="item flex items-center text-lg font-bold"
 							>
-								<IconLogs class="size-10" />
+								<IconLogs class="size-6" />
 								<p class:hidden={isSidebarMinimized} class="ml-4 text-nowrap">Logs</p>
 							</a>
 						</li>

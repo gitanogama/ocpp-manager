@@ -1,9 +1,8 @@
 import { z } from "zod";
 import type { wsContext } from "../wsContext";
 import { BootNotificationConf, BootNotificationReq } from "../zodDefinitions";
-import type { ActionHandler } from ".";
-import { Chargers } from "../../../lib/models/Chargers";
 import { Settings } from "../../../lib/models/Settings";
+import type { ActionHandler } from ".";
 
 export const bootNotification: ActionHandler = {
   handleRequest: async (
@@ -23,46 +22,16 @@ export const bootNotification: ActionHandler = {
     }
 
     const currentTime = new Date().toISOString();
+    const charger = wsCtx.get("charger");
 
-    // Use `chargePointSerialNumber` consistently
-    const serialNumber = parsedData.chargePointSerialNumber || "";
-
-    // Check if the charger already exists
-    let charger = await Chargers.findOne({
-      eb: (eb) => eb("serialNumber", "=", serialNumber),
+    // Update charger details
+    await charger.update({
+      model: parsedData.chargePointModel,
+      vendor: parsedData.chargePointVendor,
+      firmwareVersion: parsedData.firmwareVersion,
+      lastHeartbeat: currentTime,
+      updatedAt: currentTime,
     });
-
-    if (charger) {
-      // Update the existing charger
-      await charger.update({
-        model: parsedData.chargePointModel,
-        vendor: parsedData.chargePointVendor,
-        firmwareVersion: parsedData.firmwareVersion,
-        lastHeartbeat: currentTime,
-        status: "Online", // Update to online during repeated boots
-        updatedAt: currentTime,
-      });
-    } else {
-      // Insert a new charger
-      charger = await Chargers.insert({
-        serialNumber,
-        model: parsedData.chargePointModel,
-        vendor: parsedData.chargePointVendor,
-        firmwareVersion: parsedData.firmwareVersion,
-        registrationStatus: "Pending",
-        lastHeartbeat: currentTime,
-        status: "Online",
-        updatedAt: currentTime,
-      });
-    }
-
-    // Get the registration status
-    const currentStatus = charger?.registrationStatus || "Pending";
-
-    // Set the charger ID in the WebSocket context
-    if (charger?.id) {
-      wsCtx.set("chargerId", charger.id);
-    }
 
     // Fetch settings
     const settings = await Settings.findOneOrThrow();
@@ -71,11 +40,14 @@ export const bootNotification: ActionHandler = {
     return {
       currentTime,
       interval: settings.heartbeatInterval,
-      status: currentStatus === "Pending" ? "Pending" : "Accepted",
+      status: charger.enabled ? "Accepted" : "Rejected",
     };
   },
 
-  handleResponse: async (payload: unknown): Promise<string> => {
+  handleResponse: async (
+    payload: unknown,
+    _wsCtx: wsContext
+  ): Promise<string> => {
     try {
       BootNotificationConf.parse(payload);
       return "Accepted";

@@ -4,22 +4,21 @@ import {
   StatusNotificationConf,
   StatusNotificationReq,
 } from "../zodDefinitions";
-
-import type { ActionHandler } from ".";
 import { Connectors } from "../../../lib/models/Connectors";
 import { ChargerStatus } from "../../../lib/models/ChargerStatus";
-import { Chargers } from "../../../lib/models/Chargers"; // Import Chargers model to verify charger existence
+import type { ActionHandler } from ".";
 
 export const statusNotification: ActionHandler = {
   handleRequest: async (
     payload: unknown,
-    globalContext: wsContext
+    wsCtx: wsContext
   ): Promise<z.infer<typeof StatusNotificationConf>> => {
     let parsedData: z.infer<typeof StatusNotificationReq>;
 
     try {
       parsedData = StatusNotificationReq.parse(payload);
-    } catch {
+    } catch (error) {
+      console.error("Payload parsing failed:", error);
       return {};
     }
 
@@ -32,79 +31,103 @@ export const statusNotification: ActionHandler = {
       timestamp: reportedTimestamp,
     } = parsedData;
 
-    const chargerId = globalContext.get("chargerId");
-    if (!chargerId) {
-      throw new Error("No chargerId found in global context");
+    const charger = wsCtx.get("charger");
+
+    if (!charger) {
+      throw new Error("Charger not found in context.");
     }
 
     const currentTime = new Date().toISOString();
     const timestamp = reportedTimestamp || currentTime;
 
-    // Ensure the charger exists before proceeding
-    const chargerExists = await Chargers.findOne({
-      eb: (eb) => eb("id", "=", chargerId),
+    console.debug("Processing statusNotification:", {
+      chargerId: charger.id,
+      connectorId,
+      status,
+      errorCode,
+      info,
+      vendorErrorCode,
+      timestamp,
     });
-    if (!chargerExists) {
-      throw new Error(`Charger with ID ${chargerId} does not exist`);
+
+    // Handle `connectorId = 0` as applying to the entire charge point
+    if (connectorId === 0) {
+      await charger.update({
+        lastHeartbeat: timestamp,
+        updatedAt: currentTime,
+      });
+
+      console.info(`Charge point status updated for chargerId: ${charger.id}`);
+      return {};
     }
 
-    // Check if the connector exists
+    // Ensure the `Connectors` record exists
     let connector = await Connectors.findOne({
       eb: (eb) =>
         eb.and([
-          eb("chargerId", "=", chargerId),
+          eb("chargerId", "=", charger.id),
           eb("connectorId", "=", connectorId),
         ]),
     });
 
-    if (connector) {
-      // Update the existing connector
-      await connector.update({
-        status,
-        errorCode: errorCode || null,
-        vendorErrorCode: vendorErrorCode || null,
-        info: info || null,
+    if (!connector) {
+      console.info(
+        `Creating new connector for chargerId ${charger.id} and connectorId ${connectorId}`
+      );
+      connector = await Connectors.insert({
+        chargerId: charger.id,
+        connectorId,
+        status: "Available", // Default initial status
         updatedAt: currentTime,
+        createdAt: currentTime,
       });
     } else {
-      // Insert a new connector
-      connector = await Connectors.insert({
-        chargerId,
-        connectorId,
+      await connector.update({
         status,
-        errorCode: errorCode || null,
-        vendorErrorCode: vendorErrorCode || null,
-        info: info || null,
         updatedAt: currentTime,
       });
     }
 
-    // Check if chargerStatus exists for the connector
+    // Fetch the connector ID to ensure the `ChargerStatus` foreign key constraint
+    const existingConnector = await Connectors.findOneOrThrow({
+      eb: (eb) =>
+        eb.and([
+          eb("chargerId", "=", charger.id),
+          eb("connectorId", "=", connectorId),
+        ]),
+    });
+
+    // Ensure `ChargerStatus` record exists or create a new one
     let chargerStatus = await ChargerStatus.findOne({
-      eb: (eb) => eb("connectorId", "=", connectorId),
+      eb: (eb) => eb("connectorId", "=", existingConnector.id),
     });
 
     if (chargerStatus) {
-      // Update the existing chargerStatus
+      console.info(`Updating charger status for connectorId: ${connectorId}`);
       await chargerStatus.update({
         status,
-        errorCode: errorCode || null,
-        vendorErrorCode: vendorErrorCode || null,
-        info: info || null,
+        errorCode: errorCode || "",
+        vendorErrorCode: vendorErrorCode || "",
+        info: info || "",
         heartbeatTimestamp: timestamp,
       });
     } else {
-      // Insert a new chargerStatus
-      chargerStatus = await ChargerStatus.insert({
-        connectorId,
+      console.info(
+        `Creating new charger status for chargerId ${charger.id}, connectorId ${connectorId}`
+      );
+      await ChargerStatus.insert({
+        connectorId: existingConnector.id,
         status,
-        errorCode: errorCode || null,
-        vendorErrorCode: vendorErrorCode || null,
-        info: info || null,
+        errorCode: errorCode || "",
+        vendorErrorCode: vendorErrorCode || "",
+        info: info || "",
         heartbeatTimestamp: timestamp,
       });
     }
 
+    console.info(
+      `Connector status updated for chargerId: ${charger.id}, connectorId: ${connectorId}`
+    );
     return {};
   },
 

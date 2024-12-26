@@ -6,7 +6,7 @@ import { z } from "zod";
 export const settings = new Hono()
   .get("/", async (c) => {
     const settings = await Settings.findOneOrThrow();
-    return c.json(settings);
+    return c.json(settings.serialize());
   })
   .patch(
     "/",
@@ -32,6 +32,6 @@ export const settings = new Hono()
             : undefined,
       });
 
-      return c.json(settings);
+      return c.json(settings.serialize());
     }
   );

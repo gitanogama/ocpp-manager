@@ -22,15 +22,16 @@ export interface Authorization {
 
 export interface Chargers {
   createdAt: Generated<string>;
+  enabled: Generated<number>;
   firmwareVersion: Generated<string | null>;
+  friendlyName: Generated<string>;
   id: Generated<number>;
   lastHeartbeat: Generated<string | null>;
-  model: string;
-  registrationStatus: Generated<string>;
-  serialNumber: string;
-  status: Generated<string>;
+  model: Generated<string>;
+  serialNumber: Generated<string>;
+  shortcode: string;
   updatedAt: Generated<string>;
-  vendor: string;
+  vendor: Generated<string>;
 }
 
 export interface ChargerStatus {
@@ -66,7 +67,6 @@ export interface Settings {
   heartbeatInterval: Generated<number>;
   id: Generated<number>;
   systemMaintenance: Generated<number>;
-  updatedAt: Generated<string>;
 }
 
 export interface Telemetry {

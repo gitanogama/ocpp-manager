@@ -1,13 +1,13 @@
 import z from "zod";
 import type { wsContext } from "../wsContext";
 import { AuthorizeConf, AuthorizeReq } from "../zodDefinitions";
-import type { ActionHandler } from ".";
 import { Authorization } from "../../../lib/models/Authorization";
+import type { ActionHandler } from ".";
 
 export const authorize: ActionHandler = {
   handleRequest: async (
     payload: unknown,
-    _wsCtx: wsContext
+    wsCtx: wsContext
   ): Promise<z.infer<typeof AuthorizeConf>> => {
     let parsedData: z.infer<typeof AuthorizeReq>;
 
@@ -17,6 +17,8 @@ export const authorize: ActionHandler = {
       return { idTagInfo: { status: "Invalid" } };
     }
 
+    const charger = wsCtx.get("charger");
+
     const authRecord = await Authorization.findOne({
       eb: (eb) => eb("idTag", "=", parsedData.idTag),
     });
@@ -25,6 +27,8 @@ export const authorize: ActionHandler = {
       ? { status: "Invalid" }
       : authRecord.expiryDate && new Date(authRecord.expiryDate) < new Date()
       ? { status: "Expired" }
+      : authRecord.chargerId !== charger.id
+      ? { status: "Blocked" }
       : {
           status: authRecord.status as
             | "Accepted"

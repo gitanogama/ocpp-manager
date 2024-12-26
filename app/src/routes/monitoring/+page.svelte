@@ -2,46 +2,86 @@
 	import BasePage from '$lib/components/BasePage.svelte';
 	import IconDots from '$lib/icons/tabler/IconDots.svelte';
 	import IconChargingPile from '$lib/icons/tabler/IconChargingPile.svelte';
-	import { createMutationChargerStatus, createQueryChargers } from '$lib/queryClient';
-	import { formatDistanceToNow } from 'date-fns';
+	import {
+		createMutationChargerUpdate,
+		createMutationChargerCreate,
+		createQueryChargers,
+		createMutationChargerDelete
+	} from '$lib/queryClient';
+	import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
 
 	const queryChargers = createQueryChargers();
-	const mutationChargerStatus = createMutationChargerStatus();
+	const mutationChargerUpdate = createMutationChargerUpdate();
+	const mutationChargerCreate = createMutationChargerCreate();
+	const mutationChargerDelete = createMutationChargerDelete();
 
 	let dialog: HTMLDialogElement;
+	let createDialog: HTMLDialogElement;
 
-	let selectedChargerId: number | null = null;
-	let selectedStatus: 'Accepted' | 'Pending' | 'Rejected' | 'Disabled' = 'Accepted';
+	let selectedChargerId = $state<number | null>(null);
+	let inputFriendlyName = $state('');
+	let inputShortcode = $state('');
+	let inputEnabled = $state(false);
 
-	const openModal = (id: number, currentStatus: string) => {
-		selectedChargerId = id;
-		selectedStatus = currentStatus as typeof selectedStatus;
+	const openModal = (charger: NonNullable<typeof $queryChargers.data>[0]) => {
+		selectedChargerId = charger.id;
+		inputFriendlyName = charger.friendlyName;
+		inputShortcode = charger.shortcode;
+		inputEnabled = Boolean(charger.enabled);
 		dialog.showModal();
 	};
 
-	const updateStatus = async () => {
+	const openCreateModal = () => {
+		inputFriendlyName = '';
+		inputShortcode = '';
+		inputEnabled = false;
+		createDialog.showModal();
+	};
+
+	const updateCharger = async () => {
 		if (!selectedChargerId) return;
-		$mutationChargerStatus.mutate(
-			{ id: selectedChargerId.toString(), status: selectedStatus },
+		$mutationChargerUpdate.mutate(
+			{
+				id: selectedChargerId.toString(),
+				friendlyName: inputFriendlyName,
+				enabled: inputEnabled,
+				shortcode: inputShortcode
+			},
 			{
 				onSuccess: () => dialog.close()
 			}
 		);
 	};
 
-	const getStatusClass = (status: string) => {
-		return (
+	const createCharger = async () => {
+		$mutationChargerCreate.mutate(
 			{
-				Accepted: 'badge bg-base-200 text-success',
-				Pending: 'badge bg-base-200 text-warning',
-				Rejected: 'badge bg-base-200 text-neutral',
-				Disabled: 'badge bg-base-200 text-secondary'
-			}[status] || 'badge'
+				friendlyName: inputFriendlyName,
+				shortcode: inputShortcode
+			},
+			{
+				onSuccess: () => createDialog.close()
+			}
+		);
+	};
+
+	const deleteCharger = async () => {
+		if (!selectedChargerId) return;
+		$mutationChargerDelete.mutate(
+			{ id: selectedChargerId.toString() },
+			{
+				onSuccess: () => dialog.close()
+			}
 		);
 	};
 </script>
 
 <BasePage title="Monitoring">
+	<div class="mb-4 flex justify-between">
+		<h1 class="text-lg font-bold">Chargers</h1>
+		<button class="btn btn-primary" onclick={openCreateModal}>Add Charger</button>
+	</div>
+
 	<div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
 		{#if $queryChargers.data}
 			{#each $queryChargers.data as charger}
@@ -50,50 +90,44 @@
 						<div class="flex items-center justify-between">
 							<div class="flex items-center gap-3">
 								<IconChargingPile class="text-primary h-6 w-6" />
-								<h2 class="card-title">{charger.model} ({charger.serialNumber})</h2>
+								<h2 class="card-title">{charger.friendlyName || 'Unknown'}</h2>
 							</div>
 							<button
 								class="btn btn-sm btn-ghost"
-								onclick={() => openModal(charger.id, charger.registrationStatus)}
-								aria-label="Open status modal"
+								onclick={() => openModal(charger)}
+								aria-label="Edit Charger"
 							>
 								<IconDots />
 							</button>
 						</div>
 						<p class="text-sm">
+							<span class="font-bold">Serial Number:</span>
+							{charger.serialNumber}
+						</p>
+						<p class="text-sm">
+							<span class="font-bold">Firmware Version:</span>
+							{charger.firmwareVersion}
+						</p>
+						<p class="text-sm">
 							<span class="font-bold">Vendor:</span>
 							{charger.vendor}
 						</p>
 						<p class="text-sm">
-							<span class="font-bold">Status:</span>
-							<span
-								class={charger.status === 'Online'
-									? 'badge bg-base-300 text-success'
-									: 'badge bg-base-300 text-error'}
-							>
-								{charger.status}
-							</span>
+							<span class="font-bold">Model:</span>
+							{charger.model}
 						</p>
+
 						<p class="text-sm">
-							<span class="font-bold">Firmware:</span>
-							{charger.firmwareVersion || 'Unknown'}
+							<span class="font-bold">Status</span>
+							{charger.enabled === 1 ? 'Enabled' : 'Disabled'}
 						</p>
 						<p class="text-sm">
 							<span class="font-bold">Last Heartbeat:</span>
-							<br />
-							<small>
-								{#if charger.lastHeartbeat}
-									{formatDistanceToNow(new Date(charger.lastHeartbeat), { addSuffix: true })}
-								{:else}
-									<span class="text-base-300">No data</span>
-								{/if}
-							</small>
+							{charger.lastHeartbeat ? formatDistanceToNow(new Date(charger.lastHeartbeat)) : 'N/A'}
 						</p>
 						<p class="text-sm">
-							<span class="font-bold">Registration:</span>
-							<span class={getStatusClass(charger.registrationStatus)}>
-								{charger.registrationStatus}
-							</span>
+							<span class="font-bold">Shortcode:</span>
+							{charger.shortcode}
 						</p>
 					</div>
 				</div>
@@ -104,34 +138,94 @@
 	</div>
 
 	<dialog bind:this={dialog} class="modal">
-		<form method="dialog" class="modal-box bg-base-200">
-			<h3 class="text-lg font-bold">Update Charger Status</h3>
-			<p class="py-2">Select a new status for the charger:</p>
+		<form onsubmit={updateCharger} method="dialog" class="modal-box bg-base-200">
+			<h3 class="text-lg font-bold">Edit Charger</h3>
 			<div class="form-control">
-				<!-- svelte-ignore a11y_label_has_associated_control -->
-				<label class="label">
-					<span class="label-text">Status</span>
-				</label>
-				<select class="select select-bordered bg-base-100" bind:value={selectedStatus}>
-					<option value="Accepted">Accepted</option>
-					<option value="Pending">Pending</option>
-					<option value="Rejected">Rejected</option>
-					<option value="Disabled">Disabled</option>
-				</select>
+				<label class="label">Friendly Name</label>
+				<input
+					required
+					minlength="1"
+					type="text"
+					class="input input-bordered"
+					bind:value={inputFriendlyName}
+				/>
 			</div>
-			<div class="modal-action">
+			<div class="form-control">
+				<label class="label">Shortcode</label>
+				<input
+					required
+					minlength="1"
+					type="text"
+					class="input input-bordered"
+					bind:value={inputShortcode}
+				/>
+			</div>
+			<div class="form-control">
+				<label class="label cursor-pointer">
+					<span>Enabled</span>
+					<input type="checkbox" class="toggle toggle-primary" bind:checked={inputEnabled} />
+				</label>
+			</div>
+			<div class="modal-action flex justify-between">
 				<button
-					class="btn btn-primary"
-					onclick={updateStatus}
-					disabled={$mutationChargerStatus.isPending}
+					class="btn btn-error"
+					onclick={deleteCharger}
+					type="button"
+					disabled={$mutationChargerDelete.isPending}
 				>
-					{#if $mutationChargerStatus.isPending}
+					{#if $mutationChargerDelete.isPending}
 						<span class="loading loading-spinner"></span>
 					{:else}
-						Update
+						Delete
 					{/if}
 				</button>
-				<button class="btn" onclick={() => dialog.close()}>Cancel</button>
+				<div>
+					<button class="btn btn-primary" type="submit" disabled={$mutationChargerUpdate.isPending}>
+						{#if $mutationChargerUpdate.isPending}
+							<span class="loading loading-spinner"></span>
+						{:else}
+							Update
+						{/if}
+					</button>
+					<button class="btn" onclick={() => dialog.close()}>Cancel</button>
+				</div>
+			</div>
+		</form>
+	</dialog>
+
+	<dialog bind:this={createDialog} class="modal">
+		<form onsubmit={createCharger} method="dialog" class="modal-box bg-base-200">
+			<h3 class="text-lg font-bold">Add Charger</h3>
+			<div class="form-control">
+				<label class="label">Friendly Name</label>
+				<input
+					required
+					minlength="1"
+					type="text"
+					class="input input-bordered"
+					bind:value={inputFriendlyName}
+				/>
+			</div>
+			<div class="form-control">
+				<label class="label">Shortcode</label>
+				<input
+					required
+					minlength="1"
+					type="text"
+					class="input input-bordered"
+					bind:value={inputShortcode}
+				/>
+			</div>
+
+			<div class="modal-action">
+				<button class="btn btn-primary" type="submit" disabled={$mutationChargerCreate.isPending}>
+					{#if $mutationChargerCreate.isPending}
+						<span class="loading loading-spinner"></span>
+					{:else}
+						Create
+					{/if}
+				</button>
+				<button class="btn" onclick={() => createDialog.close()}>Cancel</button>
 			</div>
 		</form>
 	</dialog>

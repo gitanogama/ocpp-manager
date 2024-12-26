@@ -1,12 +1,12 @@
+import type { Chargers } from "../../lib/models/Chargers";
+
 export class wsContext {
   private context: {
-    serialNumber?: string;
-    chargerId?: number;
-    lastHeartbeat?: Date;
+    charger: Chargers;
   };
 
-  constructor() {
-    this.context = {};
+  constructor(ctx: typeof this.context) {
+    this.context = ctx;
   }
 
   get<K extends keyof typeof this.context>(key: K): (typeof this.context)[K] {
@@ -26,9 +26,5 @@ export class wsContext {
 
   remove<K extends keyof typeof this.context>(key: K): void {
     delete this.context[key];
-  }
-
-  clear(): void {
-    this.context = {};
   }
 }
