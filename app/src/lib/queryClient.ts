@@ -6,7 +6,8 @@ export const queryClient = new QueryClient();
 export const queryKeys = {
 	chargers: ['chargers'],
 	logs: ['logs'],
-	settings: ['settings']
+	settings: ['settings'],
+	connectors: (key: string) => ['connectors', key]
 };
 
 export const createQueryChargers = () =>
@@ -15,23 +16,36 @@ export const createQueryChargers = () =>
 		queryFn: () => hClient.chargers.$get().then((x) => x.json())
 	});
 
+export const createQueryConnectorsOfCharger = (chargerId: string) =>
+	createQuery({
+		queryKey: queryKeys.connectors(chargerId),
+		queryFn: () =>
+			hClient.connectors.charger[':id']
+				.$get({
+					param: {
+						id: chargerId
+					}
+				})
+				.then((x) => x.json())
+	});
+
 export const createMutationChargerUpdate = () =>
 	createMutation({
 		mutationFn: ({
 			id,
 			friendlyName,
-			enabled,
+			status,
 			shortcode
 		}: {
 			id: string;
 			friendlyName: string;
-			enabled: boolean;
+			status: 'Accepted' | 'Rejected' | 'Pending';
 			shortcode: string;
 		}) =>
 			hClient.chargers[':id']
 				.$patch({
 					param: { id },
-					json: { enabled, shortcode, friendlyName }
+					json: { status, shortcode, friendlyName }
 				})
 				.then((x) => x.json()),
 		onSuccess() {

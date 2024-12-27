@@ -22,7 +22,6 @@ export interface Authorization {
 
 export interface Chargers {
   createdAt: Generated<string>;
-  enabled: Generated<number>;
   firmwareVersion: Generated<string | null>;
   friendlyName: Generated<string>;
   id: Generated<number>;
@@ -30,6 +29,7 @@ export interface Chargers {
   model: Generated<string>;
   serialNumber: Generated<string>;
   shortcode: string;
+  status: Generated<string>;
   updatedAt: Generated<string>;
   vendor: Generated<string>;
 }

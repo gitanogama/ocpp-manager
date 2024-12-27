@@ -16,9 +16,6 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "verbatimModuleSyntax": true,
-    "paths": {
-      "@/*": ["../*"]
-    }
   },
   "exclude": ["node_modules", "dist"]
 }

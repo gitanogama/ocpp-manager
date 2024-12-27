@@ -3,6 +3,7 @@ import { Chargers } from "../../lib/models/Chargers";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { HTTPException } from "hono/http-exception";
+import { ResetTypeEnum } from "../ocpp/types";
 
 export const chargers = new Hono()
   .get("/", async (c) => {
@@ -20,14 +21,14 @@ export const chargers = new Hono()
     zValidator(
       "json",
       z.object({
-        enabled: z.boolean(),
+        status: z.enum(["Accepted", "Rejected", "Pending"]).optional(),
         friendlyName: z.ostring(),
         shortcode: z.string().min(1).toLowerCase(),
       })
     ),
     async (c) => {
       const { id } = c.req.valid("param");
-      const { enabled, friendlyName, shortcode } = c.req.valid("json");
+      const { status, friendlyName, shortcode } = c.req.valid("json");
 
       const existingCharger = await Chargers.findOne({
         eb: (eb) => eb("shortcode", "=", shortcode),
@@ -42,7 +43,7 @@ export const chargers = new Hono()
       });
 
       await charger.update({
-        enabled: enabled ? 1 : 0,
+        status,
         friendlyName,
         shortcode,
       });
@@ -98,9 +99,38 @@ export const chargers = new Hono()
       const newCharger = await Chargers.insert({
         friendlyName,
         shortcode,
-        enabled: 1,
+        status: "Accepted",
       });
 
       return c.json(newCharger.serialize(), 201);
+    }
+  )
+  .post(
+    "/:id/reset",
+    zValidator(
+      "param",
+      z.object({
+        id: z.coerce.number(),
+      })
+    ),
+    zValidator(
+      "json",
+      z.object({
+        type: z.nativeEnum(ResetTypeEnum),
+      })
+    ),
+    async (c) => {
+      const { type } = c.req.valid("json");
+      const { id } = c.req.valid("param");
+
+      const charger = await Chargers.findOneOrThrow({
+        eb: (eb) => eb("id", "=", id),
+      });
+
+      const data = await charger.reset(type);
+
+      return c.json({
+        data,
+      });
     }
   );

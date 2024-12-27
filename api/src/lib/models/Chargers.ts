@@ -1,6 +1,20 @@
 import type { Selectable } from "kysely";
 import { generateBaseModel } from "./base";
 import type { DB } from "../db/DBTypes";
+import { ocppWebsocketManager } from "../../routes/ocpp/OCPPWebsocketManager";
+import { ResetRequestSchema, type ResetResponse } from "../../routes/ocpp/types";
+import type { z } from "zod";
 
 export interface Chargers extends Selectable<DB["chargers"]> {}
-export class Chargers extends generateBaseModel("chargers", "id") {}
+export class Chargers extends generateBaseModel("chargers", "id") {
+  async reset(type: "Hard" | "Soft") {
+    const message: z.infer<typeof ResetRequestSchema> = {
+      type,
+    };
+    return await ocppWebsocketManager.sendCall<ResetResponse>({
+      shortcode: this.shortcode,
+      action: "Reset",
+      message,
+    });
+  }
+}
