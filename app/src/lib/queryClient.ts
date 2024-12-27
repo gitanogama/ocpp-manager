@@ -4,25 +4,112 @@ import { hClient } from './hClient';
 export const queryClient = new QueryClient();
 
 export const queryKeys = {
-	chargers: ['chargers'],
-	logs: ['logs'],
-	settings: ['settings'],
-	connectors: (key: string) => ['connectors', key]
+	charger: ['charger'],
+	log: ['log'],
+	setting: ['setting'],
+	connector: (key: string) => ['connector', key],
+	rfidTag: ['rfid-tag'],
+	chargeAuthorization: ['charge-authorization']
 };
 
-export const createQueryChargers = (refetchInterval?: number) =>
+export const createQueryRfidTag = (refetchInterval?: number) =>
 	createQuery({
 		refetchInterval,
-		queryKey: queryKeys.chargers,
-		queryFn: () => hClient.chargers.$get().then((x) => x.json())
+		queryKey: queryKeys.rfidTag,
+		queryFn: () => hClient['rfid-tag'].$get().then((x) => x.json())
 	});
 
-export const createQueryConnectorsOfCharger = (chargerId: string, refetchInterval?: number) =>
+export const createMutationRfidTagDelete = () =>
+	createMutation({
+		mutationFn: ({ id }: { id: number }) =>
+			hClient['rfid-tag'][':id']
+				.$delete({
+					param: { id: id.toString() }
+				})
+				.then((x) => x.json()),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: queryKeys.rfidTag
+			});
+		}
+	});
+
+export const createMutationRfidTagCreate = () =>
+	createMutation({
+		mutationFn: ({
+			friendlyName,
+			expiryDate,
+			rfidTag,
+			wLimit
+		}: {
+			friendlyName: string;
+			expiryDate?: Date | null;
+			rfidTag: string;
+			wLimit?: number | null;
+		}) =>
+			hClient['rfid-tag']
+				.$post({
+					json: {
+						friendlyName,
+						expiryDate: expiryDate || null,
+						rfidTag,
+						wLimit: wLimit ?? null
+					}
+				})
+				.then((x) => x.json()),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: queryKeys.rfidTag
+			});
+		}
+	});
+
+export const createMutationRfidTagUpdate = () =>
+	createMutation({
+		mutationFn: ({
+			id,
+			friendlyName,
+			expiryDate,
+			rfidTag,
+			wLimit
+		}: {
+			id: number;
+			friendlyName: string;
+			expiryDate: Date | null;
+			rfidTag?: string;
+			wLimit: number | null;
+		}) =>
+			hClient['rfid-tag'][':id']
+				.$patch({
+					param: { id: id.toString() },
+					json: {
+						friendlyName,
+						expiryDate,
+						rfidTag,
+						wLimit
+					}
+				})
+				.then((x) => x.json()),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: queryKeys.rfidTag
+			});
+		}
+	});
+
+export const createQueryCharger = (refetchInterval?: number) =>
 	createQuery({
 		refetchInterval,
-		queryKey: queryKeys.connectors(chargerId),
+		queryKey: queryKeys.charger,
+		queryFn: () => hClient.charger.$get().then((x) => x.json())
+	});
+
+export const createQueryConnector = (chargerId: string, refetchInterval?: number) =>
+	createQuery({
+		refetchInterval,
+		queryKey: queryKeys.connector(chargerId),
 		queryFn: () =>
-			hClient.connectors.charger[':id']
+			hClient.connector.charger[':id']
 				.$get({
 					param: {
 						id: chargerId
@@ -44,7 +131,7 @@ export const createMutationChargerUpdate = () =>
 			status: 'Accepted' | 'Rejected' | 'Pending';
 			shortcode: string;
 		}) =>
-			hClient.chargers[':id']
+			hClient.charger[':id']
 				.$patch({
 					param: { id },
 					json: { status, shortcode, friendlyName }
@@ -52,7 +139,7 @@ export const createMutationChargerUpdate = () =>
 				.then((x) => x.json()),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: queryKeys.chargers
+				queryKey: queryKeys.charger
 			});
 		}
 	});
@@ -60,14 +147,14 @@ export const createMutationChargerUpdate = () =>
 export const createMutationChargerDelete = () =>
 	createMutation({
 		mutationFn: ({ id }: { id: string }) =>
-			hClient.chargers[':id']
+			hClient.charger[':id']
 				.$delete({
 					param: { id }
 				})
 				.then((x) => x.json()),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: queryKeys.chargers
+				queryKey: queryKeys.charger
 			});
 		}
 	});
@@ -75,25 +162,25 @@ export const createMutationChargerDelete = () =>
 export const createMutationChargerCreate = () =>
 	createMutation({
 		mutationFn: ({ friendlyName, shortcode }: { friendlyName: string; shortcode: string }) =>
-			hClient.chargers
+			hClient.charger
 				.$post({
 					json: { friendlyName, shortcode }
 				})
 				.then((x) => x.json()),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: queryKeys.chargers
+				queryKey: queryKeys.charger
 			});
 		}
 	});
 
-export const createQueryLogs = (refetchInterval: number, maxLines: number) =>
+export const createQueryLog = (refetchInterval: number, maxLines: number) =>
 	createQuery({
-		queryKey: [...queryKeys.logs, maxLines],
+		queryKey: [...queryKeys.log, maxLines],
 		refetchInterval,
 		queryFn: ({ queryKey }) => {
 			const [, maxLines] = queryKey;
-			return hClient.logs.stream
+			return hClient.log.stream
 				.$get({
 					query: {
 						maxLines: maxLines.toString()
@@ -104,13 +191,13 @@ export const createQueryLogs = (refetchInterval: number, maxLines: number) =>
 		}
 	});
 
-export const createQuerySettings = () =>
+export const createQuerySetting = () =>
 	createQuery({
-		queryKey: queryKeys.settings,
-		queryFn: () => hClient.settings.$get().then((x) => x.json())
+		queryKey: queryKeys.setting,
+		queryFn: () => hClient.setting.$get().then((x) => x.json())
 	});
 
-export const createMutationSettings = () =>
+export const createMutationSetting = () =>
 	createMutation({
 		mutationFn: ({
 			heartbeatInterval,
@@ -119,14 +206,105 @@ export const createMutationSettings = () =>
 			heartbeatInterval?: number;
 			systemMaintenance?: boolean;
 		}) =>
-			hClient.settings
+			hClient.setting
 				.$patch({
 					json: { heartbeatInterval, systemMaintenance }
 				})
 				.then((x) => x.json()),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: queryKeys.chargers
+				queryKey: queryKeys.charger
+			});
+		}
+	});
+
+export const createQueryChargeAuthorization = (refetchInterval?: number) =>
+	createQuery({
+		refetchInterval,
+		queryKey: queryKeys.chargeAuthorization,
+		queryFn: () => hClient['charge-authorization'].$get().then((x) => x.json())
+	});
+
+export const createMutationChargeAuthorizationCreate = () =>
+	createMutation({
+		mutationFn: ({
+			chargerId,
+			connectorId,
+			expiryDate,
+			rfidTagId,
+			wLimit
+		}: {
+			chargerId: number;
+			connectorId: number | null;
+			expiryDate: Date | null;
+			rfidTagId: number | null;
+			wLimit: number | null;
+		}) =>
+			hClient['charge-authorization']
+				.$post({
+					json: {
+						chargerId,
+						connectorId,
+						expiryDate,
+						rfidTagId,
+						wLimit
+					}
+				})
+				.then((x) => x.json()),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ['charge-authorization']
+			});
+		}
+	});
+
+export const createMutationChargeAuthorizationUpdate = () =>
+	createMutation({
+		mutationFn: ({
+			id,
+			chargerId,
+			connectorId,
+			expiryDate,
+			rfidTagId,
+			wLimit
+		}: {
+			id: number;
+			chargerId: number;
+			connectorId: number | null;
+			expiryDate: Date | null;
+			rfidTagId: number | null;
+			wLimit: number | null;
+		}) =>
+			hClient['charge-authorization'][':id']
+				.$patch({
+					param: { id: id.toString() },
+					json: {
+						chargerId,
+						connectorId,
+						expiryDate,
+						rfidTagId,
+						wLimit
+					}
+				})
+				.then((x) => x.json()),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ['charge-authorization']
+			});
+		}
+	});
+
+export const createMutationChargeAuthorizationDelete = () =>
+	createMutation({
+		mutationFn: ({ id }: { id: number }) =>
+			hClient['charge-authorization'][':id']
+				.$delete({
+					param: { id: id.toString() }
+				})
+				.then((x) => x.json()),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: ['charge-authorization']
 			});
 		}
 	});

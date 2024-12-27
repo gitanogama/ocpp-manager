@@ -1,6 +1,5 @@
 import z from "zod";
-import { Connectors } from "../../../lib/models/Connectors";
-import { ChargerStatus } from "../../../lib/models/ChargerStatus";
+import { Connector } from "../../../lib/models/Connector";
 import type { ActionHandler } from "./ActionHandler";
 import {
   StatusNotificationRequestSchema,
@@ -26,9 +25,9 @@ export const statusNotification: ActionHandler = {
     const {
       connectorId,
       status,
-      errorCode,
-      info,
-      vendorErrorCode,
+      errorCode: _errorCode,
+      info: _info,
+      vendorErrorCode: _vendorErrorCode,
       timestamp: reportedTimestamp,
     } = parsedData;
 
@@ -38,21 +37,19 @@ export const statusNotification: ActionHandler = {
       throw new Error("Charger not found in context.");
     }
 
-    const currentTime = new Date().toISOString();
-    const timestamp = reportedTimestamp || currentTime;
+    const timestamp = reportedTimestamp || new Date().toISOString();
 
     // Handle `connectorId = 0` as applying to the entire charge point
     if (connectorId === 0) {
       await charger.update({
         lastHeartbeat: timestamp,
-        updatedAt: currentTime,
       });
 
       return {};
     }
 
     // Ensure the `Connectors` record exists
-    let connector = await Connectors.findOne({
+    let connector = await Connector.findOne({
       eb: (eb) =>
         eb.and([
           eb("chargerId", "=", charger.id),
@@ -64,52 +61,25 @@ export const statusNotification: ActionHandler = {
       console.info(
         `Creating new connector for chargerId ${charger.id} and connectorId ${connectorId}`
       );
-      connector = await Connectors.insert({
+      connector = await Connector.insert({
         chargerId: charger.id,
         connectorId,
         status: "Available", // Default initial status
-        updatedAt: currentTime,
-        createdAt: currentTime,
       });
     } else {
       await connector.update({
         status,
-        updatedAt: currentTime,
       });
     }
 
     // Fetch the connector ID to ensure the `ChargerStatus` foreign key constraint
-    const existingConnector = await Connectors.findOneOrThrow({
+    const existingConnector = await Connector.findOneOrThrow({
       eb: (eb) =>
         eb.and([
           eb("chargerId", "=", charger.id),
           eb("connectorId", "=", connectorId),
         ]),
     });
-
-    // Ensure `ChargerStatus` record exists or create a new one
-    let chargerStatus = await ChargerStatus.findOne({
-      eb: (eb) => eb("connectorId", "=", existingConnector.id),
-    });
-
-    if (chargerStatus) {
-      await chargerStatus.update({
-        status,
-        errorCode: errorCode || "",
-        vendorErrorCode: vendorErrorCode || "",
-        info: info || "",
-        heartbeatTimestamp: timestamp,
-      });
-    } else {
-      await ChargerStatus.insert({
-        connectorId: existingConnector.id,
-        status,
-        errorCode: errorCode || "",
-        vendorErrorCode: vendorErrorCode || "",
-        info: info || "",
-        heartbeatTimestamp: timestamp,
-      });
-    }
 
     return {};
   },

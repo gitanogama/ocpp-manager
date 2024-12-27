@@ -1,18 +1,20 @@
 import { Hono } from "hono";
 import type { NodeWebSocket } from "@hono/node-ws";
 import { ocpp } from "./ocpp";
-import { logs } from "./logs";
-import { settings } from "./settings";
-import { chargers } from "./chargers";
-import { authorizations } from "./authorizations";
-import { connectors } from "./connectors";
+import { log } from "./log";
+import { setting } from "./setting";
+import { charger } from "./charger";
+import { chargeAuthorization } from "./chargeAuthorization";
+import { connector } from "./connector";
+import { rfidTag } from "./rfid-tag/+index";
 
 export function api(nodeWs: NodeWebSocket) {
   return new Hono()
     .route("/ocpp", ocpp(nodeWs))
-    .route("/logs", logs)
-    .route("/settings", settings)
-    .route("/chargers", chargers)
-    .route("/authorizations", authorizations)
-    .route("/connectors", connectors);
+    .route("/log", log)
+    .route("/setting", setting)
+    .route("/charger", charger)
+    .route("/charge-authorization", chargeAuthorization)
+    .route("/connector", connector)
+    .route("/rfid-tag", rfidTag);
 }

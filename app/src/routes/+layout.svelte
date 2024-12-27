@@ -11,6 +11,10 @@
 	import IconLogs from '$lib/icons/tabler/IconLogs.svelte';
 	import { QueryClientProvider } from '@tanstack/svelte-query';
 	import { queryClient } from '$lib/queryClient';
+	import IconLockPin from '$lib/icons/tabler/IconLockPin.svelte';
+	import LayoutObjectDrawer from '$lib/components/LayoutObjectDrawer.svelte';
+	import IconDeviceAirtag from '$lib/icons/tabler/IconDeviceAirtag.svelte';
+	import IconBolt from '$lib/icons/tabler/IconBolt.svelte';
 
 	let { children } = $props();
 	let time = $state(new Date());
@@ -97,6 +101,42 @@
 						</li>
 						<li>
 							<a
+								href="/transactions"
+								class:btn-active={isActiveRoute('/transactions')}
+								class:justify-center={isSidebarMinimized}
+								class="item flex items-center text-lg font-bold"
+							>
+								<IconBolt class=" size-6" />
+
+								<p class:hidden={isSidebarMinimized} class="ml-4 text-nowrap">Transactions</p>
+							</a>
+						</li>
+						<li>
+							<a
+								href="/rfid-tags"
+								class:btn-active={isActiveRoute('/rfid-tags')}
+								class:justify-center={isSidebarMinimized}
+								class="item flex items-center text-lg font-bold"
+							>
+								<IconDeviceAirtag class=" size-6" />
+
+								<p class:hidden={isSidebarMinimized} class="ml-4 text-nowrap">RFID Tags</p>
+							</a>
+						</li>
+						<li>
+							<a
+								href="/authorization"
+								class:btn-active={isActiveRoute('/authorization')}
+								class:justify-center={isSidebarMinimized}
+								class="item flex items-center text-lg font-bold"
+							>
+								<IconLockPin class=" size-6" />
+
+								<p class:hidden={isSidebarMinimized} class="ml-4 text-nowrap">Authorization</p>
+							</a>
+						</li>
+						<li>
+							<a
 								href="/invoices"
 								class:btn-active={isActiveRoute('/invoices')}
 								class:justify-center={isSidebarMinimized}
@@ -145,4 +185,5 @@
 			</div>
 		{/if}
 	</div>
+	<LayoutObjectDrawer />
 </QueryClientProvider>

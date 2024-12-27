@@ -20,7 +20,6 @@ export const heartbeat: ActionHandler = {
     // Update the lastHeartbeat for the charger
     await charger.update({
       lastHeartbeat: currentTime,
-      updatedAt: currentTime,
     });
 
     return { currentTime };

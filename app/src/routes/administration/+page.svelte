@@ -1,8 +1,8 @@
 <script lang="ts">
 	import BasePage from '$lib/components/BasePage.svelte';
-	import { createMutationSettings, createQuerySettings } from '$lib/queryClient';
-	const querySettings = createQuerySettings();
-	const mutationSettings = createMutationSettings();
+	import { createMutationSetting, createQuerySetting } from '$lib/queryClient';
+	const querySettings = createQuerySetting();
+	const mutationSettings = createMutationSetting();
 
 	let heartbeatInterval = $state(300);
 	let systemMaintenance = $state(false);

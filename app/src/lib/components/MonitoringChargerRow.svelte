@@ -1,37 +1,99 @@
 <script lang="ts">
-	import type { hClient } from '$lib/hClient';
-	import IconChargingPile from '$lib/icons/tabler/IconChargingPile.svelte';
-	import IconPlug from '$lib/icons/tabler/IconPlug.svelte';
-	import IconChevronRight from '$lib/icons/tabler/IconChevronRight.svelte';
 	import {
 		createMutationChargerDelete,
 		createMutationChargerUpdate,
-		createQueryConnectorsOfCharger
+		createQueryConnector
 	} from '$lib/queryClient';
-	import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
+	import { drawerStore } from '$lib/drawerStore';
+	import { z } from 'zod';
 	import type { InferResponseType } from 'hono';
+	import type { hClient } from '$lib/hClient';
+	import IconChargingPile from '$lib/icons/tabler/IconChargingPile.svelte';
+	import { formatDistanceToNow } from 'date-fns';
+	import IconPlug from '$lib/icons/tabler/IconPlug.svelte';
 
-	const { charger }: { charger: InferResponseType<(typeof hClient)['chargers']['$get']>[0] } =
+	const { charger }: { charger: InferResponseType<(typeof hClient)['charger']['$get']>[0] } =
 		$props();
 
-	const queryConnectors = createQueryConnectorsOfCharger(charger.id.toString(), 10000);
+	const queryConnectors = createQueryConnector(charger.id.toString(), 10000);
 
 	const mutationChargerUpdate = createMutationChargerUpdate();
 	const mutationChargerDelete = createMutationChargerDelete();
 
-	let dialog: HTMLDialogElement;
-	let inputFriendlyName = $state(charger.friendlyName || '');
-	let inputShortcode = $state(charger.shortcode || '');
-	let inputStatus = $state<'Accepted' | 'Rejected' | 'Pending'>(charger.status as any);
-
-	const updateCharger = () => {
-		$mutationChargerUpdate.mutate({
-			id: charger.id.toString(),
-			friendlyName: inputFriendlyName,
-			status: inputStatus,
-			shortcode: inputShortcode
+	const openEditDrawer = () => {
+		drawerStore.open({
+			header: 'Edit Charger',
+			fields: [
+				{
+					label: 'Friendly Name',
+					name: 'friendlyName',
+					type: 'text',
+					defaultValue: charger.friendlyName || '',
+					validation: z.string().min(1, { message: 'Please enter a friendly name.' })
+				},
+				{
+					label: 'Shortcode',
+					name: 'shortcode',
+					type: 'text',
+					defaultValue: charger.shortcode || '',
+					validation: z
+						.string()
+						.regex(/^[a-z0-9-]+$/, {
+							message:
+								'Only lowercase letters, numbers, and dashes are allowed (no spaces or other characters).'
+						})
+						.min(5, { message: 'Minimum length is 5 characters.' })
+						.max(30, { message: 'Maximum length is 30 characters.' })
+				},
+				{
+					label: 'Status',
+					name: 'status',
+					type: 'dropdown',
+					options: [
+						{ label: 'Pending', value: 'Pending' },
+						{ label: 'Accepted', value: 'Accepted' },
+						{ label: 'Rejected', value: 'Rejected' }
+					],
+					defaultValue: charger.status || 'Pending',
+					validation: z.enum(['Pending', 'Accepted', 'Rejected'])
+				}
+			] as const,
+			actions: [
+				{
+					label: 'Save',
+					key: 'save',
+					class: 'btn-primary',
+					buttonType: 'submit',
+					callback: ({ fieldValues, close }) => {
+						$mutationChargerUpdate.mutate({
+							id: charger.id.toString(),
+							friendlyName: fieldValues.friendlyName,
+							status: fieldValues.status as any,
+							shortcode: fieldValues.shortcode
+						});
+						close();
+					}
+				},
+				{
+					label: 'Cancel',
+					key: 'cancel',
+					class: 'btn-outline',
+					callback: ({ fieldValues, close }) => {
+						close();
+					}
+				},
+				{
+					label: 'Delete',
+					key: 'delete',
+					class: 'btn-error btn-outline',
+					buttonType: 'button',
+					callback: ({ fieldValues, close }) => {
+						$mutationChargerDelete.mutate({ id: charger.id.toString() });
+						close();
+					}
+				}
+			]
 		});
-		dialog.close();
 	};
 
 	const getStatusColor = (status: string) => {
@@ -48,16 +110,9 @@
 		};
 		return (colors as any)[status] || 'bg-base-300';
 	};
-
-	function deleteCharger() {
-		$mutationChargerDelete.mutate({
-			id: charger.id.toString()
-		});
-	}
 </script>
 
-<div class="bg-base-200 rounded-lg p-6 shadow-md">
-	<!-- Charger Header with Status -->
+<div class="bg-base-200 container mx-auto rounded-lg px-4 py-6 shadow-md">
 	<div class="mb-6 flex items-center justify-between">
 		<div class="flex items-center gap-4">
 			<IconChargingPile class="text-primary h-10 w-10" />
@@ -68,11 +123,9 @@
 				<p class="text-sm text-gray-500">{charger.vendor || 'Unknown Vendor'}</p>
 			</div>
 		</div>
-		<!-- Edit Button -->
-		<button class="btn btn-ghost btn-sm" onclick={() => dialog.showModal()}> Edit </button>
+		<button class="btn btn-ghost btn-sm" onclick={openEditDrawer}> Edit </button>
 	</div>
 
-	<!-- Charger Status -->
 	<div class="mb-6">
 		<span
 			class="badge badge-lg badge-outline p-3"
@@ -83,7 +136,6 @@
 		</span>
 	</div>
 
-	<!-- Charger Information Table -->
 	<table class="bg-base-300 table w-full overflow-hidden rounded-lg">
 		<tbody>
 			<tr>
@@ -119,17 +171,16 @@
 		</tbody>
 	</table>
 
-	<!-- Connectors Section -->
 	<div class="mt-6">
 		<h3 class="mb-4 text-xl font-bold">Connectors</h3>
 		<div class="space-y-4">
 			{#if $queryConnectors.data}
 				{#each $queryConnectors.data as connector}
 					<button
-						class="bg-base-300 hover:bg-base-100 flex w-full items-center justify-between rounded-lg p-4 shadow"
+						class="bg-base-300 hover:bg-base-100 flex w-full items-center justify-between rounded-lg p-4 shadow-md"
 					>
 						<div class="flex items-center gap-4">
-							<IconPlug class=" h-6 w-6 text-current" />
+							<IconPlug class="h-6 w-6 text-current" />
 							<div class="flex flex-col text-left">
 								<span class="font-bold">Connector {connector.connectorId}</span>
 								<span class="text-sm">Max Current: {connector.maxCurrent}A</span>
@@ -139,11 +190,8 @@
 							</div>
 						</div>
 						<div class="flex items-center gap-4">
-							<div class="flex items-center gap-4">
-								<p class="text-sm font-medium">{connector.status}</p>
-								<div class={`h-2 w-16 rounded-full ${getStatusColor(connector.status)}`}></div>
-							</div>
-							<IconChevronRight class="h-5 w-5 text-gray-400" />
+							<p class="text-sm font-medium">{connector.status}</p>
+							<div class={`h-2 w-16 rounded-full ${getStatusColor(connector.status)}`}></div>
 						</div>
 					</button>
 				{/each}
@@ -151,39 +199,3 @@
 		</div>
 	</div>
 </div>
-
-<!-- Edit Charger Modal -->
-<dialog bind:this={dialog} class="modal">
-	<form method="dialog" class="modal-box">
-		<h3 class="text-lg font-bold">Edit Charger</h3>
-		<div class="mt-4 space-y-4">
-			<div class="form-control">
-				<label class="label">
-					<span class="label-text">Friendly Name</span>
-				</label>
-				<input type="text" class="input input-bordered" bind:value={inputFriendlyName} />
-			</div>
-			<div class="form-control">
-				<label class="label">
-					<span class="label-text">Shortcode</span>
-				</label>
-				<input type="text" class="input input-bordered" bind:value={inputShortcode} />
-			</div>
-			<div class="form-control">
-				<label class="label">
-					<span class="label-text">Status</span>
-				</label>
-				<select class="select select-bordered" bind:value={inputStatus}>
-					<option value="Pending">Pending</option>
-					<option value="Accepted">Accepted</option>
-					<option value="Rejected">Rejected</option>
-				</select>
-			</div>
-		</div>
-		<div class="modal-action">
-			<button class="btn btn-error btn-outline mr-auto" onclick={deleteCharger}> Delete </button>
-			<button class="btn btn-primary" type="submit" onclick={updateCharger}> Save </button>
-			<button class="btn" onclick={() => dialog.close()}> Cancel </button>
-		</div>
-	</form>
-</dialog>

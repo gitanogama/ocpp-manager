@@ -1,13 +1,10 @@
 import { Umzug } from "umzug";
 import path from "path";
 import fs from "fs";
-import DatabaseClass from "better-sqlite3";
-import { env } from "../globals/env";
+import { sql } from "kysely";
+import { db } from "./db";
 import { logger } from "../globals/logger";
 
-type Database = InstanceType<typeof DatabaseClass>;
-
-// Ensure the migrations directory exists
 function ensureDirSync(dirPath: string) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
@@ -18,34 +15,28 @@ function ensureDirSync(dirPath: string) {
 const MIGRATIONS_DIR = "./src/lib/db/migrations";
 ensureDirSync(MIGRATIONS_DIR);
 
-// Setup the SQLite DB connection
-logger.info("🚀 Setting up SQLite database...");
-const db = new DatabaseClass(env.get("DATABASE_URL"));
-
-// Helper function for running SQL scripts with `db.exec`
-function runQueryWithTransaction(db: Database, sql: string) {
+async function runQueryWithTransaction(sqlQuery: string) {
   try {
-    db.exec("BEGIN TRANSACTION");
-    db.exec(sql); // Execute the full SQL script
-    db.exec("COMMIT");
+    await db.transaction().execute(async (trx) => {
+      await sql.raw("BEGIN").execute(trx);
+      await sql.raw(sqlQuery).execute(trx);
+      await sql.raw("COMMIT").execute(trx);
+    });
     logger.info("✅ Query executed successfully");
   } catch (error: any) {
-    db.exec("ROLLBACK");
+    await sql.raw("ROLLBACK").execute(db);
     logger.error(`❌ Query error: ${error.message}`);
     throw error;
   }
 }
 
-// Custom storage class for Umzug using better-sqlite3
-class SQLiteStorage {
-  constructor(private db: Database) {}
-
+class PostgresStorage {
   async logMigration(migration: { name: string }) {
     const migrationName = migration.name.toLowerCase();
     try {
-      this.db
-        .prepare("INSERT INTO migrations (name) VALUES (?)")
-        .run(migrationName);
+      await sql`INSERT INTO migration (name) VALUES (${migrationName})`.execute(
+        db
+      );
       logger.info(`✅ Logged migration: ${migrationName}`);
     } catch (error: any) {
       logger.error(`❌ Error logging migration: ${error.message}`);
@@ -56,9 +47,9 @@ class SQLiteStorage {
   async unlogMigration(migration: { name: string }) {
     const migrationName = migration.name.toLowerCase();
     try {
-      this.db
-        .prepare("DELETE FROM migrations WHERE name = ?")
-        .run(migrationName);
+      await sql`DELETE FROM migration WHERE name = ${migrationName}`.execute(
+        db
+      );
       logger.info(`✅ Unlogged migration: ${migrationName}`);
     } catch (error: any) {
       logger.error(`❌ Error removing migration log: ${error.message}`);
@@ -68,12 +59,9 @@ class SQLiteStorage {
 
   async executed(): Promise<string[]> {
     try {
-      const rows = this.db
-        .prepare("SELECT name FROM migrations")
-        .all() as Array<{
-        name: string;
-      }>;
-      const executedMigrations = rows.map((r) => r.name);
+      const { rows } = await sql`SELECT name FROM migration`.execute(db);
+
+      const executedMigrations = rows.map((row: any) => row.name);
       logger.info(
         `✅ Retrieved executed migrations: ${executedMigrations.join(", ")}`
       );
@@ -85,22 +73,17 @@ class SQLiteStorage {
   }
 }
 
-// Create the migrations table if it doesn’t exist
-logger.info("⏳ Setting up migrations table...");
-runQueryWithTransaction(
-  db,
-  `
-  CREATE TABLE IF NOT EXISTS migrations (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+logger.info("⏳ Setting up migration table...");
+await runQueryWithTransaction(`
+  CREATE TABLE IF NOT EXISTS migration (
+    id SERIAL PRIMARY KEY,
     name TEXT UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   );
-`
-);
+`);
 
 logger.info(`📂 Searching for migrations in: ${MIGRATIONS_DIR}`);
 
-// Create the Umzug instance
 const umzug = new Umzug({
   migrations: {
     glob: path.join(MIGRATIONS_DIR, "*.sql"),
@@ -108,10 +91,10 @@ const umzug = new Umzug({
       name,
       path: filePath,
       up: async () => {
-        const sql = fs.readFileSync(filePath!, "utf8");
+        const sqlQuery = fs.readFileSync(filePath!, "utf8");
         try {
           logger.info(`🔄 Applying migration: ${name}`);
-          runQueryWithTransaction(db, sql);
+          await runQueryWithTransaction(sqlQuery);
           logger.info(`✅ Migration ${name} applied successfully.`);
         } catch (error: any) {
           logger.error(`❌ Migration ${name} failed: ${error.message}`);
@@ -121,7 +104,7 @@ const umzug = new Umzug({
     }),
   },
   context: db,
-  storage: new SQLiteStorage(db),
+  storage: new PostgresStorage(),
   logger: {
     debug: logger.debug.bind(logger),
     info: logger.info.bind(logger),
@@ -150,11 +133,7 @@ async function runMigrations() {
     logger.info(`✅ Migrations complete in ${duration}ms.`);
   } catch (error: any) {
     logger.error(`❌ Migration failed: ${error.message}`);
-  } finally {
-    db.close();
-    logger.info("🔒 Database connection closed.");
   }
 }
 
-// Run migrations if this file is executed directly via Node/ts-node
-runMigrations();
+await runMigrations();

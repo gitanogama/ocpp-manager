@@ -1,8 +1,8 @@
-import type { Chargers } from "../../lib/models/Chargers";
+import type { Charger } from "../../lib/models/Charger";
 
 export class WSCustomContext {
   private context: {
-    charger: Chargers;
+    charger: Charger;
   };
 
   constructor(ctx: typeof this.context) {

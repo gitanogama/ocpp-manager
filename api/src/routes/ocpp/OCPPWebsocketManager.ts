@@ -9,7 +9,7 @@ import {
 } from "./types";
 import { WSCustomContext } from "./WSCustomContext";
 import type { WSContext } from "hono/ws";
-import { Chargers } from "../../lib/models/Chargers";
+import { Charger } from "../../lib/models/Charger";
 import { handler } from "./handlers";
 import { HTTPException } from "hono/http-exception";
 
@@ -236,24 +236,20 @@ class OCPPWebsocketManager {
   }
 
   public async updateWsCtx(shortcode: string): Promise<WSCustomContext> {
-    const currentTime = new Date().toISOString();
     try {
-      let charger = await Chargers.findOne({
+      let charger = await Charger.findOne({
         eb: (eb) => eb("shortcode", "=", shortcode),
       });
 
       if (!charger) {
         logger.info("Creating new charger", { shortcode });
-        charger = await Chargers.insert({
+        charger = await Charger.insert({
           friendlyName: "Detected Charger",
           shortcode,
-          updatedAt: currentTime,
-          createdAt: currentTime,
         });
       } else {
         await charger.update({
-          lastHeartbeat: currentTime,
-          updatedAt: currentTime,
+          lastHeartbeat: new Date().toISOString(),
         });
       }
 

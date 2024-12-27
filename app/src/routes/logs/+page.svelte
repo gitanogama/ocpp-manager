@@ -1,9 +1,9 @@
 <script lang="ts">
 	import BasePage from '$lib/components/BasePage.svelte';
 	import Scrollable from '$lib/components/Scrollable.svelte';
-	import { createQueryLogs } from '$lib/queryClient';
+	import { createQueryLog } from '$lib/queryClient';
 
-	const queryLogs = createQueryLogs(5000, 500);
+	const queryLogs = createQueryLog(5000, 500);
 </script>
 
 <BasePage title="Logs">

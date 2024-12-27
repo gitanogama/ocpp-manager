@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Settings } from "../../../lib/models/Settings";
+import { Setting } from "../../../lib/models/Setting";
 import type { ActionHandler } from "./ActionHandler";
 import {
   BootNotificationRequestSchema,
@@ -27,17 +27,15 @@ export const bootNotification: ActionHandler = {
     const currentTime = new Date().toISOString();
     const charger = wsCtx.get("charger");
 
-    // Update charger details
     await charger.update({
       model: parsedData.chargePointModel,
       vendor: parsedData.chargePointVendor,
       firmwareVersion: parsedData.firmwareVersion,
       lastHeartbeat: currentTime,
-      updatedAt: currentTime,
     });
 
     // Fetch settings
-    const settings = await Settings.findOneOrThrow();
+    const settings = await Setting.findOneOrThrow();
 
     // Return the response
     return {

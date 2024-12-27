@@ -30,36 +30,29 @@ function readInput(prompt: string): Promise<string> {
   });
 }
 
-// Emulate __filename/__dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 (async () => {
   try {
-    // Prompt user for the migration name
     const inputName = await readInput("Enter migration name: ");
     logger.debug(`User input for migration name: "${inputName}"`);
 
-    // Create a timestamp in the same style
     const timestamp = new Date()
       .toISOString()
       .replace(/[-T:.Z]/g, "")
       .slice(0, 14);
     logger.debug(`Generated timestamp: ${timestamp}`);
 
-    // Convert name to lowercase, replace spaces with underscores
     const formattedName = inputName.toLowerCase().replace(/\s+/g, "_");
     logger.debug(`Formatted migration name: "${formattedName}"`);
 
-    // Construct paths
     const migrationsDir = path.join(__dirname, "../db/migrations");
     const migrationFileName = `${timestamp}_${formattedName}.sql`;
     const migrationFilePath = path.join(migrationsDir, migrationFileName);
 
-    // Ensure the migrations directory exists
     ensureDirSync(migrationsDir);
 
-    // Write an initial SQL comment to the file
     await fs.promises.writeFile(
       migrationFilePath,
       "-- Write your SQL migration here\n"

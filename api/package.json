@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "npx tsx watch --inspect=0.0.0.0:59929 ./src/main.ts",
-    "kysely-codegen": "kysely-codegen --camel-case --dialect sqlite --out-file ./src/lib/db/DBTypes.d.ts",
+    "kysely-codegen": "kysely-codegen --camel-case --dialect postgres --out-file ./src/lib/db/DBTypes.d.ts",
     "migrate:new": "npx tsx ./src/lib/db/new.ts",
     "migrate:run": "npx tsx ./src/lib/db/run.ts",
     "format": "prettier --write ."
@@ -18,11 +18,13 @@
     "@hono/zod-validator": "^0.4.2",
     "@types/better-sqlite3": "^7.6.12",
     "@types/node": "^20.11.17",
+    "@types/pg": "^8.11.10",
     "@types/ws": "^8.5.13",
     "better-sqlite3": "^11.7.0",
     "chalk": "^5.4.1",
     "kysely": "^0.27.5",
     "kysely-codegen": "^0.17.0",
+    "pg": "^8.13.1",
     "tsx": "^4.7.1",
     "umzug": "^3.8.2",
     "winston": "^3.17.0",

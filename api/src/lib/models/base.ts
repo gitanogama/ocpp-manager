@@ -14,7 +14,7 @@ import { db } from "../db/db.js";
 export function generateBaseModel<
   T extends keyof DB,
   PK extends Extract<keyof Selectable<DB[T]>, string>
->(table: T, primaryKey: PK) {
+>(table: T, primaryKey: PK, updatedAtField?: keyof Updateable<DB[T]>) {
   /**
    * Utility type that filters out function properties and explicitly excludes `t`.
    */
@@ -47,7 +47,6 @@ export function generateBaseModel<
 
     constructor(options: Selectable<DB[T]>) {
       this.t = options;
-
       Object.assign(this, options);
     }
 
@@ -81,8 +80,39 @@ export function generateBaseModel<
 
     /**
      * Updates the record with the provided options and synchronizes the instance.
+     * Optionally updates the `updated_at` field unless overridden by `options.noUpdateAtUpdate`.
      */
-    async update(options: Updateable<DB[T]>, trx?: Transaction<DB>) {
+    async update(
+      options: Updateable<DB[T]>,
+      trx?: Transaction<DB>,
+      optionsExtras?: { noUpdateAtUpdate?: boolean }
+    ) {
+      if (
+        updatedAtField &&
+        !optionsExtras?.noUpdateAtUpdate &&
+        !(updatedAtField in options)
+      ) {
+        const fieldKey = updatedAtField as keyof Selectable<DB[T]>;
+        const fieldValue = this.t[fieldKey];
+
+        if (typeof fieldValue === "string") {
+          options[updatedAtField as keyof Updateable<DB[T]>] =
+            new Date().toISOString() as any;
+        } else if (
+          fieldValue instanceof Date ||
+          !isNaN(new Date(String(fieldValue)).getTime())
+        ) {
+          options[updatedAtField as keyof Updateable<DB[T]>] =
+            new Date() as any;
+        } else {
+          console.warn(
+            `Unable to determine type for field '${String(
+              updatedAtField
+            )}' to update automatically.`
+          );
+        }
+      }
+
       const result = await (trx ?? db)
         .updateTable(table as keyof DB)
         .set(options)
@@ -91,7 +121,7 @@ export function generateBaseModel<
         .executeTakeFirstOrThrow();
 
       Object.assign(this.t, result);
-      Object.assign(this, options);
+      Object.assign(this, result);
     }
 
     /**

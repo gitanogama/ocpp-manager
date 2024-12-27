@@ -1,39 +1,64 @@
 <script lang="ts">
 	import BasePage from '$lib/components/BasePage.svelte';
-	import { createMutationChargerCreate, createQueryChargers } from '$lib/queryClient';
+	import { createMutationChargerCreate, createQueryCharger } from '$lib/queryClient';
 	import MonitoringChargerRow from '$lib/components/MonitoringChargerRow.svelte';
 	import Scrollable from '$lib/components/Scrollable.svelte';
+	import { drawerStore } from '$lib/drawerStore';
+	import { z } from 'zod';
 
-	const queryChargers = createQueryChargers(10000);
+	const queryChargers = createQueryCharger(10000);
 
 	const mutationChargerCreate = createMutationChargerCreate();
 
-	let inputFriendlyName = $state('');
-	let inputShortcode = $state('');
-	let inputStatus = $state<'Accepted' | 'Rejected' | 'Pending'>('Pending');
-
-	const openCreateModal = () => {
-		inputFriendlyName = '';
-		inputShortcode = '';
-		inputStatus = 'Accepted';
-		createDialog.showModal();
+	const openCreateDrawer = () => {
+		drawerStore.open({
+			header: 'Add Charger',
+			fields: [
+				{
+					label: 'Label',
+					name: 'label',
+					type: 'text',
+					defaultValue: '',
+					validation: z.string().min(1)
+				},
+				{
+					label: 'Shortcode',
+					name: 'shortcode',
+					type: 'text',
+					defaultValue: 'your-shortcode',
+					validation: z
+						.string()
+						.regex(/^[a-z0-9-]+$/, {
+							message:
+								'Only lowercase letters, numbers, and dashes are allowed (no spaces or other characters).'
+						})
+						.min(5, { message: 'Minimum length is 5 characters.' })
+						.max(30, { message: 'Maximum length is 30 characters.' })
+				}
+			] as const,
+			actions: [
+				{
+					label: 'Create',
+					key: 'create',
+					class: 'btn-primary',
+					buttonType: 'submit',
+					callback: ({ fieldValues, close }) => {
+						$mutationChargerCreate.mutate(
+							{ friendlyName: fieldValues.label, shortcode: fieldValues.shortcode },
+							{ onSuccess: () => close() }
+						);
+					}
+				}
+			]
+		});
 	};
-
-	const createCharger = () => {
-		$mutationChargerCreate.mutate(
-			{ friendlyName: inputFriendlyName, shortcode: inputShortcode },
-			{ onSuccess: () => createDialog.close() }
-		);
-	};
-
-	let createDialog: HTMLDialogElement;
 </script>
 
 <BasePage title="Monitoring">
 	<div class="container mx-auto px-4">
 		<div class="mb-6 flex items-center justify-between">
 			<h1 class="text-2xl font-bold">Chargers</h1>
-			<button class="btn btn-primary" onclick={openCreateModal}>Add Charger</button>
+			<button class="btn btn-primary" onclick={openCreateDrawer}>Add Charger</button>
 		</div>
 		<Scrollable class="p-4" maxHeight="80svh">
 			<div class="space-y-6">
@@ -50,33 +75,3 @@
 		</Scrollable>
 	</div>
 </BasePage>
-
-<dialog bind:this={createDialog} class="modal">
-	<form onsubmit={createCharger} method="dialog" class="modal-box bg-base-200">
-		<h3 class="text-lg font-bold">Add Charger</h3>
-		<div class="form-control">
-			<label class="label">Friendly Name</label>
-			<input
-				type="text"
-				required
-				minlength="1"
-				class="input input-bordered"
-				bind:value={inputFriendlyName}
-			/>
-		</div>
-		<div class="form-control">
-			<label class="label">Shortcode</label>
-			<input
-				type="text"
-				required
-				minlength="1"
-				class="input input-bordered"
-				bind:value={inputShortcode}
-			/>
-		</div>
-		<div class="modal-action">
-			<button class="btn btn-primary" type="submit">Create</button>
-			<button class="btn" onclick={() => createDialog.close()}>Cancel</button>
-		</div>
-	</form>
-</dialog>

@@ -5,103 +5,125 @@
 
 import type { ColumnType } from "kysely";
 
+export type ChargerStatus = "Accepted" | "Pending" | "Rejected";
+
+export type ConnectorStatus = "Available" | "Charging" | "Faulted" | "Finishing" | "Preparing" | "Reserved" | "SuspendedEV" | "SuspendedEVSE" | "Unavailable";
+
 export type Generated<T> = T extends ColumnType<infer S, infer I, infer U>
   ? ColumnType<S, I | undefined, U>
   : ColumnType<T, T | undefined, T>;
 
-export interface Authorization {
+export type Json = JsonValue;
+
+export type JsonArray = JsonValue[];
+
+export type JsonObject = {
+  [x: string]: JsonValue | undefined;
+};
+
+export type JsonPrimitive = boolean | number | string | null;
+
+export type JsonValue = JsonArray | JsonObject | JsonPrimitive;
+
+export type PaymentStatus = "Failed" | "Paid" | "Pending";
+
+export type Timestamp = ColumnType<Date, Date | string, Date | string>;
+
+export type TransactionStatus = "Active" | "Completed" | "Failed" | "Interrupted";
+
+export interface ChargeAuthorization {
   chargerId: number;
-  createdAt: Generated<string>;
-  expiryDate: Generated<string | null>;
+  connectorId: number | null;
+  createdAt: Generated<Timestamp>;
+  expiryDate: Timestamp | null;
+  friendlyName: Generated<string>;
   id: Generated<number>;
-  idTag: string;
-  parentIdTag: Generated<string | null>;
-  status: string;
-  updatedAt: Generated<string>;
+  rfidTagId: number | null;
+  updatedAt: Generated<Timestamp>;
+  wLimit: number | null;
 }
 
-export interface Chargers {
-  createdAt: Generated<string>;
+export interface Charger {
+  createdAt: Generated<Timestamp>;
   firmwareVersion: Generated<string | null>;
   friendlyName: Generated<string>;
   id: Generated<number>;
-  lastHeartbeat: Generated<string | null>;
+  lastHeartbeat: Generated<Timestamp | null>;
   model: Generated<string>;
   serialNumber: Generated<string>;
   shortcode: string;
-  status: Generated<string>;
-  updatedAt: Generated<string>;
+  status: Generated<ChargerStatus>;
+  updatedAt: Generated<Timestamp>;
   vendor: Generated<string>;
 }
 
-export interface ChargerStatus {
-  connectorId: number;
-  errorCode: Generated<string | null>;
-  heartbeatTimestamp: Generated<string | null>;
-  id: Generated<number>;
-  info: Generated<string | null>;
-  status: string;
-  vendorErrorCode: Generated<string | null>;
-}
-
-export interface Connectors {
+export interface Connector {
   chargerId: number;
   connectorId: number;
-  createdAt: Generated<string>;
+  createdAt: Generated<Timestamp>;
   errorCode: Generated<string | null>;
   id: Generated<number>;
   info: Generated<string | null>;
   maxCurrent: Generated<number>;
-  status: Generated<string>;
-  updatedAt: Generated<string>;
+  status: Generated<ConnectorStatus>;
+  updatedAt: Generated<Timestamp>;
   vendorErrorCode: Generated<string | null>;
 }
 
-export interface Migrations {
-  createdAt: Generated<string | null>;
-  id: Generated<number | null>;
+export interface Migration {
+  createdAt: Generated<Timestamp | null>;
+  id: Generated<number>;
   name: string;
 }
 
-export interface Settings {
+export interface RfidTag {
+  createdAt: Generated<Timestamp>;
+  expiryDate: Timestamp | null;
+  friendlyName: Generated<string>;
+  id: Generated<number>;
+  rfidTag: string;
+  updatedAt: Generated<Timestamp>;
+  wLimit: number | null;
+}
+
+export interface Setting {
   heartbeatInterval: Generated<number>;
   id: Generated<number>;
-  systemMaintenance: Generated<number>;
+  systemMaintenance: Generated<boolean>;
 }
 
 export interface Telemetry {
+  createdAt: Generated<Timestamp>;
   current: Generated<number>;
   id: Generated<number>;
   meterValue: number;
-  sampledValue: Generated<string | null>;
-  timestamp: Generated<string>;
+  sampledValue: Generated<Json | null>;
   transactionId: number;
   voltage: Generated<number>;
 }
 
-export interface Transactions {
+export interface Transaction {
+  authorizationId: number | null;
   connectorId: number;
-  createdAt: Generated<string>;
+  createdAt: Generated<Timestamp>;
+  energyDelivered: Generated<number | null>;
   id: Generated<number>;
-  idTag: string;
   meterStart: number;
   meterStop: number | null;
-  paymentStatus: Generated<string>;
+  paymentStatus: Generated<PaymentStatus>;
   reason: Generated<string | null>;
-  startTime: string;
-  status: Generated<string>;
-  stopTime: string | null;
-  transactionId: number;
-  userId: number;
+  startTime: Timestamp;
+  status: Generated<TransactionStatus>;
+  stopTime: Timestamp | null;
 }
 
 export interface DB {
-  authorization: Authorization;
-  chargers: Chargers;
-  chargerStatus: ChargerStatus;
-  connectors: Connectors;
-  migrations: Migrations;
-  settings: Settings;
+  chargeAuthorization: ChargeAuthorization;
+  charger: Charger;
+  connector: Connector;
+  migration: Migration;
+  rfidTag: RfidTag;
+  setting: Setting;
   telemetry: Telemetry;
-  transactions: Transactions;
+  transaction: Transaction;
 }

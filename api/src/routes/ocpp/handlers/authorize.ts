@@ -1,5 +1,5 @@
 import z from "zod";
-import { Authorization } from "../../../lib/models/Authorization";
+import { ChargeAuthorization } from "../../../lib/models/ChargeAuthorization";
 import type { ActionHandler } from "./ActionHandler";
 import { AuthorizeRequestSchema, AuthorizeResponseSchema } from "../types";
 import type { WSCustomContext } from "../WSCustomContext";
@@ -19,7 +19,7 @@ export const authorize: ActionHandler = {
 
     const charger = wsCtx.get("charger");
 
-    const authRecord = await Authorization.findOne({
+    const authRecord = await ChargeAuthorization.findOne({
       eb: (eb) => eb("idTag", "=", parsedData.idTag),
     });
 
