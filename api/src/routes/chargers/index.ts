@@ -130,7 +130,7 @@ export const chargers = new Hono()
       const data = await charger.reset(type);
 
       return c.json({
-        data,
+        success: data[2].status === "Accepted",
       });
     }
   );

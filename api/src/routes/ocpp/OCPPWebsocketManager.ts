@@ -5,6 +5,7 @@ import {
   CallErrorSchema,
   CallResultSchema,
   CallSchema,
+  createCallResultSchema,
 } from "./types";
 import { WSCustomContext } from "./WSCustomContext";
 import type { WSContext } from "hono/ws";
@@ -12,8 +13,6 @@ import { Chargers } from "../../lib/models/Chargers";
 import { handler } from "./handlers";
 import { HTTPException } from "hono/http-exception";
 
-type Call = z.infer<typeof CallSchema>;
-type CallError = z.infer<typeof CallErrorSchema>;
 type CallResult<T = any> = z.infer<typeof CallResultSchema> & [3, string, T];
 
 class OCPPWebsocketManager {
@@ -22,10 +21,7 @@ class OCPPWebsocketManager {
     {
       ws: WSContext<unknown>;
       wsCtx: WSCustomContext;
-      pendingRequests: Map<
-        string,
-        (response: CallResult | CallError | undefined) => void
-      >;
+      pendingRequests: Map<string, (response: CallResult | undefined) => void>;
     }
   > = new Map();
 
@@ -49,15 +45,17 @@ class OCPPWebsocketManager {
     });
   }
 
-  public async sendCall<T>({
+  public async sendCall<T extends z.ZodTypeAny>({
     shortcode,
     action,
     message,
+    responseSchema,
   }: {
     shortcode: string;
     action: ActionEnum;
     message: unknown;
-  }): Promise<CallResult<T> | CallError> {
+    responseSchema?: T;
+  }): Promise<z.infer<ReturnType<typeof createCallResultSchema<T>>>> {
     const connection = this.connections.get(shortcode);
 
     if (!connection) {
@@ -68,12 +66,29 @@ class OCPPWebsocketManager {
     }
 
     const randomId = crypto.randomUUID().toString();
-    const request: Call = [2, randomId, action, message];
+    const request: z.infer<typeof CallSchema> = [2, randomId, action, message];
 
     return new Promise((resolve, reject) => {
       connection.pendingRequests.set(randomId, (response) => {
         if (response) {
-          resolve(response);
+          try {
+            const schema = createCallResultSchema(responseSchema || z.any());
+            const validatedResponse = schema.parse(response);
+            resolve(
+              validatedResponse as z.infer<
+                ReturnType<typeof createCallResultSchema<T>>
+              >
+            );
+          } catch (error) {
+            logger.error("Response validation failed", {
+              action,
+              shortcode,
+              error: error instanceof Error ? error.message : String(error),
+            });
+            reject(
+              new HTTPException(422, { message: "Invalid response format" })
+            );
+          }
         } else {
           reject(
             new HTTPException(408, {
@@ -92,7 +107,7 @@ class OCPPWebsocketManager {
         setTimeout(() => {
           if (connection.pendingRequests.has(randomId)) {
             connection.pendingRequests.delete(randomId);
-            logger.warn("Request timed out", { action, shortcode, randomId });
+            logger.error("Request timed out", { action, shortcode, randomId });
             reject(
               new HTTPException(408, {
                 message: `Request timed out for shortcode: ${shortcode}`,
@@ -102,12 +117,10 @@ class OCPPWebsocketManager {
         }, 10000);
       } catch (error) {
         connection.pendingRequests.delete(randomId);
-        const errorMessage =
-          error instanceof Error ? error.message : String(error);
         logger.error("Failed to send request", {
           action,
           shortcode,
-          error: errorMessage,
+          error: error instanceof Error ? error.message : String(error),
         });
         reject(
           new HTTPException(500, {
@@ -138,11 +151,9 @@ class OCPPWebsocketManager {
     try {
       connection.ws.send(rawMessage);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
       logger.error("Failed to send raw message", {
         shortcode,
-        error: errorMessage,
+        error: error instanceof Error ? error.message : String(error),
       });
       throw error;
     }
@@ -164,76 +175,43 @@ class OCPPWebsocketManager {
       connection.wsCtx = await this.updateWsCtx(shortcode);
 
       if (Array.isArray(parsedMessage)) {
-        const [messageType, messageId, ...rest] = parsedMessage;
+        const [messageType, messageId]: [
+          messageType: 2 | 3 | 4,
+          messageId: string
+        ] = parsedMessage as any;
 
         switch (messageType) {
-          case 2:
-            const parsed = CallSchema.safeParse(parsedMessage);
-            if (!parsed.success) {
-              logger.error("Schema validation failed", {
-                shortcode,
-                message: parsedMessage,
-              });
-              return;
-            }
-            logger.info("incoming request (type 2)", {
-              shortcode,
-              message,
-            });
-
-            const messageResponse = await handler(
-              parsed.data,
-              connection.wsCtx
-            );
+          case 2: {
+            const parsed = CallSchema.parse(parsedMessage);
+            logger.info("incoming request (type 2)", { shortcode, message });
+            const messageResponse = await handler(parsed, connection.wsCtx);
             if (messageResponse) {
               this.sendMessage({
                 rawMessage: JSON.stringify(messageResponse),
                 shortcode,
               });
             }
-
             break;
+          }
 
           case 3: {
-            const [response] = rest;
             const resolve = connection.pendingRequests.get(messageId);
             if (resolve) {
-              const result = CallResultSchema.safeParse(parsedMessage);
-              if (result.success) {
-                resolve(result.data as any);
-                logger.info("Resolved CallResult", { shortcode, messageId });
-              } else {
-                logger.error("Invalid CallResult received", {
-                  shortcode,
-                  messageId,
-                  response,
-                });
-                resolve(undefined);
-              }
+              const result = CallResultSchema.parse(parsedMessage);
+              resolve(result as CallResult);
               connection.pendingRequests.delete(messageId);
+              logger.info("Resolved CallResult", { shortcode, messageId });
             }
             break;
           }
 
           case 4: {
-            const [errorData] = rest;
             const resolve = connection.pendingRequests.get(messageId);
             if (resolve) {
-              const result = CallErrorSchema.safeParse(parsedMessage);
-              if (result.success) {
-                resolve(result.data);
-                logger.error("Call Error received", {
-                  shortcode,
-                  error: result.data,
-                });
-              } else {
-                logger.error("Invalid Call Error received", {
-                  shortcode,
-                  rawError: errorData,
-                });
-                resolve(undefined);
-              }
+              const error = CallErrorSchema.parse(parsedMessage);
+              logger.error("Call Error received", { shortcode, error });
               connection.pendingRequests.delete(messageId);
+              throw new HTTPException(400, { message: error[3] });
             }
             break;
           }
@@ -246,18 +224,14 @@ class OCPPWebsocketManager {
             });
         }
       } else {
-        logger.http("Unsolicited message received", {
-          shortcode,
-          message,
-        });
+        logger.http("Unsolicited message received", { shortcode, message });
       }
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
       logger.error("Error handling incoming message", {
         shortcode,
-        error: errorMessage,
+        error: error instanceof Error ? error.message : String(error),
       });
+      throw error;
     }
   }
 
@@ -285,14 +259,12 @@ class OCPPWebsocketManager {
 
       return new WSCustomContext({ charger });
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : String(error);
       logger.error("Error updating context", {
         shortcode,
-        error: errorMessage,
+        error: error instanceof Error ? error.message : String(error),
       });
       throw new HTTPException(500, {
-        message: `Failed to fetch or update charger`,
+        message: "Failed to fetch or update charger",
       });
     }
   }
