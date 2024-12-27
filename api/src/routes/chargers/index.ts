@@ -4,11 +4,34 @@ import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import { HTTPException } from "hono/http-exception";
 import { ResetTypeEnum } from "../ocpp/types";
+import { Settings } from "../../lib/models/Settings";
 
 export const chargers = new Hono()
   .get("/", async (c) => {
+    const settings = await Settings.findOneOrThrow();
+    const heartbeatIntervalWithBuffer = settings.heartbeatInterval + 10;
+
     const chargers = await Chargers.findMany();
-    return c.json(chargers.map((charger) => charger.serialize()));
+
+    const chargersWithConnectivity = chargers.map((charger) => {
+      const lastHeartbeatTime = charger.lastHeartbeat
+        ? new Date(charger.lastHeartbeat).getTime()
+        : 0;
+      const now = Date.now();
+
+      const connectivity: "Online" | "Offline" =
+        lastHeartbeatTime > 0 &&
+        now - lastHeartbeatTime <= heartbeatIntervalWithBuffer * 1000
+          ? "Online"
+          : "Offline";
+
+      return {
+        ...charger.serialize(),
+        connectivity,
+      };
+    });
+
+    return c.json(chargersWithConnectivity);
   })
   .patch(
     "/:id",

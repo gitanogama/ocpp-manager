@@ -2,8 +2,9 @@
 	import BasePage from '$lib/components/BasePage.svelte';
 	import { createMutationChargerCreate, createQueryChargers } from '$lib/queryClient';
 	import MonitoringChargerRow from '$lib/components/MonitoringChargerRow.svelte';
+	import Scrollable from '$lib/components/Scrollable.svelte';
 
-	const queryChargers = createQueryChargers();
+	const queryChargers = createQueryChargers(10000);
 
 	const mutationChargerCreate = createMutationChargerCreate();
 
@@ -34,18 +35,19 @@
 			<h1 class="text-2xl font-bold">Chargers</h1>
 			<button class="btn btn-primary" onclick={openCreateModal}>Add Charger</button>
 		</div>
-
-		<div class="space-y-6">
-			{#if $queryChargers.data}
-				{#each $queryChargers.data as charger}
-					<MonitoringChargerRow {charger} />
-				{/each}
-			{:else}
-				<div class="bg-base-200 rounded-lg p-8 text-center">
-					<p class="text-base-content">Loading chargers...</p>
-				</div>
-			{/if}
-		</div>
+		<Scrollable class="p-4" maxHeight="80svh">
+			<div class="space-y-6">
+				{#if $queryChargers.data}
+					{#each $queryChargers.data as charger}
+						<MonitoringChargerRow {charger} />
+					{/each}
+				{:else}
+					<div class="bg-base-200 rounded-lg p-8 text-center">
+						<p class="text-base-content">Loading chargers...</p>
+					</div>
+				{/if}
+			</div>
+		</Scrollable>
 	</div>
 </BasePage>
 

@@ -10,14 +10,16 @@ export const queryKeys = {
 	connectors: (key: string) => ['connectors', key]
 };
 
-export const createQueryChargers = () =>
+export const createQueryChargers = (refetchInterval?: number) =>
 	createQuery({
+		refetchInterval,
 		queryKey: queryKeys.chargers,
 		queryFn: () => hClient.chargers.$get().then((x) => x.json())
 	});
 
-export const createQueryConnectorsOfCharger = (chargerId: string) =>
+export const createQueryConnectorsOfCharger = (chargerId: string, refetchInterval?: number) =>
 	createQuery({
+		refetchInterval,
 		queryKey: queryKeys.connectors(chargerId),
 		queryFn: () =>
 			hClient.connectors.charger[':id']
