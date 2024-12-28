@@ -22,7 +22,11 @@ export const stopTransaction: ActionHandler = {
     });
 
     if (!transaction) {
-      throw new Error(`Transaction with ID ${transactionId} not found.`);
+      return {
+        idTagInfo: {
+          status: "Accepted",
+        },
+      };
     }
 
     await transaction.update({
@@ -38,18 +42,17 @@ export const stopTransaction: ActionHandler = {
     if (idTag) {
       const authRecord = await ChargeAuthorization.searchValidByIdTag({
         idTag,
-        chargerId: transaction.t.chargeAuthorizationId || 0,
+        chargerId: transaction.chargeAuthorizationId || 0,
       });
 
       idTagInfo = !authRecord
         ? { status: "Blocked" }
-        : authRecord.t.expiryDate &&
-          new Date(authRecord.t.expiryDate) < new Date()
+        : authRecord.expiryDate && new Date(authRecord.expiryDate) < new Date()
         ? { status: "Expired" }
         : {
             status: "Accepted",
-            expiryDate: authRecord.t.expiryDate
-              ? new Date(authRecord.t.expiryDate).toISOString()
+            expiryDate: authRecord.expiryDate
+              ? new Date(authRecord.expiryDate).toISOString()
               : undefined,
           };
     }

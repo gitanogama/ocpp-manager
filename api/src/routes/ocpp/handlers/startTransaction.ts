@@ -43,13 +43,12 @@ export const startTransaction: ActionHandler = {
       typeof StartTransactionResponseSchema
     >["idTagInfo"] = !authRecord
       ? { status: "Blocked" }
-      : authRecord.t.expiryDate &&
-        new Date(authRecord.t.expiryDate) < new Date()
+      : authRecord.expiryDate && new Date(authRecord.expiryDate) < new Date()
       ? { status: "Expired" }
       : {
           status: "Accepted",
-          expiryDate: authRecord.t.expiryDate
-            ? new Date(authRecord.t.expiryDate).toISOString()
+          expiryDate: authRecord.expiryDate
+            ? new Date(authRecord.expiryDate).toISOString()
             : undefined,
         };
 
@@ -61,7 +60,7 @@ export const startTransaction: ActionHandler = {
     }
 
     const transaction = await Transaction.insert({
-      connectorId,
+      connectorId: connector.id,
       meterStart,
       startTime: new Date(timestamp).toISOString(),
       status: "Active",
@@ -69,7 +68,7 @@ export const startTransaction: ActionHandler = {
 
     return {
       idTagInfo,
-      transactionId: transaction.t.id,
+      transactionId: transaction.id,
     };
   },
 } as const;

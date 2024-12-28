@@ -28,8 +28,10 @@ export const meterValues: ActionHandler = {
     }
 
     await Telemetry.insert({
-      transactionId: transaction.t.id,
-      meterValue: meterValue,
+      transactionId: transaction.id,
+      meterValue: {
+        raw: meterValue,
+      },
     });
 
     return {};

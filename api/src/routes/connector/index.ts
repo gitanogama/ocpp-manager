@@ -8,6 +8,27 @@ export const connector = new Hono()
     const connectors = await Connector.findMany();
     return c.json(connectors.map((connector) => connector.serialize()));
   })
+  .post(
+    "/:id/unlock-connector",
+    zValidator(
+      "param",
+      z.object({
+        id: z.coerce.number(),
+      })
+    ),
+    async (c) => {
+      const { id } = c.req.valid("param");
+      const connector = await Connector.findOneOrThrow({
+        eb: (eb) => eb("connector.id", "=", id),
+      });
+
+      const data = await connector.unlock();
+
+      return c.json({
+        success: data[2].status === "Unlocked",
+      });
+    }
+  )
   .get(
     "/charger/:id",
     zValidator(

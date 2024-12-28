@@ -23,13 +23,12 @@ export const authorize: ActionHandler = {
     const idTagInfo: z.infer<typeof AuthorizeResponseSchema>["idTagInfo"] =
       !authRecord
         ? { status: "Blocked" }
-        : authRecord.t.expiryDate &&
-          new Date(authRecord.t.expiryDate) < new Date()
+        : authRecord.expiryDate && new Date(authRecord.expiryDate) < new Date()
         ? { status: "Expired" }
         : {
             status: "Accepted",
-            expiryDate: authRecord.t.expiryDate
-              ? new Date(authRecord.t.expiryDate).toISOString()
+            expiryDate: authRecord.expiryDate
+              ? new Date(authRecord.expiryDate).toISOString()
               : undefined,
           };
 

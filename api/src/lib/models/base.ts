@@ -35,6 +35,9 @@ export function generateBaseModel<
     protected static readonly primaryKey = primaryKey;
 
     /**
+     * @deprecated This property will be removed soon. Instead of using `t`,
+     * please access properties directly on the model instance.
+     *
      * The `t` property is made non-enumerable to ensure it does not appear in JSON serialization.
      * This configuration helps prevent unnecessary data leakage and keeps the output clean when
      * instances of this model are sent in HTTP responses, for instance in Hono, where `JSON.stringify`
@@ -44,6 +47,7 @@ export function generateBaseModel<
 
     constructor(options: Selectable<DB[T]>) {
       this.t = options;
+      Object.assign(this, options);
     }
 
     /**
@@ -117,6 +121,7 @@ export function generateBaseModel<
         .executeTakeFirstOrThrow();
 
       Object.assign(this.t, result);
+      Object.assign(this, result);
     }
 
     /**
