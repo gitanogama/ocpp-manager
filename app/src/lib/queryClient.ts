@@ -7,9 +7,13 @@ export const queryKeys = {
 	charger: ['charger'],
 	log: ['log'],
 	setting: ['setting'],
-	connector: (key: string) => ['connector', key],
+	connectorByid: (connectorId: string) => ['connector', connectorId],
 	rfidTag: ['rfid-tag'],
-	chargeAuthorization: ['charge-authorization']
+	chargeAuthorization: ['charge-authorization'],
+	transaction: ['transaction'],
+	transactionByCharger: (chargerId: number) => ['transaction', 'charger', chargerId],
+	transactionByConnector: (connectorId: number) => ['transaction', 'connector', connectorId],
+	transactionById: (id: number) => ['transaction', 'id', id]
 };
 
 export const createQueryRfidTag = (refetchInterval?: number) =>
@@ -36,24 +40,12 @@ export const createMutationRfidTagDelete = () =>
 
 export const createMutationRfidTagCreate = () =>
 	createMutation({
-		mutationFn: ({
-			friendlyName,
-			expiryDate,
-			rfidTag,
-			wLimit
-		}: {
-			friendlyName: string;
-			expiryDate?: Date | null;
-			rfidTag: string;
-			wLimit?: number | null;
-		}) =>
+		mutationFn: ({ friendlyName, rfidTag }: { friendlyName: string; rfidTag: string }) =>
 			hClient['rfid-tag']
 				.$post({
 					json: {
 						friendlyName,
-						expiryDate: expiryDate || null,
-						rfidTag,
-						wLimit: wLimit ?? null
+						rfidTag
 					}
 				})
 				.then((x) => x.json()),
@@ -69,24 +61,18 @@ export const createMutationRfidTagUpdate = () =>
 		mutationFn: ({
 			id,
 			friendlyName,
-			expiryDate,
-			rfidTag,
-			wLimit
+			rfidTag
 		}: {
 			id: number;
 			friendlyName: string;
-			expiryDate: Date | null;
 			rfidTag?: string;
-			wLimit: number | null;
 		}) =>
 			hClient['rfid-tag'][':id']
 				.$patch({
 					param: { id: id.toString() },
 					json: {
 						friendlyName,
-						expiryDate,
-						rfidTag,
-						wLimit
+						rfidTag
 					}
 				})
 				.then((x) => x.json()),
@@ -107,7 +93,7 @@ export const createQueryCharger = (refetchInterval?: number) =>
 export const createQueryConnector = (chargerId: string, refetchInterval?: number) =>
 	createQuery({
 		refetchInterval,
-		queryKey: queryKeys.connector(chargerId),
+		queryKey: queryKeys.connectorByid(chargerId),
 		queryFn: () =>
 			hClient.connector.charger[':id']
 				.$get({
@@ -229,25 +215,19 @@ export const createMutationChargeAuthorizationCreate = () =>
 	createMutation({
 		mutationFn: ({
 			chargerId,
-			connectorId,
 			expiryDate,
-			rfidTagId,
-			wLimit
+			rfidTagId
 		}: {
 			chargerId: number;
-			connectorId: number | null;
 			expiryDate: Date | null;
 			rfidTagId: number | null;
-			wLimit: number | null;
 		}) =>
 			hClient['charge-authorization']
 				.$post({
 					json: {
 						chargerId,
-						connectorId,
 						expiryDate,
-						rfidTagId,
-						wLimit
+						rfidTagId
 					}
 				})
 				.then((x) => x.json()),
@@ -263,27 +243,21 @@ export const createMutationChargeAuthorizationUpdate = () =>
 		mutationFn: ({
 			id,
 			chargerId,
-			connectorId,
 			expiryDate,
-			rfidTagId,
-			wLimit
+			rfidTagId
 		}: {
 			id: number;
 			chargerId: number;
-			connectorId: number | null;
 			expiryDate: Date | null;
 			rfidTagId: number | null;
-			wLimit: number | null;
 		}) =>
 			hClient['charge-authorization'][':id']
 				.$patch({
 					param: { id: id.toString() },
 					json: {
 						chargerId,
-						connectorId,
 						expiryDate,
-						rfidTagId,
-						wLimit
+						rfidTagId
 					}
 				})
 				.then((x) => x.json()),
@@ -305,6 +279,65 @@ export const createMutationChargeAuthorizationDelete = () =>
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: ['charge-authorization']
+			});
+		}
+	});
+
+// Transaction Queries and Mutations
+export const createQueryTransactions = (refetchInterval?: number) =>
+	createQuery({
+		refetchInterval,
+		queryKey: queryKeys.transaction,
+		queryFn: () => hClient.transaction.$get().then((x) => x.json())
+	});
+
+export const createQueryTransactionById = (id: number, refetchInterval?: number) =>
+	createQuery({
+		refetchInterval,
+		queryKey: queryKeys.transactionById(id),
+		queryFn: () =>
+			hClient.transaction[':id']
+				.$get({
+					param: { id: id.toString() }
+				})
+				.then((x) => x.json())
+	});
+
+export const createQueryTransactionsByCharger = (chargerId: number, refetchInterval?: number) =>
+	createQuery({
+		refetchInterval,
+		queryKey: queryKeys.transactionByCharger(chargerId),
+		queryFn: () =>
+			hClient.transaction.charger[':chargerId']
+				.$get({
+					param: { chargerId: chargerId.toString() }
+				})
+				.then((x) => x.json())
+	});
+
+export const createQueryTransactionsByConnector = (connectorId: number, refetchInterval?: number) =>
+	createQuery({
+		refetchInterval,
+		queryKey: queryKeys.transactionByConnector(connectorId),
+		queryFn: () =>
+			hClient.transaction.connector[':connectorId']
+				.$get({
+					param: { connectorId: connectorId.toString() }
+				})
+				.then((x) => x.json())
+	});
+
+export const createMutationTransactionDelete = () =>
+	createMutation({
+		mutationFn: ({ id }: { id: number }) =>
+			hClient.transaction[':id']
+				.$delete({
+					param: { id: id.toString() }
+				})
+				.then((x) => x.json()),
+		onSuccess() {
+			queryClient.invalidateQueries({
+				queryKey: queryKeys.transaction
 			});
 		}
 	});

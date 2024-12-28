@@ -13,42 +13,19 @@ export const statusNotification: ActionHandler = {
     payload: unknown,
     wsCtx: WSCustomContext
   ): Promise<z.infer<typeof StatusNotificationResponseSchema>> => {
-    let parsedData: z.infer<typeof StatusNotificationRequestSchema>;
-
-    try {
-      parsedData = StatusNotificationRequestSchema.parse(payload);
-    } catch (error) {
-      logger.error("Payload parsing failed:", error);
-      return {};
-    }
-
-    const {
-      connectorId,
-      status,
-      errorCode: _errorCode,
-      info: _info,
-      vendorErrorCode: _vendorErrorCode,
-      timestamp: reportedTimestamp,
-    } = parsedData;
+    const { connectorId, status } =
+      StatusNotificationRequestSchema.parse(payload);
 
     const charger = wsCtx.get("charger");
 
-    if (!charger) {
-      throw new Error("Charger not found in context.");
-    }
-
-    const timestamp = reportedTimestamp || new Date().toISOString();
-
-    // Handle `connectorId = 0` as applying to the entire charge point
     if (connectorId === 0) {
       await charger.update({
-        lastHeartbeat: timestamp,
+        lastHeartbeat: new Date(),
       });
 
       return {};
     }
 
-    // Ensure the `Connectors` record exists
     let connector = await Connector.findOne({
       eb: (eb) =>
         eb.and([
@@ -58,28 +35,19 @@ export const statusNotification: ActionHandler = {
     });
 
     if (!connector) {
-      console.info(
+      logger.info(
         `Creating new connector for chargerId ${charger.id} and connectorId ${connectorId}`
       );
       connector = await Connector.insert({
         chargerId: charger.id,
         connectorId,
-        status: "Available", // Default initial status
+        status: "Available",
       });
     } else {
       await connector.update({
         status,
       });
     }
-
-    // Fetch the connector ID to ensure the `ChargerStatus` foreign key constraint
-    const existingConnector = await Connector.findOneOrThrow({
-      eb: (eb) =>
-        eb.and([
-          eb("chargerId", "=", charger.id),
-          eb("connectorId", "=", connectorId),
-        ]),
-    });
 
     return {};
   },

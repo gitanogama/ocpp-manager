@@ -14,15 +14,7 @@ export const bootNotification: ActionHandler = {
   ): Promise<z.infer<typeof BootNotificationResponseSchema>> => {
     let parsedData: z.infer<typeof BootNotificationRequestSchema>;
 
-    try {
-      parsedData = BootNotificationRequestSchema.parse(payload);
-    } catch {
-      return {
-        currentTime: new Date().toISOString(),
-        interval: 0,
-        status: "Rejected",
-      };
-    }
+    parsedData = BootNotificationRequestSchema.parse(payload);
 
     const currentTime = new Date().toISOString();
     const charger = wsCtx.get("charger");
@@ -34,10 +26,8 @@ export const bootNotification: ActionHandler = {
       lastHeartbeat: currentTime,
     });
 
-    // Fetch settings
     const settings = await Setting.findOneOrThrow();
 
-    // Return the response
     return {
       currentTime,
       interval: settings.heartbeatInterval,

@@ -8,16 +8,11 @@ export const heartbeat: ActionHandler = {
     payload: unknown,
     wsCtx: WSCustomContext
   ): Promise<z.infer<typeof HeartbeatResponseSchema>> => {
-    try {
-      HeartbeatRequestSchema.parse(payload);
-    } catch {
-      // Ignoring validation errors as per OCPP behavior
-    }
+    HeartbeatRequestSchema.parse(payload);
 
     const currentTime = new Date().toISOString();
     const charger = wsCtx.get("charger");
 
-    // Update the lastHeartbeat for the charger
     await charger.update({
       lastHeartbeat: currentTime,
     });

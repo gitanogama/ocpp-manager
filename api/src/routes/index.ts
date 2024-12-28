@@ -7,6 +7,7 @@ import { charger } from "./charger";
 import { chargeAuthorization } from "./chargeAuthorization";
 import { connector } from "./connector";
 import { rfidTag } from "./rfid-tag/+index";
+import { transaction } from "./transaction";
 
 export function api(nodeWs: NodeWebSocket) {
   return new Hono()
@@ -16,5 +17,6 @@ export function api(nodeWs: NodeWebSocket) {
     .route("/charger", charger)
     .route("/charge-authorization", chargeAuthorization)
     .route("/connector", connector)
-    .route("/rfid-tag", rfidTag);
+    .route("/rfid-tag", rfidTag)
+    .route("/transaction", transaction);
 }

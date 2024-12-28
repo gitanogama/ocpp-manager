@@ -14,22 +14,17 @@ export const chargeAuthorization = new Hono()
       "json",
       z.object({
         chargerId: z.number(),
-        connectorId: z.number().nullable(),
         expiryDate: z.coerce.date().nullable(),
         rfidTagId: z.number().nullable(),
-        wLimit: z.number().nullable(),
       })
     ),
     async (c) => {
-      const { chargerId, connectorId, expiryDate, rfidTagId, wLimit } =
-        c.req.valid("json");
+      const { chargerId, expiryDate, rfidTagId } = c.req.valid("json");
 
       const newAuthorization = await ChargeAuthorization.insert({
         chargerId,
-        connectorId: connectorId || null,
         expiryDate: expiryDate,
         rfidTagId: rfidTagId || null,
-        wLimit: wLimit || null,
       });
 
       return c.json(newAuthorization.serialize(), 201);
@@ -47,16 +42,13 @@ export const chargeAuthorization = new Hono()
       "json",
       z.object({
         chargerId: z.number(),
-        connectorId: z.number().nullable(),
         expiryDate: z.coerce.date().nullable(),
         rfidTagId: z.number().nullable(),
-        wLimit: z.number().nullable(),
       })
     ),
     async (c) => {
       const { id } = c.req.valid("param");
-      const { chargerId, connectorId, expiryDate, rfidTagId, wLimit } =
-        c.req.valid("json");
+      const { chargerId, expiryDate, rfidTagId } = c.req.valid("json");
 
       const authorization = await ChargeAuthorization.findOneOrThrow({
         eb: (eb) => eb("id", "=", id),
@@ -64,10 +56,8 @@ export const chargeAuthorization = new Hono()
 
       await authorization.update({
         chargerId,
-        connectorId: connectorId || null,
         expiryDate: expiryDate,
         rfidTagId: rfidTagId,
-        wLimit: wLimit || null,
       });
 
       return c.json(authorization.serialize());

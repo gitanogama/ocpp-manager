@@ -33,14 +33,12 @@ export type TransactionStatus = "Active" | "Completed" | "Failed" | "Interrupted
 
 export interface ChargeAuthorization {
   chargerId: number;
-  connectorId: number | null;
   createdAt: Generated<Timestamp>;
   expiryDate: Timestamp | null;
   friendlyName: Generated<string>;
   id: Generated<number>;
   rfidTagId: number | null;
   updatedAt: Generated<Timestamp>;
-  wLimit: number | null;
 }
 
 export interface Charger {
@@ -78,12 +76,10 @@ export interface Migration {
 
 export interface RfidTag {
   createdAt: Generated<Timestamp>;
-  expiryDate: Timestamp | null;
   friendlyName: Generated<string>;
   id: Generated<number>;
   rfidTag: string;
   updatedAt: Generated<Timestamp>;
-  wLimit: number | null;
 }
 
 export interface Setting {
@@ -94,16 +90,13 @@ export interface Setting {
 
 export interface Telemetry {
   createdAt: Generated<Timestamp>;
-  current: Generated<number>;
   id: Generated<number>;
-  meterValue: number;
-  sampledValue: Generated<Json | null>;
+  meterValue: Generated<Json | null>;
   transactionId: number;
-  voltage: Generated<number>;
 }
 
 export interface Transaction {
-  authorizationId: number | null;
+  chargeAuthorizationId: number | null;
   connectorId: number;
   createdAt: Generated<Timestamp>;
   energyDelivered: Generated<number | null>;

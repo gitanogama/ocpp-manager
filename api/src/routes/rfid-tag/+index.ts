@@ -14,19 +14,16 @@ export const rfidTag = new Hono()
       "json",
       z.object({
         friendlyName: z.string(),
-        expiryDate: z.coerce.date().nullable(),
         rfidTag: z.string(),
-        wLimit: z.number().nullable(),
       })
     ),
     async (c) => {
-      const { friendlyName, expiryDate, rfidTag, wLimit } = c.req.valid("json");
+      const { friendlyName, rfidTag } = c.req.valid("json");
 
       const newTag = await RfidTag.insert({
         friendlyName,
-        expiryDate,
+
         rfidTag,
-        wLimit: wLimit || null,
       });
 
       return c.json(newTag);
@@ -44,13 +41,11 @@ export const rfidTag = new Hono()
       "json",
       z.object({
         friendlyName: z.string(),
-        expiryDate: z.coerce.date().nullable(),
         rfidTag: z.ostring(),
-        wLimit: z.number().nullable(),
       })
     ),
     async (c) => {
-      const { friendlyName, expiryDate, rfidTag, wLimit } = c.req.valid("json");
+      const { friendlyName, rfidTag } = c.req.valid("json");
       const { id } = c.req.valid("param");
 
       const tag = await RfidTag.findOneOrThrow({
@@ -60,8 +55,6 @@ export const rfidTag = new Hono()
       await tag.update({
         friendlyName,
         rfidTag,
-        wLimit: wLimit || null,
-        expiryDate,
       });
 
       return c.json(tag.serialize());

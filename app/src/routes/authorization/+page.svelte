@@ -36,40 +36,9 @@
 						}))
 					: [],
 
-				validation: z.string().min(1),
-				onChange: async (value) => {
-					if (!value) return;
-					const connectors = await hClient.connector.charger[':id']
-						.$get({
-							param: {
-								id: value
-							}
-						})
-						.then((res) => res.json());
-
-					drawerStore.overwriteDeep((state) => {
-						const connectorField = state.fields.find((field) => field.name === 'connectorId');
-						if (!connectorField || connectorField.type !== 'dropdown') return;
-
-						connectorField.options = [
-							{ label: 'All', value: '' },
-							...connectors.map((connector) => ({
-								label: connector.id.toString(),
-								value: connector.id.toString()
-							}))
-						];
-
-						return state;
-					});
-				}
+				validation: z.string().min(1)
 			},
-			{
-				label: 'Connector ID',
-				name: 'connectorId',
-				type: 'dropdown',
-				options: [],
-				validation: z.string()
-			},
+
 			{
 				label: 'Expiry Date',
 				name: 'expiryDate',
@@ -89,13 +58,6 @@
 					: [],
 
 				validation: z.string().min(1)
-			},
-			{
-				label: 'Watt Limit',
-				name: 'wLimit',
-				type: 'number',
-
-				validation: z.coerce.number().nullable()
 			}
 		] as const satisfies Field[];
 
@@ -111,10 +73,8 @@
 					callback: ({ fieldValues, close }) => {
 						$mutationChargeAuthorizationCreate.mutate({
 							chargerId: parseInt(fieldValues.chargerId),
-							connectorId: parseInt(fieldValues.connectorId) || null,
 							expiryDate: fieldValues.expiryDate ? new Date(fieldValues.expiryDate) : null,
-							rfidTagId: parseInt(fieldValues.rfidTagId) || null,
-							wLimit: fieldValues.wLimit || null
+							rfidTagId: parseInt(fieldValues.rfidTagId) || null
 						});
 						close();
 					}
@@ -125,14 +85,7 @@
 		drawerStore.open(drawerContent);
 	};
 
-	const openEditDrawer = (auth: {
-		id: number;
-		chargerId: number;
-		connectorId: number | null;
-		expiryDate: string | null;
-		rfidTagId: number | null;
-		wLimit: number | null;
-	}) => {
+	const openEditDrawer = (auth: NonNullable<typeof $queryChargeAuthorizations.data>[0]) => {
 		const fields = [
 			{
 				label: 'Charger ID',
@@ -145,37 +98,9 @@
 							value: charger.id.toString()
 						}))
 					: [],
-				validation: z.string().min(1),
-				onChange: async (value) => {
-					if (!value) return;
-					const connectors = await hClient.connector.charger[':id']
-						.$get({ param: { id: value } })
-						.then((res) => res.json());
-
-					drawerStore.overwriteDeep((state) => {
-						const connectorField = state.fields.find((field) => field.name === 'connectorId');
-						if (!connectorField || connectorField.type !== 'dropdown') return;
-
-						connectorField.options = [
-							{ label: 'All', value: '' },
-							...connectors.map((connector) => ({
-								label: connector.id.toString(),
-								value: connector.id.toString()
-							}))
-						];
-
-						return state;
-					});
-				}
+				validation: z.string().min(1)
 			},
-			{
-				label: 'Connector ID',
-				name: 'connectorId',
-				type: 'dropdown',
-				defaultValue: auth.connectorId?.toString() || '',
-				options: [], // Populated dynamically on Charger ID change
-				validation: z.string()
-			},
+
 			{
 				label: 'Expiry Date',
 				name: 'expiryDate',
@@ -195,13 +120,6 @@
 						}))
 					: [],
 				validation: z.string().min(1)
-			},
-			{
-				label: 'Watt Limit',
-				name: 'wLimit',
-				type: 'number',
-				defaultValue: auth.wLimit || undefined,
-				validation: z.coerce.number().nullable()
 			}
 		] as const satisfies Field[];
 
@@ -218,10 +136,8 @@
 						$mutationChargeAuthorizationUpdate.mutate({
 							id: auth.id,
 							chargerId: parseInt(fieldValues.chargerId),
-							connectorId: fieldValues.connectorId ? parseInt(fieldValues.connectorId) : null,
 							expiryDate: fieldValues.expiryDate ? new Date(fieldValues.expiryDate) : null,
-							rfidTagId: parseInt(fieldValues.rfidTagId) || null,
-							wLimit: fieldValues.wLimit ? Number(fieldValues.wLimit) : null
+							rfidTagId: parseInt(fieldValues.rfidTagId) || null
 						});
 						close();
 					}
@@ -248,9 +164,6 @@
 		} as const satisfies DrawerState<typeof fields>;
 
 		drawerStore.open(drawerContent);
-
-		// Preload connector options based on the current chargerId
-		fields.find((field) => field.name === 'chargerId')?.onChange?.(auth.chargerId.toString());
 	};
 </script>
 
@@ -279,7 +192,6 @@
 									<IconLockPin class="text-primary h-10 w-10" />
 									<div>
 										<h3 class="text-xl font-semibold">Charger ID: {auth.chargerId}</h3>
-										<p class="text-sm text-gray-500">Connector ID: {auth.connectorId ?? 'N/A'}</p>
 									</div>
 								</div>
 								<button class="btn btn-ghost btn-sm" onclick={() => openEditDrawer(auth)}
@@ -293,10 +205,6 @@
 										<td>{charger?.friendlyName} ({charger?.vendor})</td>
 									</tr>
 									<tr>
-										<td class="w-60 font-medium">Connector Id</td>
-										<td>Connector: {auth.connectorId || 'All'}</td>
-									</tr>
-									<tr>
 										<td class="w-60 font-medium">RFID Tag</td>
 										<td>{tag?.friendlyName} ({tag?.rfidTag})</td>
 									</tr>
@@ -307,10 +215,6 @@
 												? formatDistanceToNow(new Date(auth.expiryDate), { addSuffix: true })
 												: 'N/A'}</td
 										>
-									</tr>
-									<tr>
-										<td class="w-60 font-medium">Watt Limit</td>
-										<td>{auth.wLimit ? `${auth.wLimit} W` : 'No limit'}</td>
 									</tr>
 									<tr>
 										<td class="w-60 font-medium">Created</td>

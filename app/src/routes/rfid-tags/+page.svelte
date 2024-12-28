@@ -34,15 +34,7 @@
 					type: 'text',
 					defaultValue: '',
 					validation: z.string().min(1)
-				},
-				{
-					label: 'Expiry Date',
-					name: 'expiryDate',
-					type: 'date',
-					defaultValue: '',
-					validation: z.string()
-				},
-				{ label: 'Watt Limit', name: 'wLimit', type: 'number', validation: z.number() }
+				}
 			] as const,
 			actions: [
 				{
@@ -53,9 +45,8 @@
 					callback: ({ fieldValues, close }) => {
 						$mutationRfidTagCreate.mutate({
 							friendlyName: fieldValues.friendlyName,
-							expiryDate: fieldValues.expiryDate ? new Date(fieldValues.expiryDate) : null,
-							rfidTag: fieldValues.rfidTag,
-							wLimit: fieldValues.wLimit || null
+
+							rfidTag: fieldValues.rfidTag
 						});
 						close();
 					}
@@ -64,13 +55,7 @@
 		});
 	};
 
-	const openEditDrawer = (tag: {
-		id: number;
-		friendlyName: string;
-		rfidTag: string;
-		expiryDate: string | null;
-		wLimit: number | null;
-	}) => {
+	const openEditDrawer = (tag: NonNullable<typeof $queryRfidTags.data>[0]) => {
 		drawerStore.open({
 			header: 'Edit RFID Tag',
 			fields: [
@@ -87,20 +72,6 @@
 					type: 'text',
 					defaultValue: tag.rfidTag,
 					validation: z.string().min(1)
-				},
-				{
-					label: 'Expiry Date',
-					name: 'expiryDate',
-					type: 'date',
-					defaultValue: tag.expiryDate || '',
-					validation: z.string()
-				},
-				{
-					label: 'Watt Limit',
-					name: 'wLimit',
-					type: 'number',
-					defaultValue: tag.wLimit || undefined,
-					validation: z.coerce.number()
 				}
 			] as const,
 			actions: [
@@ -113,9 +84,7 @@
 						$mutationRfidTagUpdate.mutate({
 							id: tag.id,
 							friendlyName: fieldValues.friendlyName,
-							expiryDate: fieldValues.expiryDate ? new Date(fieldValues.expiryDate) : null,
-							rfidTag: fieldValues.rfidTag,
-							wLimit: fieldValues.wLimit ?? null
+							rfidTag: fieldValues.rfidTag
 						});
 						close();
 					}
@@ -162,18 +131,6 @@
 
 							<table class="bg-base-300 table w-full overflow-hidden rounded-lg">
 								<tbody>
-									<tr>
-										<td class="w-60 font-medium">Expiry Date</td>
-										<td
-											>{tag.expiryDate
-												? formatDistanceToNow(new Date(tag.expiryDate), { addSuffix: true })
-												: 'N/A'}</td
-										>
-									</tr>
-									<tr>
-										<td class="w-60 font-medium">Watt Limit</td>
-										<td>{tag.wLimit ?? 'No limit'}</td>
-									</tr>
 									<tr>
 										<td class="w-60 font-medium">Created</td>
 										<td>{formatDistanceToNow(new Date(tag.createdAt), { addSuffix: true })}</td>
