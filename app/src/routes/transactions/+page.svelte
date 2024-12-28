@@ -29,7 +29,7 @@
 									</p>
 								</div>
 								<button
-									class="btn btn-error btn-sm"
+									class="btn btn-ghost btn-sm"
 									onclick={() => deleteTransaction(transaction.id)}
 								>
 									Delete
