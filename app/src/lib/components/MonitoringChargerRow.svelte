@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {
 		createMutationChargerDelete,
+		createMutationChargerReset,
 		createMutationChargerUpdate,
 		createQueryConnector
 	} from '$lib/queryClient';
@@ -11,6 +12,7 @@
 	import IconChargingPile from '$lib/icons/tabler/IconChargingPile.svelte';
 	import { formatDistanceToNow } from 'date-fns';
 	import IconPlug from '$lib/icons/tabler/IconPlug.svelte';
+	import { toast } from 'svelte-daisy-toast';
 
 	const { charger }: { charger: InferResponseType<(typeof hClient)['charger']['$get']>[0] } =
 		$props();
@@ -19,6 +21,7 @@
 
 	const mutationChargerUpdate = createMutationChargerUpdate();
 	const mutationChargerDelete = createMutationChargerDelete();
+	const mutationChargerReset = createMutationChargerReset();
 
 	const openEditDrawer = () => {
 		drawerStore.open({
@@ -65,13 +68,29 @@
 					class: 'btn-primary',
 					buttonType: 'submit',
 					callback: ({ fieldValues, close }) => {
-						$mutationChargerUpdate.mutate({
-							id: charger.id.toString(),
-							friendlyName: fieldValues.friendlyName,
-							status: fieldValues.status as any,
-							shortcode: fieldValues.shortcode
-						});
-						close();
+						$mutationChargerUpdate.mutate(
+							{
+								id: charger.id.toString(),
+								friendlyName: fieldValues.friendlyName,
+								status: fieldValues.status as any,
+								shortcode: fieldValues.shortcode
+							},
+							{
+								onError: () => {
+									toast({
+										message: 'Error saving charger',
+										type: 'error'
+									});
+								},
+								onSuccess: () => {
+									toast({
+										message: 'Charger saved',
+										type: 'success'
+									});
+									close();
+								}
+							}
+						);
 					}
 				},
 				{
@@ -88,7 +107,24 @@
 					class: 'btn-error btn-outline',
 					buttonType: 'button',
 					callback: ({ close }) => {
-						$mutationChargerDelete.mutate({ id: charger.id.toString() });
+						$mutationChargerDelete.mutate(
+							{ id: charger.id.toString() },
+							{
+								onError: () => {
+									toast({
+										message: 'Error deleting charger',
+										type: 'error'
+									});
+								},
+								onSuccess: () => {
+									toast({
+										message: 'Charger deleted',
+										type: 'success'
+									});
+									close();
+								}
+							}
+						);
 						close();
 					}
 				}
@@ -110,6 +146,32 @@
 		};
 		return (colors as any)[status] || 'bg-base-300';
 	};
+
+	let dialogReset: HTMLDialogElement;
+
+	const resetCharger = (type: 'Hard' | 'Soft') => {
+		$mutationChargerReset.mutate(
+			{
+				id: charger.id,
+				type
+			},
+			{
+				onError: () => {
+					toast({
+						message: 'Error resetting charger',
+						type: 'error'
+					});
+				},
+				onSuccess: () => {
+					toast({
+						message: 'Charger reset',
+						type: 'success'
+					});
+					dialogReset.close();
+				}
+			}
+		);
+	};
 </script>
 
 <div class="bg-base-200 container mx-auto rounded-lg px-4 py-6 shadow-md">
@@ -123,7 +185,29 @@
 				<p class="text-sm text-gray-500">{charger.vendor || 'Unknown Vendor'}</p>
 			</div>
 		</div>
-		<button class="btn btn-ghost btn-sm" onclick={openEditDrawer}> Edit </button>
+		<div class="flex gap-x-2">
+			<div>
+				<button class="btn btn-ghost btn-sm" onclick={() => dialogReset.showModal()}>Reset</button>
+				<dialog bind:this={dialogReset} class="modal">
+					<div class="modal-box">
+						<form method="dialog">
+							<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+						</form>
+						<h3 class="mb-10 text-lg font-bold">Reset Charger</h3>
+						<div class="flex gap-x-2">
+							<button class="btn btn-warning btn-sm" onclick={() => resetCharger('Soft')}
+								>Soft Reset</button
+							>
+							<button class="btn btn-error btn-sm" onclick={() => resetCharger('Hard')}
+								>Hard Reset</button
+							>
+						</div>
+					</div>
+				</dialog>
+			</div>
+
+			<button class="btn btn-ghost btn-sm" onclick={openEditDrawer}>Edit</button>
+		</div>
 	</div>
 
 	<div class="mb-6">

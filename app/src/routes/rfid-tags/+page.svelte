@@ -11,6 +11,7 @@
 	import BasePage from '$lib/components/BasePage.svelte';
 	import IconDeviceAirtag from '$lib/icons/tabler/IconDeviceAirtag.svelte';
 	import Scrollable from '$lib/components/Scrollable.svelte';
+	import { toast } from 'svelte-daisy-toast';
 
 	const queryRfidTags = createQueryRfidTag(10000);
 	const mutationRfidTagCreate = createMutationRfidTagCreate();
@@ -43,12 +44,28 @@
 					class: 'btn-primary',
 					buttonType: 'submit',
 					callback: ({ fieldValues, close }) => {
-						$mutationRfidTagCreate.mutate({
-							friendlyName: fieldValues.friendlyName,
+						$mutationRfidTagCreate.mutate(
+							{
+								friendlyName: fieldValues.friendlyName,
 
-							rfidTag: fieldValues.rfidTag
-						});
-						close();
+								rfidTag: fieldValues.rfidTag
+							},
+							{
+								onError: () => {
+									toast({
+										message: 'Error creating RFID Tag',
+										type: 'error'
+									});
+								},
+								onSuccess: () => {
+									toast({
+										message: 'RFID Tag created',
+										type: 'success'
+									});
+									close();
+								}
+							}
+						);
 					}
 				}
 			]
@@ -81,11 +98,28 @@
 					class: 'btn-primary',
 					buttonType: 'submit',
 					callback: ({ fieldValues, close }) => {
-						$mutationRfidTagUpdate.mutate({
-							id: tag.id,
-							friendlyName: fieldValues.friendlyName,
-							rfidTag: fieldValues.rfidTag
-						});
+						$mutationRfidTagUpdate.mutate(
+							{
+								id: tag.id,
+								friendlyName: fieldValues.friendlyName,
+								rfidTag: fieldValues.rfidTag
+							},
+							{
+								onError: () => {
+									toast({
+										message: 'Error saving RFID Tag',
+										type: 'error'
+									});
+								},
+								onSuccess: () => {
+									toast({
+										message: 'RFID Tag saved',
+										type: 'success'
+									});
+									close();
+								}
+							}
+						);
 						close();
 					}
 				},
@@ -96,8 +130,24 @@
 					class: 'btn-error btn-outline',
 					buttonType: 'button',
 					callback: ({ close }) => {
-						$mutationRfidTagDelete.mutate({ id: tag.id });
-						close();
+						$mutationRfidTagDelete.mutate(
+							{ id: tag.id },
+							{
+								onError: () => {
+									toast({
+										message: 'Error deleting RFID Tag',
+										type: 'error'
+									});
+								},
+								onSuccess: () => {
+									toast({
+										message: 'RFID Tag deleted',
+										type: 'success'
+									});
+									close();
+								}
+							}
+						);
 					}
 				}
 			]

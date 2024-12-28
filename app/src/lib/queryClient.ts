@@ -283,7 +283,6 @@ export const createMutationChargeAuthorizationDelete = () =>
 		}
 	});
 
-// Transaction Queries and Mutations
 export const createQueryTransactions = (refetchInterval?: number) =>
 	createQuery({
 		refetchInterval,
@@ -340,4 +339,15 @@ export const createMutationTransactionDelete = () =>
 				queryKey: queryKeys.transaction
 			});
 		}
+	});
+
+export const createMutationChargerReset = () =>
+	createMutation({
+		mutationFn: ({ id, type }: { id: number; type: 'Hard' | 'Soft' }) =>
+			hClient['charger'][':id']['reset']
+				.$post({
+					param: { id: id.toString() },
+					json: { type }
+				})
+				.then((x) => x.json())
 	});

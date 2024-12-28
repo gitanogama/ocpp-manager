@@ -15,6 +15,7 @@
 	import LayoutObjectDrawer from '$lib/components/LayoutObjectDrawer.svelte';
 	import IconDeviceAirtag from '$lib/icons/tabler/IconDeviceAirtag.svelte';
 	import IconBolt from '$lib/icons/tabler/IconBolt.svelte';
+	import Toast from 'svelte-daisy-toast';
 
 	let { children } = $props();
 	let time = $state(new Date());
@@ -51,6 +52,7 @@
 	}
 </script>
 
+<Toast position="bottom-end" />
 <QueryClientProvider client={queryClient}>
 	<div class="bg-base-100 flex h-screen">
 		<!-- Sidebar -->

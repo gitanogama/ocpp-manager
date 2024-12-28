@@ -7,12 +7,13 @@
 		createQueryCharger,
 		createQueryRfidTag
 	} from '$lib/queryClient';
-	import { drawerStore, type DrawerState, type Field } from '$lib/drawerStore';
+	import { drawerStore } from '$lib/drawerStore';
 	import { z } from 'zod';
 	import { formatDistanceToNow } from 'date-fns';
 	import BasePage from '$lib/components/BasePage.svelte';
 	import IconLockPin from '$lib/icons/tabler/IconLockPin.svelte';
 	import Scrollable from '$lib/components/Scrollable.svelte';
+	import { toast } from 'svelte-daisy-toast';
 
 	const queryChargeAuthorizations = createQueryChargeAuthorization(10000);
 	const queryChargers = createQueryCharger(10000);
@@ -23,46 +24,43 @@
 	const mutationChargeAuthorizationDelete = createMutationChargeAuthorizationDelete();
 
 	const openCreateDrawer = () => {
-		const fields = [
-			{
-				label: 'Charger ID',
-				name: 'chargerId',
-				type: 'dropdown',
-				options: $queryChargers.data
-					? $queryChargers.data.map((charger) => ({
-							label: `${charger.friendlyName} (${charger.vendor})`,
-							value: charger.id.toString()
-						}))
-					: [],
-
-				validation: z.string().min(1)
-			},
-
-			{
-				label: 'Expiry Date',
-				name: 'expiryDate',
-				type: 'date',
-				defaultValue: '',
-				validation: z.string()
-			},
-			{
-				label: 'RFID Tag ID',
-				name: 'rfidTagId',
-				type: 'dropdown',
-				options: $queryRfidTags.data
-					? $queryRfidTags.data.map((tag) => ({
-							label: `${tag.friendlyName} (${tag.rfidTag})`,
-							value: tag.id.toString()
-						}))
-					: [],
-
-				validation: z.string().min(1)
-			}
-		] as const satisfies Field[];
-
-		const drawerContent = {
+		drawerStore.open({
 			header: 'Add Charge Authorization',
-			fields,
+			fields: [
+				{
+					label: 'Charger ID',
+					name: 'chargerId',
+					type: 'dropdown',
+					options: $queryChargers.data
+						? $queryChargers.data.map((charger) => ({
+								label: `${charger.friendlyName} (${charger.vendor})`,
+								value: charger.id.toString()
+							}))
+						: [],
+					validation: z.string().min(1)
+				},
+
+				{
+					label: 'Expiry Date',
+					name: 'expiryDate',
+					type: 'date',
+					defaultValue: '',
+					validation: z.string()
+				},
+				{
+					label: 'RFID Tag ID',
+					name: 'rfidTagId',
+					type: 'dropdown',
+					options: $queryRfidTags.data
+						? $queryRfidTags.data.map((tag) => ({
+								label: `${tag.friendlyName} (${tag.rfidTag})`,
+								value: tag.id.toString()
+							}))
+						: [],
+
+					validation: z.string().min(1)
+				}
+			] as const,
 			actions: [
 				{
 					label: 'Create',
@@ -70,61 +68,73 @@
 					class: 'btn-primary',
 					buttonType: 'submit',
 					callback: ({ fieldValues, close }) => {
-						$mutationChargeAuthorizationCreate.mutate({
-							chargerId: parseInt(fieldValues.chargerId),
-							expiryDate: fieldValues.expiryDate ? new Date(fieldValues.expiryDate) : null,
-							rfidTagId: parseInt(fieldValues.rfidTagId) || null
-						});
-						close();
+						$mutationChargeAuthorizationCreate.mutate(
+							{
+								chargerId: parseInt(fieldValues.chargerId),
+								expiryDate: fieldValues.expiryDate ? new Date(fieldValues.expiryDate) : null,
+								rfidTagId: parseInt(fieldValues.rfidTagId) || null
+							},
+							{
+								onError: () => {
+									toast({
+										message: 'Error creating charge authorization',
+										type: 'error'
+									});
+								},
+								onSuccess: () => {
+									toast({
+										message: 'Charge authorization created',
+										type: 'success'
+									});
+									close();
+								}
+							}
+						);
 					}
 				}
 			]
-		} as const satisfies DrawerState<typeof fields>;
-
-		drawerStore.open(drawerContent);
+		});
 	};
 
 	const openEditDrawer = (auth: NonNullable<typeof $queryChargeAuthorizations.data>[0]) => {
-		const fields = [
-			{
-				label: 'Charger ID',
-				name: 'chargerId',
-				type: 'dropdown',
-				defaultValue: auth.chargerId.toString(),
-				options: $queryChargers.data
-					? $queryChargers.data.map((charger) => ({
-							label: `${charger.friendlyName} (${charger.vendor})`,
-							value: charger.id.toString()
-						}))
-					: [],
-				validation: z.string().min(1)
-			},
-
-			{
-				label: 'Expiry Date',
-				name: 'expiryDate',
-				type: 'date',
-				defaultValue: auth.expiryDate || '',
-				validation: z.string()
-			},
-			{
-				label: 'RFID Tag ID',
-				name: 'rfidTagId',
-				type: 'dropdown',
-				defaultValue: auth.rfidTagId?.toString() || '',
-				options: $queryRfidTags.data
-					? $queryRfidTags.data.map((tag) => ({
-							label: `${tag.friendlyName} (${tag.rfidTag})`,
-							value: tag.id.toString()
-						}))
-					: [],
-				validation: z.string().min(1)
-			}
-		] as const satisfies Field[];
-
-		const drawerContent = {
+		drawerStore.open({
 			header: 'Edit Charge Authorization',
-			fields,
+			fields: [
+				{
+					label: 'Charger ID',
+					name: 'chargerId',
+					type: 'dropdown',
+					defaultValue: auth.chargerId.toString(),
+					options: $queryChargers.data
+						? $queryChargers.data.map((charger) => ({
+								label: `${charger.friendlyName} (${charger.vendor})`,
+								value: charger.id.toString()
+							}))
+						: [],
+					validation: z.string().min(1)
+				},
+
+				{
+					label: 'Expiry Date',
+					name: 'expiryDate',
+					type: 'date',
+					defaultValue: auth.expiryDate || '',
+					validation: z.string()
+				},
+				{
+					label: 'RFID Tag ID',
+					name: 'rfidTagId',
+					type: 'dropdown',
+					defaultValue: auth.rfidTagId?.toString() || '',
+					options: $queryRfidTags.data
+						? $queryRfidTags.data.map((tag) => ({
+								label: `${tag.friendlyName} (${tag.rfidTag})`,
+								value: tag.id.toString()
+							}))
+						: [],
+					validation: z.string().min(1)
+				}
+			],
 			actions: [
 				{
 					label: 'Save',
@@ -132,13 +142,29 @@
 					class: 'btn-primary',
 					buttonType: 'submit',
 					callback: ({ fieldValues, close }) => {
-						$mutationChargeAuthorizationUpdate.mutate({
-							id: auth.id,
-							chargerId: parseInt(fieldValues.chargerId),
-							expiryDate: fieldValues.expiryDate ? new Date(fieldValues.expiryDate) : null,
-							rfidTagId: parseInt(fieldValues.rfidTagId) || null
-						});
-						close();
+						$mutationChargeAuthorizationUpdate.mutate(
+							{
+								id: auth.id,
+								chargerId: parseInt(fieldValues.chargerId),
+								expiryDate: fieldValues.expiryDate ? new Date(fieldValues.expiryDate) : null,
+								rfidTagId: parseInt(fieldValues.rfidTagId) || null
+							},
+							{
+								onError: () => {
+									toast({
+										message: 'Error saving charge authorization',
+										type: 'error'
+									});
+								},
+								onSuccess: () => {
+									toast({
+										message: 'Charge authorization saving',
+										type: 'success'
+									});
+									close();
+								}
+							}
+						);
 					}
 				},
 				{
@@ -155,14 +181,28 @@
 					class: 'btn-error btn-outline',
 					buttonType: 'button',
 					callback: ({ close }) => {
-						$mutationChargeAuthorizationDelete.mutate({ id: auth.id });
-						close();
+						$mutationChargeAuthorizationDelete.mutate(
+							{ id: auth.id },
+							{
+								onError: () => {
+									toast({
+										message: 'Error deleting charge authorization',
+										type: 'error'
+									});
+								},
+								onSuccess: () => {
+									toast({
+										message: 'Charge authorization deleted',
+										type: 'success'
+									});
+									close();
+								}
+							}
+						);
 					}
 				}
 			]
-		} as const satisfies DrawerState<typeof fields>;
-
-		drawerStore.open(drawerContent);
+		});
 	};
 </script>
 

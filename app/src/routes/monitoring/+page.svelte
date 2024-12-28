@@ -5,6 +5,7 @@
 	import Scrollable from '$lib/components/Scrollable.svelte';
 	import { drawerStore } from '$lib/drawerStore';
 	import { z } from 'zod';
+	import { toast } from 'svelte-daisy-toast';
 
 	const queryChargers = createQueryCharger(10000);
 
@@ -45,7 +46,21 @@
 					callback: ({ fieldValues, close }) => {
 						$mutationChargerCreate.mutate(
 							{ friendlyName: fieldValues.label, shortcode: fieldValues.shortcode },
-							{ onSuccess: () => close() }
+							{
+								onError: () => {
+									toast({
+										message: 'Error creating charger',
+										type: 'error'
+									});
+								},
+								onSuccess: () => {
+									toast({
+										message: 'Charger created',
+										type: 'success'
+									});
+									close();
+								}
+							}
 						);
 					}
 				}
