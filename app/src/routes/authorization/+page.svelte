@@ -11,7 +11,6 @@
 	import { z } from 'zod';
 	import { formatDistanceToNow } from 'date-fns';
 	import BasePage from '$lib/components/BasePage.svelte';
-	import { hClient } from '$lib/hClient';
 	import IconLockPin from '$lib/icons/tabler/IconLockPin.svelte';
 	import Scrollable from '$lib/components/Scrollable.svelte';
 

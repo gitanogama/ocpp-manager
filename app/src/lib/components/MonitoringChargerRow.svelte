@@ -78,7 +78,7 @@
 					label: 'Cancel',
 					key: 'cancel',
 					class: 'btn-outline',
-					callback: ({ fieldValues, close }) => {
+					callback: ({ close }) => {
 						close();
 					}
 				},
@@ -87,7 +87,7 @@
 					key: 'delete',
 					class: 'btn-error btn-outline',
 					buttonType: 'button',
-					callback: ({ fieldValues, close }) => {
+					callback: ({ close }) => {
 						$mutationChargerDelete.mutate({ id: charger.id.toString() });
 						close();
 					}
