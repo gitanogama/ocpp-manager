@@ -76,7 +76,7 @@
 											{transaction.energyDelivered
 												? `${transaction.energyDelivered / 1000} kWh`
 												: transaction.estimatedEnergyDelivered?.totalEnergyDelivered
-													? `Estimated ${transaction.estimatedEnergyDelivered.totalEnergyDelivered} kWh ${formatDistanceToNow(transaction.estimatedEnergyDelivered.lastUpdateTimestamp)}`
+													? `Estimated ${transaction.estimatedEnergyDelivered.totalEnergyDelivered / 1000} kWh ${formatDistanceToNow(transaction.estimatedEnergyDelivered.lastUpdateTimestamp)}`
 													: 'N/A'}
 										</td>
 									</tr>

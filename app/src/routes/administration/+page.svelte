@@ -14,6 +14,7 @@
 			heartbeatInterval = $querySettings.data.heartbeatInterval;
 			systemMaintenance = Boolean($querySettings.data.systemMaintenance);
 			meterValueSampleInterval = $querySettings.data.meterValueSampleInterval;
+			clockAlignedDataInterval = $querySettings.data.clockAlignedDataInterval;
 		}
 	});
 
