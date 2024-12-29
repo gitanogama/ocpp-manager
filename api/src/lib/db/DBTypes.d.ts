@@ -83,6 +83,7 @@ export interface RfidTag {
 }
 
 export interface Setting {
+  clockAlignedDataInterval: Generated<number>;
   heartbeatInterval: Generated<number>;
   id: Generated<number>;
   meterValueSampleInterval: Generated<number>;

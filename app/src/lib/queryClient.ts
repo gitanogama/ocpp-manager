@@ -207,14 +207,23 @@ export const createMutationSetting = () =>
 	createMutation({
 		mutationFn: ({
 			heartbeatInterval,
-			systemMaintenance
+			systemMaintenance,
+			clockAlignedDataInterval,
+			meterValueSampleInterval
 		}: {
 			heartbeatInterval?: number;
 			systemMaintenance?: boolean;
+			clockAlignedDataInterval?: number;
+			meterValueSampleInterval?: number;
 		}) =>
 			hClient.setting
 				.$patch({
-					json: { heartbeatInterval, systemMaintenance }
+					json: {
+						heartbeatInterval,
+						systemMaintenance,
+						clockAlignedDataInterval,
+						meterValueSampleInterval
+					}
 				})
 				.then((x) => x.json()),
 		onSuccess() {

@@ -22,7 +22,13 @@ export class Connector extends generateBaseModel(
     const setting = await Setting.findOneOrThrow();
 
     const cutoffTime = new Date(
-      Date.now() - (setting.meterValueSampleInterval + 10) * 1000
+      Date.now() -
+        (Math.max(
+          setting.meterValueSampleInterval,
+          setting.clockAlignedDataInterval
+        ) +
+          10) *
+          1000
     );
 
     const transactions = await Transaction.findMany({

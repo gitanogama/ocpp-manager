@@ -52,13 +52,18 @@
 
 									<tr>
 										<td class="w-60 font-medium">Connector</td>
-										<td>{transaction.connectorId}</td>
+										<td>{transaction.connector?.connectorId}</td>
 									</tr>
 									<tr>
 										<td class="w-60 font-medium">Tag Used</td>
 										<td>{transaction.chargeAuthorization?.tag?.friendlyName ?? 'Unknown'}</td>
 									</tr>
-
+									<tr>
+										<td class="w-60 font-medium">Start Time</td>
+										<td>
+											{new Date(transaction.startTime).toLocaleString()}
+										</td>
+									</tr>
 									<tr>
 										<td class="w-60 font-medium">Duration</td>
 										<td>
@@ -70,14 +75,14 @@
 										<td>
 											{transaction.energyDelivered
 												? `${transaction.energyDelivered / 1000} kWh`
-												: transaction.estimatedEnergyDelivered?.total_energy_delivered
-													? `Estimated ${transaction.estimatedEnergyDelivered?.total_energy_delivered} kWh ${formatDistanceToNow(transaction.estimatedEnergyDelivered?.last_update_timestamp)}`
-													: 'N/A'}</td
-										>
+												: transaction.estimatedEnergyDelivered?.totalEnergyDelivered
+													? `Estimated ${transaction.estimatedEnergyDelivered.totalEnergyDelivered} kWh ${formatDistanceToNow(transaction.estimatedEnergyDelivered.lastUpdateTimestamp)}`
+													: 'N/A'}
+										</td>
 									</tr>
 									<tr>
-										<td class="w-60 font-medium">Reason</td>
-										<td>{transaction.reason}</td>
+										<td class="w-60 font-medium">Stop Reason</td>
+										<td>{transaction.reason || 'N/A'}</td>
 									</tr>
 									<tr>
 										<td class="w-60 font-medium">Payment Status</td>

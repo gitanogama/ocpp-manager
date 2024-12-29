@@ -7,6 +7,7 @@
 	let heartbeatInterval = $state(0);
 	let systemMaintenance = $state(false);
 	let meterValueSampleInterval = $state(0);
+	let clockAlignedDataInterval = $state(0);
 
 	$effect(() => {
 		if ($querySettings.data) {
@@ -19,62 +20,102 @@
 	function updateSettings() {
 		$mutationSettings.mutate({
 			heartbeatInterval,
-			systemMaintenance
+			systemMaintenance,
+			meterValueSampleInterval,
+			clockAlignedDataInterval
 		});
 	}
 </script>
 
 <BasePage title="Administration">
-	<div class="max-w-xl space-y-6 p-4">
+	<div class="max-w-xl p-4">
 		{#if $querySettings.isPending}
 			<p class="text-center">Loading settings...</p>
 		{:else}
-			<div class="form-control">
-				<!-- svelte-ignore a11y_label_has_associated_control -->
-				<label class="mb-2 block text-sm font-medium">Heartbeat Interval (seconds)</label>
-				<input
-					type="number"
-					class="input input-bordered w-full"
-					bind:value={heartbeatInterval}
-					placeholder="300"
-					disabled={$mutationSettings.isPending}
-				/>
-			</div>
-
-			<div class="form-control">
-				<!-- svelte-ignore a11y_label_has_associated_control -->
-				<label class="mb-2 block text-sm font-medium">Meter Value Sample Interval (seconds)</label>
-				<input
-					type="number"
-					class="input input-bordered w-full"
-					bind:value={meterValueSampleInterval}
-					placeholder="300"
-					disabled={$mutationSettings.isPending}
-				/>
-			</div>
-
-			<div class="form-control">
-				<!-- svelte-ignore a11y_label_has_associated_control -->
-				<label class="mb-2 block text-sm font-medium">System Maintenance</label>
-				<input
-					type="checkbox"
-					class="toggle toggle-primary"
-					bind:checked={systemMaintenance}
-					disabled={$mutationSettings.isPending}
-				/>
-			</div>
-
-			<button
-				class="btn btn-primary w-full"
-				onclick={updateSettings}
-				disabled={$mutationSettings.isPending}
+			<form
+				class="space-y-6"
+				onsubmit={(e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					updateSettings();
+				}}
 			>
-				{#if $mutationSettings.isPending}
-					<span class="loading loading-spinner"></span>
-				{:else}
-					Update Settings
-				{/if}
-			</button>
+				<div class="form-control">
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label for="heartbeatInterval" class="mb-2 block text-sm font-medium"
+						>Heartbeat Interval (seconds)</label
+					>
+					<input
+						id="heartbeatInterval"
+						type="number"
+						class="input input-bordered w-full"
+						bind:value={heartbeatInterval}
+						placeholder="300"
+						min="10"
+						max="99999"
+						required
+						disabled={$mutationSettings.isPending}
+					/>
+				</div>
+
+				<div class="form-control">
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label for="meterValueSampleInterval" class="mb-2 block text-sm font-medium"
+						>Meter Value Sample Interval (seconds)</label
+					>
+					<input
+						id="meterValueSampleInterval"
+						type="number"
+						class="input input-bordered w-full"
+						bind:value={meterValueSampleInterval}
+						placeholder="60"
+						min="10"
+						max="99999"
+						required
+						disabled={$mutationSettings.isPending}
+					/>
+				</div>
+
+				<div class="form-control">
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label for="clockAlignedDataInterval" class="mb-2 block text-sm font-medium"
+						>Clock Aligned Data Interval (seconds)</label
+					>
+					<input
+						id="clockAlignedDataInterval"
+						type="number"
+						class="input input-bordered w-full"
+						bind:value={clockAlignedDataInterval}
+						placeholder="60"
+						min="10"
+						max="99999"
+						required
+						disabled={$mutationSettings.isPending}
+					/>
+				</div>
+
+				<div class="form-control">
+					<!-- svelte-ignore a11y_label_has_associated_control -->
+					<label for="systemMaintenance" class="mb-2 block text-sm font-medium"
+						>System Maintenance</label
+					>
+					<input
+						id="systemMaintenance"
+						type="checkbox"
+						class="toggle toggle-primary"
+						bind:checked={systemMaintenance}
+						disabled={$mutationSettings.isPending}
+					/>
+				</div>
+
+				<button type="submit" class="btn btn-primary w-full" disabled={$mutationSettings.isPending}>
+					{#if $mutationSettings.isPending}
+						<span class="loading loading-spinner"></span>
+					{:else}
+						Update Settings
+					{/if}
+				</button>
+			</form>
 		{/if}
 	</div>
 </BasePage>

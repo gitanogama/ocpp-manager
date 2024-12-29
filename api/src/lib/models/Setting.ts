@@ -15,12 +15,16 @@ export class Setting extends generateBaseModel("setting", "id") {
 
     const configurations: ChangeConfigurationRequest[] = [
       {
+        key: "HeartbeatInterval",
+        value: setting.heartbeatInterval.toString(),
+      },
+      {
         key: "MeterValueSampleInterval",
         value: setting.meterValueSampleInterval.toString(),
       },
       {
-        key: "HeartbeatInterval",
-        value: setting.heartbeatInterval.toString(),
+        key: "ClockAlignedDataInterval",
+        value: setting.clockAlignedDataInterval.toString(),
       },
     ];
 
