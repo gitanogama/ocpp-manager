@@ -179,7 +179,9 @@
 		data: NonNullable<
 			NonNullable<typeof $queryConnectors.data>[0]['telemetry']
 		>['meterValue']['raw'],
-		phase: string
+		phase: NonNullable<
+			NonNullable<typeof $queryConnectors.data>[0]['telemetry']
+		>['meterValue']['raw'][0]['sampledValue'][0]['phase']
 	) {
 		for (const entry of data) {
 			const phaseData = entry.sampledValue.find(
@@ -196,7 +198,9 @@
 		data: NonNullable<
 			NonNullable<typeof $queryConnectors.data>[0]['telemetry']
 		>['meterValue']['raw'],
-		measurand: string
+		measurand: NonNullable<
+			NonNullable<typeof $queryConnectors.data>[0]['telemetry']
+		>['meterValue']['raw'][0]['sampledValue'][0]['measurand']
 	) {
 		for (const entry of data) {
 			const measurandData = entry.sampledValue.find(
