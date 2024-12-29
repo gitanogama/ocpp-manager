@@ -8,6 +8,11 @@ export const rfidTag = new Hono()
     const tags = await RfidTag.findMany();
     return c.json(tags.map((tag) => tag.serialize()));
   })
+  .get("/detail", async (c) => {
+    const tags = await RfidTag.findMany();
+
+    return c.json(await Promise.all(tags.map((tag) => tag.getFullDetail())));
+  })
   .post(
     "/",
     zValidator(

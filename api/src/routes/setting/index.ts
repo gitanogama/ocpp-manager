@@ -15,17 +15,22 @@ export const setting = new Hono()
       z.object({
         heartbeatInterval: z.number().optional(),
         systemMaintenance: z.boolean().optional(),
+        meterValueSampleInterval: z.number().optional(),
       })
     ),
     async (c) => {
-      const { heartbeatInterval, systemMaintenance } = c.req.valid("json");
+      const { heartbeatInterval, systemMaintenance, meterValueSampleInterval } =
+        c.req.valid("json");
 
       const settings = await Setting.findOneOrThrow();
 
-      settings.update({
+      await settings.update({
         heartbeatInterval,
         systemMaintenance,
+        meterValueSampleInterval,
       });
+
+      await Setting.applyCurrentViaChangeConfiguration();
 
       return c.json(settings.serialize());
     }

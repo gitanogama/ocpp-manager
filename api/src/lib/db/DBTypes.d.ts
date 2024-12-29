@@ -85,6 +85,7 @@ export interface RfidTag {
 export interface Setting {
   heartbeatInterval: Generated<number>;
   id: Generated<number>;
+  meterValueSampleInterval: Generated<number>;
   systemMaintenance: Generated<boolean>;
 }
 

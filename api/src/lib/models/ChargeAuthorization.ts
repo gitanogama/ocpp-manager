@@ -3,12 +3,14 @@ import { db } from "../db/db";
 import { RfidTag } from "./RfidTag";
 import { generateBaseModel } from "./base";
 import type { DB } from "../db/DBTypes";
+import { Charger } from "./Charger";
 
 export interface ChargeAuthorization
   extends Selectable<DB["chargeAuthorization"]> {}
 export class ChargeAuthorization extends generateBaseModel(
   "chargeAuthorization",
-  "id"
+  "id",
+  "updatedAt"
 ) {
   static async searchValidByIdTag({
     idTag,
@@ -44,5 +46,22 @@ export class ChargeAuthorization extends generateBaseModel(
       .executeTakeFirst();
 
     return authRecord ? new this(authRecord) : null;
+  }
+
+  async getFullDetail() {
+    const [charger, tag] = await Promise.all([
+      Charger.findOneOrThrow({
+        eb: (eb) => eb("id", "=", this.chargerId),
+      }),
+      RfidTag.findOneOrThrow({
+        eb: (eb) => eb("id", "=", this.rfidTagId),
+      }),
+    ]);
+
+    return {
+      ...this.serialize(),
+      charger: charger.serialize(),
+      tag: tag.serialize(),
+    };
   }
 }

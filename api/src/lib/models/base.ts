@@ -208,7 +208,7 @@ export function generateBaseModel<
     ) {
       const record = await this.findOne(options, trx);
       if (!record) {
-        throw new HTTPException(500, { message: "Error retrieving user." });
+        throw new HTTPException(500, { message: "Error retrieving record." });
       }
       return record;
     }

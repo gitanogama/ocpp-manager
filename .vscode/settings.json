@@ -1,3 +1,12 @@
 {
-    "typescript.tsserver.experimental.enableProjectDiagnostics": true
+    "typescript.tsserver.experimental.enableProjectDiagnostics": true,
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "driver": "PostgreSQL",
+            "name": "LOCAL APP",
+            "connectString": "postgres://root:password@localhost:5432/app"
+        }
+    ]
 }

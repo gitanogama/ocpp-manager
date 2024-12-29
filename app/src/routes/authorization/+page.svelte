@@ -1,11 +1,11 @@
 <script lang="ts">
 	import {
-		createQueryChargeAuthorization,
+		createQueryChargeAuthorizationDetail,
 		createMutationChargeAuthorizationCreate,
 		createMutationChargeAuthorizationUpdate,
 		createMutationChargeAuthorizationDelete,
 		createQueryCharger,
-		createQueryRfidTag
+		createQueryRfidTagDetail
 	} from '$lib/queryClient';
 	import { drawerStore } from '$lib/drawerStore';
 	import { z } from 'zod';
@@ -15,9 +15,9 @@
 	import Scrollable from '$lib/components/Scrollable.svelte';
 	import { toast } from 'svelte-daisy-toast';
 
-	const queryChargeAuthorizations = createQueryChargeAuthorization(10000);
+	const queryChargeAuthorizations = createQueryChargeAuthorizationDetail(10000);
 	const queryChargers = createQueryCharger(10000);
-	const queryRfidTags = createQueryRfidTag(10000);
+	const queryRfidTags = createQueryRfidTagDetail(10000);
 
 	const mutationChargeAuthorizationCreate = createMutationChargeAuthorizationCreate();
 	const mutationChargeAuthorizationUpdate = createMutationChargeAuthorizationUpdate();
@@ -223,8 +223,6 @@
 			<div class="space-y-6">
 				{#if $queryChargeAuthorizations.data}
 					{#each $queryChargeAuthorizations.data as auth}
-						{@const tag = $queryRfidTags.data?.find((tag) => tag.id === auth.rfidTagId)}
-						{@const charger = $queryChargers.data?.find((charger) => charger.id === auth.chargerId)}
 						<div class="bg-base-200 rounded-lg p-6 shadow-md">
 							<div class="flex items-center justify-between">
 								<div class="flex items-center gap-4">
@@ -240,12 +238,12 @@
 							<table class="bg-base-300 mt-4 table w-full overflow-hidden rounded-lg">
 								<tbody>
 									<tr>
-										<td class="w-60 font-medium">Charging Station</td>
-										<td>{charger?.friendlyName} ({charger?.vendor})</td>
+										<td class="w-60 font-medium">RFID Tag</td>
+										<td>{auth.tag.friendlyName} ({auth.tag.rfidTag})</td>
 									</tr>
 									<tr>
-										<td class="w-60 font-medium">RFID Tag</td>
-										<td>{tag?.friendlyName} ({tag?.rfidTag})</td>
+										<td class="w-60 font-medium">Charging Station</td>
+										<td>{auth.charger.friendlyName} ({auth.charger.vendor})</td>
 									</tr>
 									<tr>
 										<td class="w-60 font-medium">Expiry Date</td>

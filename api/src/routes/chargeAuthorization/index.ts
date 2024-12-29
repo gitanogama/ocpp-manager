@@ -6,7 +6,17 @@ import { ChargeAuthorization } from "../../lib/models/ChargeAuthorization";
 export const chargeAuthorization = new Hono()
   .get("/", async (c) => {
     const authorizations = await ChargeAuthorization.findMany();
+
     return c.json(authorizations.map((auth) => auth.serialize()));
+  })
+  .get("/detail", async (c) => {
+    const authorizations = await ChargeAuthorization.findMany();
+
+    return c.json(
+      await Promise.all(
+        authorizations.map((authorization) => authorization.getFullDetail())
+      )
+    );
   })
   .post(
     "/",

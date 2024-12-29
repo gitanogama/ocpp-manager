@@ -9,6 +9,15 @@ export const transaction = new Hono()
     const transactions = await Transaction.findMany();
     return c.json(transactions.map((transaction) => transaction.serialize()));
   })
+  .get("/detail", async (c) => {
+    const transactions = await Transaction.findMany();
+
+    return c.json(
+      await Promise.all(
+        transactions.map((transaction) => transaction.getFullDetail())
+      )
+    );
+  })
 
   .get(
     "/:id",
@@ -29,7 +38,25 @@ export const transaction = new Hono()
     }
   )
   .get(
-    "/charger/:chargerId",
+    "/:id/detail",
+    zValidator(
+      "param",
+      z.object({
+        id: z.coerce.number(),
+      })
+    ),
+    async (c) => {
+      const { id } = c.req.valid("param");
+
+      const transaction = await Transaction.findOneOrThrow({
+        eb: (eb) => eb("id", "=", id),
+      });
+
+      return c.json(await transaction.getFullDetail());
+    }
+  )
+  .get(
+    "/charger/:chargerId/detail",
     zValidator(
       "param",
       z.object({
@@ -56,11 +83,15 @@ export const transaction = new Hono()
         });
       }
 
-      return c.json(transactions.map((transaction) => transaction.serialize()));
+      return c.json(
+        await Promise.all(
+          transactions.map((transaction) => transaction.getFullDetail())
+        )
+      );
     }
   )
   .get(
-    "/connector/:connectorId",
+    "/connector/:connectorId/detail",
     zValidator(
       "param",
       z.object({
@@ -74,7 +105,11 @@ export const transaction = new Hono()
         eb: (eb) => eb("connectorId", "=", connectorId),
       });
 
-      return c.json(transactions.map((transaction) => transaction.serialize()));
+      return c.json(
+        await Promise.all(
+          transactions.map((transaction) => transaction.getFullDetail())
+        )
+      );
     }
   )
   .delete(

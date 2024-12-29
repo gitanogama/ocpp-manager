@@ -1,12 +1,12 @@
 import path from "path";
-import { Hono } from "hono";
+import { Hono, type Context } from "hono";
 import { serve } from "@hono/node-server";
 import { createNodeWebSocket } from "@hono/node-ws";
 import { serveStatic } from "@hono/node-server/serve-static";
 import { api } from "./routes/index";
 import { logger } from "./lib/globals/logger";
-import { customLogger } from "./middlewares/customLogger";
 import { cors } from "hono/cors";
+import { globalErrorHandler } from "./lib/globals/globalErrorHandler";
 
 export function createApp() {
   const staticPath = "./build";
@@ -14,7 +14,11 @@ export function createApp() {
 
   const app = new Hono()
     .use(cors())
-    .use(customLogger)
+    .use(async (c: Context, next) => {
+      await next();
+      globalErrorHandler(c);
+    })
+    // .use(customLogger)
     .use("*", serveStatic({ root: staticPath }));
 
   const nodeWs = createNodeWebSocket({ app });

@@ -200,7 +200,11 @@ class OCPPWebsocketManager {
               const result = CallResultSchema.parse(parsedMessage);
               resolve(result as CallResult);
               connection.pendingRequests.delete(messageId);
-              logger.info("Resolved CallResult", { shortcode, messageId });
+              logger.info("Resolved CallResult", {
+                shortcode,
+                messageId,
+                message: JSON.stringify(result),
+              });
             }
             break;
           }

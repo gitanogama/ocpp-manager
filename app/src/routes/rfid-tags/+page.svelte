@@ -1,6 +1,6 @@
 <script lang="ts">
 	import {
-		createQueryRfidTag,
+		createQueryRfidTagDetail,
 		createMutationRfidTagCreate,
 		createMutationRfidTagDelete,
 		createMutationRfidTagUpdate
@@ -13,7 +13,7 @@
 	import Scrollable from '$lib/components/Scrollable.svelte';
 	import { toast } from 'svelte-daisy-toast';
 
-	const queryRfidTags = createQueryRfidTag(10000);
+	const queryRfidTags = createQueryRfidTagDetail(10000);
 	const mutationRfidTagCreate = createMutationRfidTagCreate();
 	const mutationRfidTagDelete = createMutationRfidTagDelete();
 	const mutationRfidTagUpdate = createMutationRfidTagUpdate();
@@ -161,22 +161,23 @@
 			<h1 class="text-2xl font-bold">RFID Tags</h1>
 			<button class="btn btn-primary" onclick={openCreateDrawer}>Add RFID Tag</button>
 		</div>
+
 		<Scrollable class="p-4" maxHeight="80svh">
 			<div class="space-y-6">
-				{#if $queryRfidTags.data}
+				{#if $queryRfidTags.data && $queryRfidTags.data.length > 0}
 					{#each $queryRfidTags.data as tag}
 						<div class="bg-base-200 rounded-lg p-6 shadow-md">
 							<div class="mb-6 flex items-center justify-between">
-								<div class="mb-6 flex items-center gap-4">
+								<div class="flex items-center gap-4">
 									<IconDeviceAirtag class="text-primary h-10 w-10" />
 									<div>
 										<h3 class="text-xl font-semibold">{tag.friendlyName}</h3>
 										<p class="text-sm text-gray-500">RFID: {tag.rfidTag}</p>
 									</div>
 								</div>
-								<button class="btn btn-ghost btn-sm" onclick={() => openEditDrawer(tag)}
-									>Edit</button
-								>
+								<button class="btn btn-ghost btn-sm" onclick={() => openEditDrawer(tag)}>
+									Edit
+								</button>
 							</div>
 
 							<table class="bg-base-300 table w-full overflow-hidden rounded-lg">
@@ -185,13 +186,24 @@
 										<td class="w-60 font-medium">Created</td>
 										<td>{formatDistanceToNow(new Date(tag.createdAt), { addSuffix: true })}</td>
 									</tr>
+									{#if tag.lastTransaction}
+										<tr>
+											<td class="w-60 font-medium">Last Transaction</td>
+											<td
+												>#{tag.lastTransaction.id} -
+												{formatDistanceToNow(tag.lastTransaction.createdAt, {
+													addSuffix: true
+												})}</td
+											>
+										</tr>
+									{/if}
 								</tbody>
 							</table>
 						</div>
 					{/each}
 				{:else}
 					<div class="bg-base-200 rounded-lg p-8 text-center">
-						<p class="text-base-content">Loading RFID Tags...</p>
+						<p class="text-base-content">No RFID Tags Found</p>
 					</div>
 				{/if}
 			</div>

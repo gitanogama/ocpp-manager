@@ -3,6 +3,7 @@
 		createMutationChargerDelete,
 		createMutationChargerReset,
 		createMutationChargerUpdate,
+		createMutationConnectorUnlock,
 		createQueryConnector
 	} from '$lib/queryClient';
 	import { drawerStore } from '$lib/drawerStore';
@@ -22,6 +23,7 @@
 	const mutationChargerUpdate = createMutationChargerUpdate();
 	const mutationChargerDelete = createMutationChargerDelete();
 	const mutationChargerReset = createMutationChargerReset();
+	const mutationConnectorUnlock = createMutationConnectorUnlock();
 
 	const openEditDrawer = () => {
 		drawerStore.open({
@@ -194,6 +196,7 @@
 							<button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
 						</form>
 						<h3 class="mb-10 text-lg font-bold">Reset Charger</h3>
+
 						<div class="flex gap-x-2">
 							<button class="btn btn-warning btn-sm" onclick={() => resetCharger('Soft')}
 								>Soft Reset</button
@@ -260,24 +263,30 @@
 		<div class="space-y-4">
 			{#if $queryConnectors.data}
 				{#each $queryConnectors.data as connector}
-					<button
-						class="bg-base-300 hover:bg-base-100 flex w-full items-center justify-between rounded-lg p-4 shadow-md"
+					<div
+						class="bg-base-300 flex w-full items-center justify-between rounded-lg p-4 shadow-md"
 					>
 						<div class="flex items-center gap-4">
 							<IconPlug class="h-6 w-6 text-current" />
 							<div class="flex flex-col text-left">
 								<span class="font-bold">Connector {connector.connectorId}</span>
-								<span class="text-sm">Max Current: {connector.maxCurrent}A</span>
+								<span class="text-sm">Current Load: {connector.currentLoad.valueWh} W</span>
 								{#if connector.errorCode}
 									<p class="text-error mt-1 text-sm">Error: {connector.errorCode}</p>
 								{/if}
 							</div>
+							<div class="w-16"></div>
+							<button
+								class="btn btn-ghost btn-sm"
+								onclick={() => $mutationConnectorUnlock.mutate({ id: connector.id.toString() })}
+								>Unlock</button
+							>
 						</div>
 						<div class="flex items-center gap-4">
 							<p class="text-sm font-medium">{connector.status}</p>
-							<div class={`h-2 w-16 rounded-full ${getStatusColor(connector.status)}`}></div>
+							<div class={`h-3 w-20 rounded-full ${getStatusColor(connector.status)}`}></div>
 						</div>
-					</button>
+					</div>
 				{/each}
 			{/if}
 		</div>

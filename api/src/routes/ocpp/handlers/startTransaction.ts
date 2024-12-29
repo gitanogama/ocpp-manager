@@ -60,6 +60,7 @@ export const startTransaction: ActionHandler = {
     }
 
     const transaction = await Transaction.insert({
+      chargeAuthorizationId: authRecord?.id,
       connectorId: connector.id,
       meterStart,
       startTime: new Date(timestamp).toISOString(),

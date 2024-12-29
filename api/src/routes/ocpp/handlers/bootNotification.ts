@@ -28,6 +28,8 @@ export const bootNotification: ActionHandler = {
 
     const settings = await Setting.findOneOrThrow();
 
+    await Setting.applyCurrentViaChangeConfiguration(charger.shortcode);
+
     return {
       currentTime,
       interval: settings.heartbeatInterval,
