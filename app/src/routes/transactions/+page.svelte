@@ -72,13 +72,22 @@
 									</tr>
 									<tr>
 										<td class="w-60 font-medium">Energy Delivered</td>
-										<td>
-											{transaction.energyDelivered
-												? `${transaction.energyDelivered / 1000} kWh`
-												: transaction.estimatedEnergyDelivered?.totalEnergyDelivered
-													? `Estimated ${transaction.estimatedEnergyDelivered.totalEnergyDelivered / 1000} kWh ${formatDistanceToNow(transaction.estimatedEnergyDelivered.lastUpdateTimestamp)}`
-													: 'N/A'}
-										</td>
+
+										{#if transaction.energyDelivered}
+											<td>{transaction.energyDelivered / 1000} kWh</td>
+										{:else if transaction.estimatedEnergyDelivered?.totalEnergyDelivered}
+											<td
+												class="tooltip"
+												data-tip="Last update {formatDistanceToNow(
+													transaction.estimatedEnergyDelivered.lastUpdateTimestamp
+												)}"
+											>
+												Estimated {transaction.estimatedEnergyDelivered.totalEnergyDelivered / 1000}
+												kWh</td
+											>
+										{:else}
+											<td>N/A</td>
+										{/if}
 									</tr>
 									<tr>
 										<td class="w-60 font-medium">Stop Reason</td>

@@ -6,7 +6,6 @@ import {
   StatusNotificationResponseSchema,
 } from "../types";
 import type { WSCustomContext } from "../WSCustomContext";
-import { logger } from "../../../lib/globals/logger";
 
 export const statusNotification: ActionHandler = {
   handleRequest: async (
@@ -35,13 +34,10 @@ export const statusNotification: ActionHandler = {
     });
 
     if (!connector) {
-      logger.info(
-        `Creating new connector for chargerId ${charger.id} and connectorId ${connectorId}`
-      );
       connector = await Connector.insert({
         chargerId: charger.id,
         connectorId,
-        status: "Available",
+        status,
       });
     } else {
       await connector.update({

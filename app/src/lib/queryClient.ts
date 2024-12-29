@@ -262,7 +262,7 @@ export const createMutationChargeAuthorizationCreate = () =>
 				.then((x) => x.json()),
 		onSuccess() {
 			queryClient.invalidateQueries({
-				queryKey: ['charge-authorization']
+				queryKey: queryKeys.chargeAuthorizationDetail
 			});
 		}
 	});

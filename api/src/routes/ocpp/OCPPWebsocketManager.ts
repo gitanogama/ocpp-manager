@@ -142,9 +142,7 @@ class OCPPWebsocketManager {
 
     if (!connection) {
       logger.error("No active connection for shortcode", { shortcode });
-      throw new HTTPException(500, {
-        message: `No active connection for shortcode: ${shortcode}`,
-      });
+      throw new Error(`No active connection for shortcode: ${shortcode}`);
     }
 
     logger.http("Sending raw message", { rawMessage, shortcode });

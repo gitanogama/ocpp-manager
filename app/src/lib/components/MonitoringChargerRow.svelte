@@ -236,11 +236,15 @@
 						<h3 class="mb-10 text-lg font-bold">Reset Charger</h3>
 
 						<div class="flex gap-x-2">
-							<button class="btn btn-warning btn-sm" onclick={() => resetCharger('Soft')}
-								>Soft Reset</button
+							<button
+								disabled={$mutationChargerReset.isPending}
+								class="btn btn-warning btn-sm"
+								onclick={() => resetCharger('Soft')}>Soft Reset</button
 							>
-							<button class="btn btn-error btn-sm" onclick={() => resetCharger('Hard')}
-								>Hard Reset</button
+							<button
+								disabled={$mutationChargerReset.isPending}
+								class="btn btn-error btn-sm"
+								onclick={() => resetCharger('Hard')}>Hard Reset</button
 							>
 						</div>
 					</div>
@@ -344,9 +348,28 @@
 							</div>
 							<div class="w-16"></div>
 							<button
+								disabled={$mutationConnectorUnlock.isPending}
 								class="btn btn-ghost btn-sm"
-								onclick={() => $mutationConnectorUnlock.mutate({ id: connector.id.toString() })}
-								>Unlock</button
+								onclick={() =>
+									$mutationConnectorUnlock.mutate(
+										{ id: connector.id.toString() },
+										{
+											onSuccess(data) {
+												toast({
+													message: data.success
+														? 'Connector unlocked'
+														: 'Failed unlocking connector',
+													type: data.success ? 'success' : 'error'
+												});
+											},
+											onError() {
+												toast({
+													message: 'Failed unlocking connector',
+													type: 'error'
+												});
+											}
+										}
+									)}>Unlock</button
 							>
 						</div>
 						<div class="flex items-center gap-4">

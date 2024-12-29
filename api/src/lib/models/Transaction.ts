@@ -20,7 +20,7 @@ export class Transaction extends generateBaseModel("transaction", "id") {
           .selectFrom("telemetry")
           .select([
             sql<number>`
-        MAX(
+        ROUND(MAX(
           TRIM(BOTH '"' FROM JSONB_PATH_QUERY_FIRST(
             telemetry.meter_value::jsonb,
             '$.raw[*].sampledValue[*] ? (@.measurand == "Energy.Active.Import.Register").value'
@@ -31,7 +31,7 @@ export class Transaction extends generateBaseModel("transaction", "id") {
             telemetry.meter_value::jsonb,
             '$.raw[*].sampledValue[*] ? (@.measurand == "Energy.Active.Import.Register").value'
           )::TEXT)::NUMERIC
-        )
+          ))
       `.as("totalEnergyDelivered"),
             sql<string>`MAX(telemetry.created_at)`.as("lastUpdateTimestamp"),
           ])

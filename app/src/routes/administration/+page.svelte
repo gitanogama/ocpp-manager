@@ -112,9 +112,7 @@
 				<button type="submit" class="btn btn-primary w-full" disabled={$mutationSettings.isPending}>
 					{#if $mutationSettings.isPending}
 						<span class="loading loading-spinner"></span>
-					{:else}
-						Update Settings
-					{/if}
+					{/if} Update Settings
 				</button>
 			</form>
 		{/if}

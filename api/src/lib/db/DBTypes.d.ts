@@ -91,10 +91,11 @@ export interface Setting {
 }
 
 export interface Telemetry {
+  connectorId: number;
   createdAt: Generated<Timestamp>;
   id: Generated<number>;
   meterValue: Generated<Json | null>;
-  transactionId: number;
+  transactionId: number | null;
 }
 
 export interface Transaction {

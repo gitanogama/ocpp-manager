@@ -1,1 +1,0 @@
-import"../chunks/disclose-version.Bg9kRutz.js";import"../chunks/legacy.Bk2kbUbt.js";import{e as i,f as n}from"../chunks/runtime.BtD-H5di.js";import{i as r}from"../chunks/lifecycle.qssZEobZ.js";import{o as t}from"../chunks/index-client.DdqlFB8n.js";function c(p,o){i(o,!1),t(()=>{window.location.href="/monitoring"}),r(),n()}export{c as component};

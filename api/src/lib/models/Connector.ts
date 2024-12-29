@@ -10,7 +10,6 @@ import { ocppWebsocketManager } from "../../routes/ocpp/OCPPWebsocketManager";
 import { db } from "../db/db";
 import { Setting } from "./Setting";
 import { Telemetry } from "./Telemetry";
-import { Transaction } from "./Transaction";
 
 export interface Connector extends Selectable<DB["connector"]> {}
 export class Connector extends generateBaseModel(
@@ -31,20 +30,10 @@ export class Connector extends generateBaseModel(
           1000
     );
 
-    const transactions = await Transaction.findMany({
-      eb: (eb) => eb("connectorId", "=", this.id),
-    });
-
-    if (!transactions.length) return null;
-
     const telemetryData = await db
       .selectFrom("telemetry")
       .selectAll()
-      .where(
-        "transactionId",
-        "in",
-        transactions.map((t) => t.serialize().id)
-      )
+      .where("connectorId", "=", this.id)
       .where("createdAt", ">=", cutoffTime)
       .orderBy("createdAt", "desc")
       .executeTakeFirst();
