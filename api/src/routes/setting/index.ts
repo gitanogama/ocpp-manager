@@ -2,7 +2,6 @@ import { Hono } from "hono";
 import { Setting } from "../../lib/models/Setting";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
-import { Transaction } from "../../lib/models/Transaction";
 
 export const setting = new Hono()
   .get("/", async (c) => {
