@@ -174,6 +174,40 @@
 			}
 		);
 	};
+
+	function getPhaseValue(
+		data: NonNullable<
+			NonNullable<typeof $queryConnectors.data>[0]['telemetry']
+		>['meterValue']['raw'],
+		phase: string
+	) {
+		for (const entry of data) {
+			const phaseData = entry.sampledValue.find(
+				(item) => item.phase === phase && item.measurand === 'Current.Import'
+			);
+			if (phaseData) {
+				return `${phaseData.value} ${phaseData.unit ?? ''}`.trim();
+			}
+		}
+		return 'N/A';
+	}
+
+	function getMeasurandValue(
+		data: NonNullable<
+			NonNullable<typeof $queryConnectors.data>[0]['telemetry']
+		>['meterValue']['raw'],
+		measurand: string
+	) {
+		for (const entry of data) {
+			const measurandData = entry.sampledValue.find(
+				(item) => item.measurand === measurand && !item.phase
+			);
+			if (measurandData) {
+				return measurandData.value;
+			}
+		}
+		return 'N/A';
+	}
 </script>
 
 <div class="bg-base-200 container mx-auto rounded-lg px-4 py-6 shadow-md">
@@ -270,7 +304,36 @@
 							<IconPlug class="h-6 w-6 text-current" />
 							<div class="flex flex-col text-left">
 								<span class="font-bold">Connector {connector.connectorId}</span>
-								<span class="text-sm">Current Load: {connector.currentLoad.valueWh} W</span>
+								{#if connector.telemetry?.meterValue.raw}
+									<div class="text-sm">
+										<p>
+											<b>Current Load:</b> L1: {getPhaseValue(
+												connector.telemetry?.meterValue.raw,
+												'L1'
+											)}, L2: {getPhaseValue(connector.telemetry?.meterValue.raw, 'L2')}, L3: {getPhaseValue(
+												connector.telemetry?.meterValue.raw,
+												'L3'
+											)}
+										</p>
+										<p>
+											<b>Power:</b>
+											{getMeasurandValue(
+												connector.telemetry?.meterValue.raw,
+												'Power.Active.Import'
+											)}W
+										</p>
+										<p>
+											<b>Temperature:</b>
+											{getMeasurandValue(connector.telemetry?.meterValue.raw, 'Temperature')}°C
+										</p>
+										<p>
+											<b>Frequency:</b>
+											{getMeasurandValue(connector.telemetry?.meterValue.raw, 'Frequency')} Hz
+										</p>
+									</div>
+								{:else}
+									<p class="text-sm">Telemetry data unavailable</p>
+								{/if}
 								{#if connector.errorCode}
 									<p class="text-error mt-1 text-sm">Error: {connector.errorCode}</p>
 								{/if}

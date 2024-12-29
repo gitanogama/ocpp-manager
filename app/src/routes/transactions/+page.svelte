@@ -67,10 +67,10 @@
 									</tr>
 									<tr>
 										<td class="w-60 font-medium">Energy Delivered</td>
-										<td
-											>{transaction.energyDelivered
+										<td>
+											{transaction.energyDelivered
 												? `${transaction.energyDelivered / 1000} kWh`
-												: transaction.estimatedEnergyDelivered
+												: transaction.estimatedEnergyDelivered?.total_energy_delivered
 													? `Estimated ${transaction.estimatedEnergyDelivered?.total_energy_delivered} kWh ${formatDistanceToNow(transaction.estimatedEnergyDelivered?.last_update_timestamp)}`
 													: 'N/A'}</td
 										>

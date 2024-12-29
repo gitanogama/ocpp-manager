@@ -1,4 +1,4 @@
-import type { Selectable } from "kysely";
+import { type Selectable } from "kysely";
 import { generateBaseModel } from "./base";
 import type { DB } from "../db/DBTypes";
 import type { z } from "zod";
@@ -9,6 +9,8 @@ import {
 import { ocppWebsocketManager } from "../../routes/ocpp/OCPPWebsocketManager";
 import { db } from "../db/db";
 import { Setting } from "./Setting";
+import { Telemetry } from "./Telemetry";
+import { Transaction } from "./Transaction";
 
 export interface Connector extends Selectable<DB["connector"]> {}
 export class Connector extends generateBaseModel(
@@ -16,43 +18,40 @@ export class Connector extends generateBaseModel(
   "id",
   "updatedAt"
 ) {
-  async getCurrentLoad() {
+  async getLatestValidTelemetry() {
     const setting = await Setting.findOneOrThrow();
 
     const cutoffTime = new Date(
       Date.now() - (setting.meterValueSampleInterval + 10) * 1000
     );
 
+    const transactions = await Transaction.findMany({
+      eb: (eb) => eb("connectorId", "=", this.id),
+    });
+
+    if (!transactions.length) return null;
+
     const telemetryData = await db
       .selectFrom("telemetry")
-      .select(["meterValue", "createdAt"])
-      .where("transactionId", "in", (eb) =>
-        eb
-          .selectFrom("transaction")
-          .select("id")
-          .where("connectorId", "=", this.id)
+      .selectAll()
+      .where(
+        "transactionId",
+        "in",
+        transactions.map((t) => t.serialize().id)
       )
       .where("createdAt", ">=", cutoffTime)
       .orderBy("createdAt", "desc")
       .executeTakeFirst();
 
-    const meterValue = telemetryData ? (telemetryData.meterValue as any) : null;
-    const valueWh = meterValue
-      ? meterValue?.raw?.[0]?.sampledValue?.[4]?.value
-      : null;
-
-    return {
-      valueWh: valueWh ? Number(valueWh) : 0,
-      lastTelemetry: telemetryData?.createdAt || null,
-    };
+    return telemetryData ? new Telemetry(telemetryData).serialize() : null;
   }
 
   async getDetailData() {
-    const currentLoad = await this.getCurrentLoad();
+    const telemetry = await this.getLatestValidTelemetry();
 
     return {
       ...this.serialize(),
-      currentLoad,
+      telemetry,
     };
   }
 

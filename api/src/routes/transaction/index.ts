@@ -7,14 +7,16 @@ import { Connector } from "../../lib/models/Connector";
 export const transaction = new Hono()
   .get("/", async (c) => {
     const transactions = await Transaction.findMany();
-    return c.json(transactions.map((transaction) => transaction.serialize()));
+    return c.json(
+      transactions.reverse().map((transaction) => transaction.serialize())
+    );
   })
   .get("/detail", async (c) => {
     const transactions = await Transaction.findMany();
 
     return c.json(
       await Promise.all(
-        transactions.map((transaction) => transaction.getFullDetail())
+        transactions.reverse().map((transaction) => transaction.getFullDetail())
       )
     );
   })

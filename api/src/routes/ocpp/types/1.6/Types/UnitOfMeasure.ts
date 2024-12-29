@@ -15,7 +15,7 @@ export const UnitOfMeasureEnum = {
   Celsius: "Celsius",
   Fahrenheit: "Fahrenheit",
   Percent: "Percent",
-};
+} as const;
 
 export type UnitOfMeasureEnum =
   (typeof UnitOfMeasureEnum)[keyof typeof UnitOfMeasureEnum];
