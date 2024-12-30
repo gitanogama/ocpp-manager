@@ -12,12 +12,9 @@ COPY ./entrypoint.sh ./api/entrypoint.sh
 # Add necessary permissions to entrypoint.sh
 RUN chmod +x ./api/entrypoint.sh
 
-
 # Ensure .env files are set up for both app and api
 RUN [ -f ./app/.env ] || ([ -f ./app/.env.example ] && cp ./app/.env.example ./app/.env)
 RUN [ -f ./api/.env ] || ([ -f ./api/.env.example ] && cp ./api/.env.example ./api/.env)
-
-
 
 # Install frontend dependencies and build the frontend in /app directory
 WORKDIR /workspace/app
@@ -44,7 +41,7 @@ RUN yarn install --frozen-lockfile --production
 FROM node:alpine3.21 AS production
 
 # Set the working directory
-WORKDIR /workspace
+WORKDIR /workspace/api
 
 # Copy only necessary files from the builder stage
 COPY --from=builder /workspace/api /workspace/api
@@ -53,7 +50,7 @@ COPY --from=builder /workspace/api /workspace/api
 EXPOSE 3000
 
 # Set the entrypoint script for the container
-ENTRYPOINT ["sh", "/workspace/api/entrypoint.sh"]
+ENTRYPOINT ["sh", "./entrypoint.sh"]
 
 # Run migrations and start the application
-CMD ["sh", "-c", "sleep 10 && node /workspace/api/dist/run_migrations.cjs && node /workspace/api/dist/main.cjs"]
+CMD ["sh", "-c", "sleep 10 && node dist/run_migrations.cjs && node dist/main.cjs"]
