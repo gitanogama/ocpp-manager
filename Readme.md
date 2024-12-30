@@ -60,6 +60,9 @@ services:
 
 This will pull the latest image of the OCPP Manager from GitHub Container Registry and set up the required PostgreSQL database.
 
+1. **Accessing the Server:** Once the services are running, the OCPP Manager server will be available shortly at `http://HOSTED_IP:3000`. You can replace `3000:3000` in the `docker-compose.yml` file with your desired port to change the exposed port.
+2. **Startup Delay:** The PostgreSQL database may require a few seconds to initialize. Allow the webserver an additional ~10 seconds for the webserver to come online to accomodate for the database startup.
+
 ## Connecting Chargers and Using Authorization
 
 ### Steps to Connect Chargers from Vendors (e.g., go-e or ABL)
