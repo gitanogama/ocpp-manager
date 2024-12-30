@@ -29,3 +29,6 @@ lerna-debug.log*
 
 # Database
 app.db
+
+# SvelteKit Build
+/build

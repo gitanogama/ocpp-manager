@@ -157,8 +157,7 @@
 
 <BasePage title="RFID Tags">
 	<div class="container mx-auto px-4">
-		<div class="mb-6 flex items-center justify-between">
-			<h1 class="text-2xl font-bold">RFID Tags</h1>
+		<div class="mb-6 flex items-center justify-end">
 			<button class="btn btn-primary" onclick={openCreateDrawer}>Add RFID Tag</button>
 		</div>
 

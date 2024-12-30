@@ -1,18 +1,17 @@
 <script lang="ts">
 	import BasePage from '$lib/components/BasePage.svelte';
+	import IconInfoCircle from '$lib/icons/tabler/IconInfoCircle.svelte';
 	import { createMutationSetting, createQuerySetting } from '$lib/queryClient';
 	const querySettings = createQuerySetting();
 	const mutationSettings = createMutationSetting();
 
 	let heartbeatInterval = $state(0);
-	let systemMaintenance = $state(false);
 	let meterValueSampleInterval = $state(0);
 	let clockAlignedDataInterval = $state(0);
 
 	$effect(() => {
 		if ($querySettings.data) {
 			heartbeatInterval = $querySettings.data.heartbeatInterval;
-			systemMaintenance = Boolean($querySettings.data.systemMaintenance);
 			meterValueSampleInterval = $querySettings.data.meterValueSampleInterval;
 			clockAlignedDataInterval = $querySettings.data.clockAlignedDataInterval;
 		}
@@ -21,7 +20,6 @@
 	function updateSettings() {
 		$mutationSettings.mutate({
 			heartbeatInterval,
-			systemMaintenance,
 			meterValueSampleInterval,
 			clockAlignedDataInterval
 		});
@@ -43,9 +41,13 @@
 			>
 				<div class="form-control">
 					<!-- svelte-ignore a11y_label_has_associated_control -->
-					<label for="heartbeatInterval" class="mb-2 block text-sm font-medium"
-						>Heartbeat Interval (seconds)</label
+					<label
+						for="heartbeatInterval"
+						data-tip="Sets how often (in seconds) the charge point sends a heartbeat to the server."
+						class="tooltip mb-2 flex w-fit items-center gap-x-2 text-sm font-medium"
 					>
+						Heartbeat Interval (seconds) <IconInfoCircle class="size-4" />
+					</label>
 					<input
 						id="heartbeatInterval"
 						type="number"
@@ -61,9 +63,14 @@
 
 				<div class="form-control">
 					<!-- svelte-ignore a11y_label_has_associated_control -->
-					<label for="meterValueSampleInterval" class="mb-2 block text-sm font-medium"
-						>Meter Value Sample Interval (seconds)</label
+					<label
+						for="meterValueSampleInterval"
+						data-tip="Defines how often (in seconds) the charge point sends meter updates during charging."
+						class="tooltip mb-2 flex w-fit items-center gap-x-2 text-sm font-medium"
 					>
+						Meter Value Sample Interval (seconds) <IconInfoCircle class="size-4" />
+					</label>
+
 					<input
 						id="meterValueSampleInterval"
 						type="number"
@@ -79,9 +86,14 @@
 
 				<div class="form-control">
 					<!-- svelte-ignore a11y_label_has_associated_control -->
-					<label for="clockAlignedDataInterval" class="mb-2 block text-sm font-medium"
-						>Clock Aligned Data Interval (seconds)</label
+					<label
+						for="clockAlignedDataInterval"
+						data-tip="Defines how often (in seconds) the charge point sends periodic updates, apart from its status."
+						class="tooltip mb-2 flex w-fit items-center gap-x-2 text-sm font-medium"
 					>
+						Clock Aligned Data Interval (seconds) <IconInfoCircle class="size-4" />
+					</label>
+
 					<input
 						id="clockAlignedDataInterval"
 						type="number"
@@ -91,20 +103,6 @@
 						min="10"
 						max="99999"
 						required
-						disabled={$mutationSettings.isPending}
-					/>
-				</div>
-
-				<div class="form-control">
-					<!-- svelte-ignore a11y_label_has_associated_control -->
-					<label for="systemMaintenance" class="mb-2 block text-sm font-medium"
-						>System Maintenance</label
-					>
-					<input
-						id="systemMaintenance"
-						type="checkbox"
-						class="toggle toggle-primary"
-						bind:checked={systemMaintenance}
 						disabled={$mutationSettings.isPending}
 					/>
 				</div>

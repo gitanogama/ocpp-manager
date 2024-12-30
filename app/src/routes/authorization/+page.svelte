@@ -208,8 +208,7 @@
 
 <BasePage title="Charge Authorizations">
 	<div class="container mx-auto px-4">
-		<div class="mb-6 flex items-center justify-between">
-			<h1 class="text-2xl font-bold">Charge Authorizations</h1>
+		<div class="mb-6 flex items-center justify-end">
 			<button
 				class="btn btn-primary"
 				disabled={$queryChargers.isPending || $queryRfidTags.isPending}
