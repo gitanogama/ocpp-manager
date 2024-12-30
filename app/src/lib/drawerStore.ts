@@ -68,7 +68,7 @@ export type Action<TFieldValues> = {
 	label: string;
 	class?: string;
 	buttonType?: HTMLButtonAttributes['type'];
-	callback: (data: { fieldValues: TFieldValues; close: () => void }) => void;
+	callback: (data: { fieldValues: TFieldValues; closeDrawer: () => void }) => void;
 };
 
 export type DrawerState<F extends readonly Field[]> = {

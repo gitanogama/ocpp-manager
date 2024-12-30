@@ -46,7 +46,7 @@
 					key: 'create',
 					class: 'btn-primary',
 					buttonType: 'submit',
-					callback: ({ fieldValues, close }) => {
+					callback: ({ fieldValues, closeDrawer }) => {
 						$mutationChargerCreate.mutate(
 							{ friendlyName: fieldValues.label, shortcode: fieldValues.shortcode },
 							{
@@ -61,7 +61,7 @@
 										message: 'Charger created',
 										type: 'success'
 									});
-									close();
+									closeDrawer();
 								}
 							}
 						);

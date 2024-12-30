@@ -67,7 +67,7 @@
 					key: 'create',
 					class: 'btn-primary',
 					buttonType: 'submit',
-					callback: ({ fieldValues, close }) => {
+					callback: ({ fieldValues, closeDrawer }) => {
 						$mutationChargeAuthorizationCreate.mutate(
 							{
 								chargerId: parseInt(fieldValues.chargerId),
@@ -86,7 +86,7 @@
 										message: 'Charge authorization created',
 										type: 'success'
 									});
-									close();
+									closeDrawer();
 								}
 							}
 						);
@@ -141,7 +141,7 @@
 					key: 'save',
 					class: 'btn-primary',
 					buttonType: 'submit',
-					callback: ({ fieldValues, close }) => {
+					callback: ({ fieldValues, closeDrawer }) => {
 						$mutationChargeAuthorizationUpdate.mutate(
 							{
 								id: auth.id,
@@ -161,7 +161,7 @@
 										message: 'Charge authorization saving',
 										type: 'success'
 									});
-									close();
+									closeDrawer();
 								}
 							}
 						);
@@ -171,8 +171,8 @@
 					label: 'Cancel',
 					key: 'cancel',
 					class: 'btn-outline',
-					callback: ({ close }) => {
-						close();
+					callback: ({ closeDrawer }) => {
+						closeDrawer();
 					}
 				},
 				{
@@ -180,7 +180,7 @@
 					key: 'delete',
 					class: 'btn-error btn-outline',
 					buttonType: 'button',
-					callback: ({ close }) => {
+					callback: ({ closeDrawer }) => {
 						$mutationChargeAuthorizationDelete.mutate(
 							{ id: auth.id },
 							{
@@ -195,7 +195,7 @@
 										message: 'Charge authorization deleted',
 										type: 'success'
 									});
-									close();
+									closeDrawer();
 								}
 							}
 						);

@@ -43,7 +43,7 @@
 					key: 'create',
 					class: 'btn-primary',
 					buttonType: 'submit',
-					callback: ({ fieldValues, close }) => {
+					callback: ({ fieldValues, closeDrawer }) => {
 						$mutationRfidTagCreate.mutate(
 							{
 								friendlyName: fieldValues.friendlyName,
@@ -62,7 +62,7 @@
 										message: 'RFID Tag created',
 										type: 'success'
 									});
-									close();
+									closeDrawer();
 								}
 							}
 						);
@@ -97,7 +97,7 @@
 					key: 'save',
 					class: 'btn-primary',
 					buttonType: 'submit',
-					callback: ({ fieldValues, close }) => {
+					callback: ({ fieldValues, closeDrawer }) => {
 						$mutationRfidTagUpdate.mutate(
 							{
 								id: tag.id,
@@ -116,20 +116,24 @@
 										message: 'RFID Tag saved',
 										type: 'success'
 									});
-									close();
+									closeDrawer();
 								}
 							}
 						);
-						close();
 					}
 				},
-				{ label: 'Cancel', key: 'cancel', class: 'btn-outline', callback: ({ close }) => close() },
+				{
+					label: 'Cancel',
+					key: 'cancel',
+					class: 'btn-outline',
+					callback: ({ closeDrawer }) => closeDrawer()
+				},
 				{
 					label: 'Delete',
 					key: 'delete',
 					class: 'btn-error btn-outline',
 					buttonType: 'button',
-					callback: ({ close }) => {
+					callback: ({ closeDrawer }) => {
 						$mutationRfidTagDelete.mutate(
 							{ id: tag.id },
 							{
@@ -144,7 +148,7 @@
 										message: 'RFID Tag deleted',
 										type: 'success'
 									});
-									close();
+									closeDrawer();
 								}
 							}
 						);

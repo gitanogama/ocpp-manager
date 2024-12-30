@@ -71,7 +71,7 @@
 
 		action.callback({
 			fieldValues: fieldValues as FieldValues<typeof drawer.fields>,
-			close: () => drawerStore.close()
+			closeDrawer: () => drawerStore.close()
 		});
 	};
 

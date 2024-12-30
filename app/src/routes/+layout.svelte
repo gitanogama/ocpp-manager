@@ -52,6 +52,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>OCPP Manager</title>
+</svelte:head>
+
 <Toast position="bottom-end" />
 <QueryClientProvider client={queryClient}>
 	<div class="bg-base-100 flex h-screen">

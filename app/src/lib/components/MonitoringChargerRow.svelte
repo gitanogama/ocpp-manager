@@ -69,7 +69,7 @@
 					key: 'save',
 					class: 'btn-primary',
 					buttonType: 'submit',
-					callback: ({ fieldValues, close }) => {
+					callback: ({ fieldValues, closeDrawer }) => {
 						$mutationChargerUpdate.mutate(
 							{
 								id: charger.id.toString(),
@@ -89,7 +89,7 @@
 										message: 'Charger saved',
 										type: 'success'
 									});
-									close();
+									closeDrawer();
 								}
 							}
 						);
@@ -99,8 +99,8 @@
 					label: 'Cancel',
 					key: 'cancel',
 					class: 'btn-outline',
-					callback: ({ close }) => {
-						close();
+					callback: ({ closeDrawer }) => {
+						closeDrawer();
 					}
 				},
 				{
@@ -108,7 +108,7 @@
 					key: 'delete',
 					class: 'btn-error btn-outline',
 					buttonType: 'button',
-					callback: ({ close }) => {
+					callback: ({ closeDrawer }) => {
 						$mutationChargerDelete.mutate(
 							{ id: charger.id.toString() },
 							{
@@ -123,11 +123,10 @@
 										message: 'Charger deleted',
 										type: 'success'
 									});
-									close();
+									closeDrawer();
 								}
 							}
 						);
-						close();
 					}
 				}
 			]
