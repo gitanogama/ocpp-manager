@@ -4,6 +4,12 @@
   <img src="./assets/Logo.svg" alt="OCPP Manager Logo" height="80">
 </div>
 
+## Build Status
+
+| Branch | Build Status                                                                                                                 |
+| ------ | ---------------------------------------------------------------------------------------------------------------------------- |
+| main   | ![Build Status - main](https://github.com/davbauer/ocpp-manager/actions/workflows/push-image-main.yml/badge.svg?branch=main) |
+
 ## Preview
 
 ![Preview](./assets/preview.png)
