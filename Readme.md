@@ -16,6 +16,10 @@
 
 ## Overview
 
+> [!WARNING]  
+> This project is newly created and in its early stages of development. It may undergo significant changes, and there may still be unresolved issues or incomplete features.
+> Use at your own risk and feel free to contribute or report any issues you encounter!
+
 OCPP Manager is an application built with [HonoJS](https://hono.dev/) for the backend and [SvelteKit](https://svelte.dev/) for the frontend.
 
 ### Features:
@@ -23,12 +27,6 @@ OCPP Manager is an application built with [HonoJS](https://hono.dev/) for the ba
 - **Charging Station Management**: Add and monitor charging stations and their associated connectors.
 - **RFID Card Setup**: Manage RFID cards, including setting up expiring authorizations to allow or restrict charging.
 - **Transaction Records**: Track all transactions and estimate ongoing transaction details.
-
----
-
-> PS.: This is a very newly created repository and project. If anyone is interested in improving it, contributions would be greatly appreciated!  
-> If there are issues or feature ideas, feel free to create an issue or even directly submit a Pull Request.  
-> Also, I've been told I'm not the best frontend developer, so improvements to the frontend would be welcome too.
 
 ## Docker Compose Example
 
