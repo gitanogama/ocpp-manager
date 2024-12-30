@@ -28,7 +28,7 @@ OCPP Manager is an application built with [HonoJS](https://hono.dev/) for the ba
 
 > PS.: This is a very newly created repository and project. If anyone is interested in improving it, contributions would be greatly appreciated!  
 > If there are issues or feature ideas, feel free to create an issue or even directly submit a Pull Request.  
-> Also, I've been told I’m not the best frontend developer, so improvements to the frontend would be welcome too.
+> Also, I've been told I'm not the best frontend developer, so improvements to the frontend would be welcome too.
 
 ## Docker Compose Example
 
@@ -71,7 +71,7 @@ The OCPP endpoint will be displayed. The tutorial will mention a `shortcode`.
 
 **What is a Shortcode?**
 
-A `shortcode` is a unique identifier that can be a charging station’s serial number or a newly created name. Make sure to append this `shortcode` to the OCPP endpoint.
+A `shortcode` is a unique identifier that can be a charging station's serial number or a newly created name. Make sure to append this `shortcode` to the OCPP endpoint.
 
 Once set up, the charging station will start sending heartbeat requests to the OCPP Manager. Within a few minutes, the charger should appear in the interface.
 
@@ -93,7 +93,7 @@ Once the authorization is added, you should be allowed to charge.
 
 Hold the RFID tag near the charging station. It should appear shortly in the interface, just like the anonymous tag.
 
-Assign the tag to a charge authorization, and you’re ready to go!
+Assign the tag to a charge authorization, and you're ready to go!
 
 #### Transactions
 
