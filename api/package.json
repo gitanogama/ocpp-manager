@@ -3,12 +3,12 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "dev": "npx --yes tsx watch --inspect=0.0.0.0:59929 ./src/main.ts",
+    "dev": "tsx watch --inspect=0.0.0.0:59929 ./src/main.ts",
     "build:main": "esbuild src/main.ts --bundle --platform=node --outfile=dist/main.cjs --format=cjs --external:pg-native",
     "build:run_migrations": "esbuild src/lib/db/run.ts --bundle --platform=node --outfile=dist/run_migrations.cjs --format=cjs --external:pg-native",
     "kysely-codegen": "kysely-codegen --camel-case --dialect postgres --out-file ./src/lib/db/DBTypes.d.ts",
-    "migrate:new": "npx --yes  tsx ./src/lib/db/new.ts",
-    "migrate:run": "npx --yes  tsx ./src/lib/db/run.ts",
+    "migrate:new": "tsx ./src/lib/db/new.ts",
+    "migrate:run": "tsx ./src/lib/db/run.ts",
     "format": "prettier --write ."
   },
   "dependencies": {
