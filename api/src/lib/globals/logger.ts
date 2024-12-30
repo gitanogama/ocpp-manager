@@ -4,7 +4,7 @@ import path from "path";
 import chalk from "chalk";
 import type { TransformableInfo } from "logform";
 
-export const logDir = path.join(path.dirname(process.cwd()), "logs");
+export const logDir = path.join(process.cwd(), "logs");
 
 if (!fs.existsSync(logDir)) {
   fs.mkdirSync(logDir, { recursive: true });
