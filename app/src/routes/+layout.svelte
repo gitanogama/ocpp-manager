@@ -142,10 +142,15 @@
 								href="/invoices"
 								class:btn-active={isActiveRoute('/invoices')}
 								class:justify-center={isSidebarMinimized}
-								class="item flex items-center text-lg font-bold"
+								class="item indicator flex w-full items-center text-lg font-bold"
 							>
 								<IconInvoice class="size-6" />
 
+								<span
+									class:hidden={isSidebarMinimized}
+									class="indicator-item badge badge-outline right-10 mt-2 opacity-45"
+									>Coming Soon</span
+								>
 								<p class:hidden={isSidebarMinimized} class="ml-4 text-nowrap">Invoices</p>
 							</a>
 						</li>
