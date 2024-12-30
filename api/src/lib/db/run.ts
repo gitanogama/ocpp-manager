@@ -18,9 +18,7 @@ ensureDirSync(MIGRATIONS_DIR);
 async function runQueryWithTransaction(sqlQuery: string) {
   try {
     await db.transaction().execute(async (trx) => {
-      await sql.raw("BEGIN").execute(trx);
       await sql.raw(sqlQuery).execute(trx);
-      await sql.raw("COMMIT").execute(trx);
     });
     logger.info("✅ Query executed successfully");
   } catch (error: any) {
@@ -73,67 +71,75 @@ class PostgresStorage {
   }
 }
 
-logger.info("⏳ Setting up migration table...");
-await runQueryWithTransaction(`
-  CREATE TABLE IF NOT EXISTS migration (
-    id SERIAL PRIMARY KEY,
-    name TEXT UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );
-`);
+async function setupMigrations() {
+  logger.info("⏳ Setting up migration table...");
+  await runQueryWithTransaction(`
+    CREATE TABLE IF NOT EXISTS migration (
+      id SERIAL PRIMARY KEY,
+      name TEXT UNIQUE NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `);
 
-logger.info(`📂 Searching for migrations in: ${MIGRATIONS_DIR}`);
+  logger.info(`📂 Searching for migrations in: ${MIGRATIONS_DIR}`);
 
-const umzug = new Umzug({
-  migrations: {
-    glob: path.join(MIGRATIONS_DIR, "*.sql"),
-    resolve: ({ name, path: filePath }) => ({
-      name,
-      path: filePath,
-      up: async () => {
-        const sqlQuery = fs.readFileSync(filePath!, "utf8");
-        try {
-          logger.info(`🔄 Applying migration: ${name}`);
-          await runQueryWithTransaction(sqlQuery);
-          logger.info(`✅ Migration ${name} applied successfully.`);
-        } catch (error: any) {
-          logger.error(`❌ Migration ${name} failed: ${error.message}`);
-          throw error;
-        }
-      },
-    }),
-  },
-  context: db,
-  storage: new PostgresStorage(),
-  logger: {
-    debug: logger.debug.bind(logger),
-    info: logger.info.bind(logger),
-    warn: logger.warn.bind(logger),
-    error: logger.error.bind(logger),
-  },
-});
+  const umzug = new Umzug({
+    migrations: {
+      glob: path.join(MIGRATIONS_DIR, "*.sql"),
+      resolve: ({ name, path: filePath }) => ({
+        name,
+        path: filePath,
+        up: async () => {
+          const sqlQuery = fs.readFileSync(filePath!, "utf8");
+          try {
+            logger.info(`🔄 Applying migration: ${name}`);
+            await runQueryWithTransaction(sqlQuery);
+            logger.info(`✅ Migration ${name} applied successfully.`);
+          } catch (error: any) {
+            logger.error(`❌ Migration ${name} failed: ${error.message}`);
+            throw error;
+          }
+        },
+      }),
+    },
+    context: db,
+    storage: new PostgresStorage(),
+    logger: {
+      debug: logger.debug.bind(logger),
+      info: logger.info.bind(logger),
+      warn: logger.warn.bind(logger),
+      error: logger.error.bind(logger),
+    },
+  });
 
-async function runMigrations() {
-  try {
-    logger.info("⏳ Running migrations...");
-    const start = Date.now();
+  async function runMigrations() {
+    try {
+      logger.info("⏳ Running migrations...");
+      const start = Date.now();
 
-    const migrations = await umzug.up();
+      const migrations = await umzug.up();
 
-    if (migrations.length > 0) {
-      logger.info("✅ Applied migrations:");
-      migrations.forEach((m) => {
-        logger.info(`  - Name: ${m.name}, Path: ${m.path}`);
-      });
-    } else {
-      logger.info("✅ No migrations to apply.");
+      if (migrations.length > 0) {
+        logger.info("✅ Applied migrations:");
+        migrations.forEach((m) => {
+          logger.info(`  - Name: ${m.name}, Path: ${m.path}`);
+        });
+      } else {
+        logger.info("✅ No migrations to apply.");
+      }
+
+      const duration = Date.now() - start;
+      logger.info(`✅ Migrations complete in ${duration}ms.`);
+      await db.destroy();
+    } catch (error: any) {
+      logger.error(`❌ Migration failed: ${error.message}`);
     }
-
-    const duration = Date.now() - start;
-    logger.info(`✅ Migrations complete in ${duration}ms.`);
-  } catch (error: any) {
-    logger.error(`❌ Migration failed: ${error.message}`);
   }
+
+  await runMigrations();
 }
 
-await runMigrations();
+setupMigrations().catch((err) => {
+  logger.error(`❌ Error setting up migrations: ${err.message}`);
+  process.exit(1);
+});

@@ -3,10 +3,12 @@
   "license": "UNLICENSED",
   "type": "module",
   "scripts": {
-    "dev": "npx tsx watch --inspect=0.0.0.0:59929 ./src/main.ts",
+    "dev": "npx --yes tsx watch --inspect=0.0.0.0:59929 ./src/main.ts",
+    "build:main": "esbuild src/main.ts --bundle --platform=node --outfile=dist/main.cjs --format=cjs --external:pg-native",
+    "build:run_migrations": "esbuild src/lib/db/run.ts --bundle --platform=node --outfile=dist/run_migrations.cjs --format=cjs --external:pg-native",
     "kysely-codegen": "kysely-codegen --camel-case --dialect postgres --out-file ./src/lib/db/DBTypes.d.ts",
-    "migrate:new": "npx tsx ./src/lib/db/new.ts",
-    "migrate:run": "npx tsx ./src/lib/db/run.ts",
+    "migrate:new": "npx --yes  tsx ./src/lib/db/new.ts",
+    "migrate:run": "npx --yes  tsx ./src/lib/db/run.ts",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -22,6 +24,7 @@
     "@types/ws": "^8.5.13",
     "better-sqlite3": "^11.7.0",
     "chalk": "^5.4.1",
+    "esbuild": "^0.24.2",
     "kysely": "^0.27.5",
     "kysely-codegen": "^0.17.0",
     "pg": "^8.13.1",

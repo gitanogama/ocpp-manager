@@ -16,6 +16,7 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "verbatimModuleSyntax": true,
+    "disableSizeLimit": true,
   },
   "exclude": ["node_modules", "dist"]
 }

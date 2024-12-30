@@ -1,0 +1,21 @@
+services:
+  ocpp-manager:
+    container_name: ocpp-manager-server
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgres://root:password@postgres:5432/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+  postgres:
+    container_name: ocpp-manager-postgres
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app
+    restart: unless-stopped
