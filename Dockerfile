@@ -12,6 +12,13 @@ COPY ./entrypoint.sh ./api/entrypoint.sh
 # Add necessary permissions to entrypoint.sh
 RUN chmod +x ./api/entrypoint.sh
 
+
+# Ensure .env files are set up for both app and api
+RUN [ -f ./app/.env ] || ([ -f ./app/.env.example ] && cp ./app/.env.example ./app/.env)
+RUN [ -f ./api/.env ] || ([ -f ./api/.env.example ] && cp ./api/.env.example ./api/.env)
+
+
+
 # Install frontend dependencies and build the frontend in /app directory
 WORKDIR /workspace/app
 RUN yarn install --frozen-lockfile
