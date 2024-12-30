@@ -12,7 +12,7 @@
 
 ## Preview
 
-![Preview](./assets/preview.png)
+![Preview](./assets/preview.webp)
 
 ## Overview
 
@@ -61,6 +61,45 @@ services:
 ```
 
 This will pull the latest image of the OCPP Manager from GitHub Container Registry and set up the required PostgreSQL database.
+
+## Connecting Chargers and Using Authorization
+
+### Steps to Connect Chargers from Vendors (e.g., go-e or ABL)
+
+Navigate to the monitoring page and click on the tutorial button.
+The OCPP endpoint will be displayed. The tutorial will mention a `shortcode`.
+
+**What is a Shortcode?**
+
+A `shortcode` is a unique identifier that can be a charging station’s serial number or a newly created name. Make sure to append this `shortcode` to the OCPP endpoint.
+
+Once set up, the charging station will start sending heartbeat requests to the OCPP Manager. Within a few minutes, the charger should appear in the interface.
+
+Click `"Edit"` on the charger to accept it. After some minutes, the current state of the connectors and the charger itself should appear.
+
+_Your charger is now connected!_
+
+### How to Use Authorization
+
+#### Anonymous Charging
+
+Start charging. It will fail the first time, and a virtual RFID tag will appear in the RFID tag tab.
+
+Assign this virtual tag to a charge authorization.
+
+Once the authorization is added, you should be allowed to charge.
+
+#### RFID Charging
+
+Hold the RFID tag near the charging station. It should appear shortly in the interface, just like the anonymous tag.
+
+Assign the tag to a charge authorization, and you’re ready to go!
+
+#### Transactions
+
+While transactions are running, they will be estimated in real-time.
+
+Once completed or aborted, the charger will update the transaction with the actual details.
 
 ## Development Setup
 
