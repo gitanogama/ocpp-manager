@@ -42,7 +42,7 @@ services:
     environment:
       DATABASE_URL: postgres://root:password@postgres:5432/app
     volumes:
-      - ./logs:/logs
+      - ./logs:/workspace/api/logs
     ports:
       - "3000:3000"
     depends_on:
