@@ -1,6 +1,7 @@
 {
   "name": "app",
-  "license": "UNLICENSED",
+  "private": true,
+  "license": "CC BY-NC 4.0",
   "type": "module",
   "scripts": {
     "dev": "tsx watch --inspect=0.0.0.0:59929 ./src/main.ts",
