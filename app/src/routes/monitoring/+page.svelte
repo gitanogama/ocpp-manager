@@ -118,7 +118,7 @@
 										class="tooltip tooltip-top"
 										data-tip="Protocol depends on whether your site uses HTTP or HTTPS"
 									>
-										<code class="mt-2 block rounded bg-gray-200 p-2">
+										<code class="mt-2 block rounded-sm bg-gray-200 p-2">
 											<span class="text-blue-600">{ocppURL.protocol}</span>
 											<span class="text-green-600">{ocppURL.baseURL}</span>
 											<span class="text-purple-600">{ocppURL.path}</span>
@@ -133,7 +133,7 @@
 										class="tooltip tooltip-right"
 										data-tip="Replace shortcode with your charger's unique identifier"
 									>
-										<code class="mt-2 block rounded bg-gray-200 p-2 text-blue-600"
+										<code class="mt-2 block rounded-sm bg-gray-200 p-2 text-blue-600"
 											>{ocppURL.toString()}</code
 										>
 									</div>

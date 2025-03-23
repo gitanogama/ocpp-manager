@@ -64,7 +64,7 @@
 			<aside
 				class={`${
 					isSidebarMinimized ? 'w-24' : 'w-72'
-				} bg-base-200 text-base-content transition-width flex-shrink-0 duration-300`}
+				} bg-base-200 text-base-content transition-width shrink-0 duration-300`}
 			>
 				<div class="flex h-full flex-col p-4">
 					<div class="relative">
