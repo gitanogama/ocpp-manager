@@ -15,7 +15,7 @@
 	import LayoutObjectDrawer from '$lib/components/LayoutObjectDrawer.svelte';
 	import IconDeviceAirtag from '$lib/icons/tabler/IconDeviceAirtag.svelte';
 	import IconBolt from '$lib/icons/tabler/IconBolt.svelte';
-	import Toast from 'svelte-daisy-toast';
+	import { Toaster } from 'svelte-french-toast';
 
 	let { children } = $props();
 	let time = $state(new Date());
@@ -56,7 +56,7 @@
 	<title>OCPP Manager</title>
 </svelte:head>
 
-<Toast position="bottom-end" />
+<Toaster position="bottom-right" />
 <QueryClientProvider client={queryClient}>
 	<div class="bg-base-100 flex h-screen">
 		<!-- Sidebar -->

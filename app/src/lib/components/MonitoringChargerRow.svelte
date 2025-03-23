@@ -13,7 +13,6 @@
 	import IconChargingPile from '$lib/icons/tabler/IconChargingPile.svelte';
 	import { formatDistanceToNow } from 'date-fns';
 	import IconPlug from '$lib/icons/tabler/IconPlug.svelte';
-	import { toast } from 'svelte-daisy-toast';
 
 	const { charger }: { charger: InferResponseType<(typeof hClient)['charger']['$get']>[0] } =
 		$props();
@@ -78,17 +77,7 @@
 								shortcode: fieldValues.shortcode
 							},
 							{
-								onError: () => {
-									toast({
-										message: 'Error saving charger',
-										type: 'error'
-									});
-								},
 								onSuccess: () => {
-									toast({
-										message: 'Charger saved',
-										type: 'success'
-									});
 									closeDrawer();
 								}
 							}
@@ -112,17 +101,7 @@
 						$mutationChargerDelete.mutate(
 							{ id: charger.id.toString() },
 							{
-								onError: () => {
-									toast({
-										message: 'Error deleting charger',
-										type: 'error'
-									});
-								},
 								onSuccess: () => {
-									toast({
-										message: 'Charger deleted',
-										type: 'success'
-									});
 									closeDrawer();
 								}
 							}
@@ -157,17 +136,7 @@
 				type
 			},
 			{
-				onError: () => {
-					toast({
-						message: 'Error resetting charger',
-						type: 'error'
-					});
-				},
 				onSuccess: () => {
-					toast({
-						message: 'Charger reset',
-						type: 'success'
-					});
 					dialogReset.close();
 				}
 			}
@@ -349,26 +318,8 @@
 							<button
 								disabled={$mutationConnectorUnlock.isPending}
 								class="btn btn-ghost btn-sm"
-								onclick={() =>
-									$mutationConnectorUnlock.mutate(
-										{ id: connector.id.toString() },
-										{
-											onSuccess(data) {
-												toast({
-													message: data.success
-														? 'Connector unlocked'
-														: 'Failed unlocking connector',
-													type: data.success ? 'success' : 'error'
-												});
-											},
-											onError() {
-												toast({
-													message: 'Failed unlocking connector',
-													type: 'error'
-												});
-											}
-										}
-									)}>Unlock</button
+								onclick={() => $mutationConnectorUnlock.mutate({ id: connector.id.toString() })}
+								>Unlock</button
 							>
 						</div>
 						<div class="flex items-center gap-4">

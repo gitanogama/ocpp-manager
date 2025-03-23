@@ -36,6 +36,7 @@ export type DateField = {
 export type Field = {
 	name: string;
 	label: string;
+	placeholder?: string;
 	validation?: z.ZodType<any, any, any>;
 	class?: string;
 } & (

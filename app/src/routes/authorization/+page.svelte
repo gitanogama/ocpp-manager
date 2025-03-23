@@ -13,7 +13,6 @@
 	import BasePage from '$lib/components/BasePage.svelte';
 	import IconLockPin from '$lib/icons/tabler/IconLockPin.svelte';
 	import Scrollable from '$lib/components/Scrollable.svelte';
-	import { toast } from 'svelte-daisy-toast';
 
 	const queryChargeAuthorizations = createQueryChargeAuthorizationDetail(10000);
 	const queryChargers = createQueryCharger(10000);
@@ -75,17 +74,7 @@
 								rfidTagId: parseInt(fieldValues.rfidTagId) || null
 							},
 							{
-								onError: () => {
-									toast({
-										message: 'Error creating charge authorization',
-										type: 'error'
-									});
-								},
 								onSuccess: () => {
-									toast({
-										message: 'Charge authorization created',
-										type: 'success'
-									});
 									closeDrawer();
 								}
 							}
@@ -150,17 +139,7 @@
 								rfidTagId: parseInt(fieldValues.rfidTagId) || null
 							},
 							{
-								onError: () => {
-									toast({
-										message: 'Error saving charge authorization',
-										type: 'error'
-									});
-								},
 								onSuccess: () => {
-									toast({
-										message: 'Charge authorization saving',
-										type: 'success'
-									});
 									closeDrawer();
 								}
 							}
@@ -184,17 +163,7 @@
 						$mutationChargeAuthorizationDelete.mutate(
 							{ id: auth.id },
 							{
-								onError: () => {
-									toast({
-										message: 'Error deleting charge authorization',
-										type: 'error'
-									});
-								},
 								onSuccess: () => {
-									toast({
-										message: 'Charge authorization deleted',
-										type: 'success'
-									});
 									closeDrawer();
 								}
 							}

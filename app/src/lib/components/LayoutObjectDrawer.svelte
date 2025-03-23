@@ -151,7 +151,7 @@
 		<label for="object-drawer" class="drawer-overlay"></label>
 		{#if drawer}
 			<form
-				class="menu bg-base-200 text-base-content min-h-full w-[30rem] p-4"
+				class="menu bg-base-200 text-base-content min-h-full w-80 p-0 md:w-96"
 				onsubmit={(e) => {
 					e.preventDefault();
 					e.stopPropagation();
@@ -159,98 +159,122 @@
 					if (submitAction) handleAction(submitAction);
 				}}
 			>
-				<h2 class="text-lg font-bold">{drawer.header}</h2>
+				<div class="flex h-full flex-col">
+					<!-- Header with shadow for visual separation -->
+					<div class="bg-base-100 p-4 shadow-md">
+						<h2 class="text-xl font-semibold">{drawer.header}</h2>
+					</div>
 
-				<div class="my-4 space-y-4">
-					{#each drawer.fields as field, index}
-						<div class="form-control">
-							<label for={`field-${index}`} class="label">
-								<span class="label-text">{field.label}</span>
-							</label>
+					<!-- Scrollable content area -->
+					<div class="flex-grow overflow-y-auto p-6">
+						<div class="space-y-6">
+							{#each drawer.fields as field, index}
+								<div class="form-control w-full">
+									<!-- Label with consistent spacing -->
+									<label for={`field-${index}`} class="label">
+										<span class="label-text font-medium">{field.label}</span>
+									</label>
 
-							{#if field.type === 'text' || field.type === 'number'}
-								<input
-									id={`field-${index}`}
-									type={field.type}
-									class={`input input-bordered ${field.class || ''} ${
-										fieldErrors[field.name] ? 'input-error' : ''
-									}`}
-									bind:value={fieldValues[field.name]}
-									oninput={() => {
-										handleFieldChange(field, fieldValues[field.name]);
-										const error = validateField(field, fieldValues[field.name]);
-										fieldErrors[field.name] = error;
-									}}
-								/>
-							{:else if field.type === 'checkbox'}
-								<input
-									id={`field-${index}`}
-									type="checkbox"
-									class={`checkbox ${field.class || ''} ${
-										fieldErrors[field.name] ? 'checkbox-error' : ''
-									}`}
-									bind:checked={fieldValues[field.name]}
-									onchange={() => {
-										handleFieldChange(field, fieldValues[field.name]);
-										const error = validateField(field, fieldValues[field.name]);
-										fieldErrors[field.name] = error;
-									}}
-								/>
-							{:else if field.type === 'dropdown'}
-								<select
-									id={`field-${index}`}
-									class={`select select-bordered ${field.class || ''} ${
-										fieldErrors[field.name] ? 'select-error' : ''
-									}`}
-									bind:value={fieldValues[field.name]}
-									onchange={() => {
-										handleFieldChange(field, fieldValues[field.name]);
-										const error = validateField(field, fieldValues[field.name]);
-										fieldErrors[field.name] = error;
+									<!-- Input fields with consistent styling -->
+									{#if field.type === 'text' || field.type === 'number'}
+										<input
+											id={`field-${index}`}
+											type={field.type}
+											class="input input-bordered h-10 w-full {field.class || ''} {fieldErrors[
+												field.name
+											]
+												? 'input-error'
+												: ''}"
+											placeholder={field.placeholder || ''}
+											bind:value={fieldValues[field.name]}
+											oninput={() => {
+												handleFieldChange(field, fieldValues[field.name]);
+												const error = validateField(field, fieldValues[field.name]);
+												fieldErrors[field.name] = error;
+											}}
+										/>
+									{:else if field.type === 'checkbox'}
+										<div class="flex h-10 items-center pl-2">
+											<input
+												id={`field-${index}`}
+												type="checkbox"
+												class="checkbox {field.class || ''} {fieldErrors[field.name]
+													? 'checkbox-error'
+													: ''}"
+												bind:checked={fieldValues[field.name]}
+												onchange={() => {
+													handleFieldChange(field, fieldValues[field.name]);
+													const error = validateField(field, fieldValues[field.name]);
+													fieldErrors[field.name] = error;
+												}}
+											/>
+										</div>
+									{:else if field.type === 'dropdown'}
+										<select
+											id={`field-${index}`}
+											class="select select-bordered h-10 w-full {field.class || ''} {fieldErrors[
+												field.name
+											]
+												? 'select-error'
+												: ''}"
+											bind:value={fieldValues[field.name]}
+											onchange={() => {
+												handleFieldChange(field, fieldValues[field.name]);
+												const error = validateField(field, fieldValues[field.name]);
+												fieldErrors[field.name] = error;
+											}}
+										>
+											{#each field.options as option}
+												<option value={option.value}>{option.label}</option>
+											{/each}
+										</select>
+									{:else if field.type === 'date'}
+										<input
+											id={`field-${index}`}
+											type="datetime-local"
+											class="input input-bordered h-10 w-full {field.class || ''} {fieldErrors[
+												field.name
+											]
+												? 'input-error'
+												: ''}"
+											bind:value={fieldValues[field.name]}
+											onchange={() => {
+												handleFieldChange(field, fieldValues[field.name]);
+												const error = validateField(field, fieldValues[field.name]);
+												fieldErrors[field.name] = error;
+											}}
+										/>
+									{/if}
+
+									<!-- Error messages with consistent style -->
+									{#if fieldErrors[field.name]}
+										<label class="label pt-1">
+											<span class="label-text-alt text-error">{fieldErrors[field.name]}</span>
+										</label>
+									{/if}
+								</div>
+							{/each}
+						</div>
+					</div>
+
+					<!-- Footer with action buttons -->
+					<div class="bg-base-100 border-base-300 border-t p-4 shadow-inner">
+						<div class="flex justify-end gap-3">
+							{#each drawer.actions as action}
+								<button
+									type={action.buttonType}
+									class="btn {action.buttonType === 'submit'
+										? 'btn-primary'
+										: 'btn-outline'} {action.class || ''}"
+									onclick={() => {
+										if (action.buttonType !== 'submit') handleAction(action);
 									}}
 								>
-									{#each field.options as option}
-										<option value={option.value}>{option.label}</option>
-									{/each}
-								</select>
-							{:else if field.type === 'date'}
-								<input
-									id={`field-${index}`}
-									type="datetime-local"
-									class={`input input-bordered ${field.class || ''} ${
-										fieldErrors[field.name] ? 'input-error' : ''
-									}`}
-									bind:value={fieldValues[field.name]}
-									onchange={() => {
-										handleFieldChange(field, fieldValues[field.name]);
-										const error = validateField(field, fieldValues[field.name]);
-										fieldErrors[field.name] = error;
-									}}
-								/>
-							{/if}
-
-							{#if fieldErrors[field.name]}
-								<!-- svelte-ignore a11y_label_has_associated_control -->
-								<label class="label">
-									<span class="label-text-alt text-error">{fieldErrors[field.name]}</span>
-								</label>
-							{/if}
+									{action.label}
+								</button>
+							{/each}
 						</div>
-					{/each}
-				</div>
-
-				<div class="mt-4 flex space-x-2">
-					{#each drawer.actions as action}
-						<button
-							type={action.buttonType}
-							class="btn {action.class || ''}"
-							onclick={() => {
-								if (action.buttonType !== 'submit') handleAction(action);
-							}}
-						>
-							{action.label}
-						</button>
-					{/each}
+					</div>
 				</div>
 			</form>
 		{/if}

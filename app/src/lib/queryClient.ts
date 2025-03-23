@@ -1,5 +1,6 @@
 import { createMutation, createQuery, QueryClient } from '@tanstack/svelte-query';
 import { hClient } from './hClient';
+import toast from 'svelte-french-toast';
 
 export const queryClient = new QueryClient();
 
@@ -30,12 +31,21 @@ export const createQueryRfidTagDetail = (refetchInterval?: number) =>
 
 export const createMutationRfidTagDelete = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({ id }: { id: number }) =>
-			hClient['rfid-tag'][':id']
-				.$delete({
-					param: { id: id.toString() }
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient['rfid-tag'][':id']
+					.$delete({
+						param: { id: id.toString() }
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Deleting...',
+					success: 'RFID Tag deleted',
+					error: 'Error deleting RFID Tag'
+				}
+			),
+
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.rfidTagDetail
@@ -45,15 +55,23 @@ export const createMutationRfidTagDelete = () =>
 
 export const createMutationRfidTagCreate = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({ friendlyName, rfidTag }: { friendlyName: string; rfidTag: string }) =>
-			hClient['rfid-tag']
-				.$post({
-					json: {
-						friendlyName,
-						rfidTag
-					}
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient['rfid-tag']
+					.$post({
+						json: {
+							friendlyName,
+							rfidTag
+						}
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Creating...',
+					success: 'RFID Tag created',
+					error: 'Error creating RFID Tag'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.rfidTagDetail
@@ -63,6 +81,7 @@ export const createMutationRfidTagCreate = () =>
 
 export const createMutationRfidTagUpdate = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({
 			id,
 			friendlyName,
@@ -72,15 +91,22 @@ export const createMutationRfidTagUpdate = () =>
 			friendlyName: string;
 			rfidTag?: string;
 		}) =>
-			hClient['rfid-tag'][':id']
-				.$patch({
-					param: { id: id.toString() },
-					json: {
-						friendlyName,
-						rfidTag
-					}
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient['rfid-tag'][':id']
+					.$patch({
+						param: { id: id.toString() },
+						json: {
+							friendlyName,
+							rfidTag
+						}
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Updating...',
+					success: 'RFID Tag updated',
+					error: 'Error updating RFID Tag'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.rfidTagDetail
@@ -111,12 +137,20 @@ export const createQueryConnector = (chargerId: string, refetchInterval?: number
 
 export const createMutationConnectorUnlock = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({ id }: { id: string }) =>
-			hClient.connector[':id']['unlock-connector']
-				.$post({
-					param: { id }
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient.connector[':id']['unlock-connector']
+					.$post({
+						param: { id }
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Unlocking connector...',
+					success: 'Connector unlocked',
+					error: 'Error unlocking connector'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.charger
@@ -126,6 +160,7 @@ export const createMutationConnectorUnlock = () =>
 
 export const createMutationChargerUpdate = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({
 			id,
 			friendlyName,
@@ -137,12 +172,19 @@ export const createMutationChargerUpdate = () =>
 			status: 'Accepted' | 'Rejected' | 'Pending';
 			shortcode: string;
 		}) =>
-			hClient.charger[':id']
-				.$patch({
-					param: { id },
-					json: { status, shortcode, friendlyName }
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient.charger[':id']
+					.$patch({
+						param: { id },
+						json: { status, shortcode, friendlyName }
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Updating charger...',
+					success: 'Charger updated',
+					error: 'Error updating charger'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.charger
@@ -152,12 +194,20 @@ export const createMutationChargerUpdate = () =>
 
 export const createMutationChargerDelete = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({ id }: { id: string }) =>
-			hClient.charger[':id']
-				.$delete({
-					param: { id }
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient.charger[':id']
+					.$delete({
+						param: { id }
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Deleting charger...',
+					success: 'Charger deleted',
+					error: 'Error deleting charger'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.charger
@@ -167,12 +217,20 @@ export const createMutationChargerDelete = () =>
 
 export const createMutationChargerCreate = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({ friendlyName, shortcode }: { friendlyName: string; shortcode: string }) =>
-			hClient.charger
-				.$post({
-					json: { friendlyName, shortcode }
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient.charger
+					.$post({
+						json: { friendlyName, shortcode }
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Creating charger...',
+					success: 'Charger created',
+					error: 'Error creating charger'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.charger
@@ -205,6 +263,7 @@ export const createQuerySetting = () =>
 
 export const createMutationSetting = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({
 			heartbeatInterval,
 			systemMaintenance,
@@ -216,16 +275,23 @@ export const createMutationSetting = () =>
 			clockAlignedDataInterval?: number;
 			meterValueSampleInterval?: number;
 		}) =>
-			hClient.setting
-				.$patch({
-					json: {
-						heartbeatInterval,
-						systemMaintenance,
-						clockAlignedDataInterval,
-						meterValueSampleInterval
-					}
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient.setting
+					.$patch({
+						json: {
+							heartbeatInterval,
+							systemMaintenance,
+							clockAlignedDataInterval,
+							meterValueSampleInterval
+						}
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Updating settings...',
+					success: 'Settings updated',
+					error: 'Error updating settings'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.charger
@@ -242,6 +308,7 @@ export const createQueryChargeAuthorizationDetail = (refetchInterval?: number) =
 
 export const createMutationChargeAuthorizationCreate = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({
 			chargerId,
 			expiryDate,
@@ -251,15 +318,22 @@ export const createMutationChargeAuthorizationCreate = () =>
 			expiryDate: Date | null;
 			rfidTagId: number | null;
 		}) =>
-			hClient['charge-authorization']
-				.$post({
-					json: {
-						chargerId,
-						expiryDate,
-						rfidTagId
-					}
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient['charge-authorization']
+					.$post({
+						json: {
+							chargerId,
+							expiryDate,
+							rfidTagId
+						}
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Creating authorization...',
+					success: 'Charge authorization created',
+					error: 'Error creating charge authorization'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.chargeAuthorizationDetail
@@ -269,6 +343,7 @@ export const createMutationChargeAuthorizationCreate = () =>
 
 export const createMutationChargeAuthorizationUpdate = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({
 			id,
 			chargerId,
@@ -280,16 +355,23 @@ export const createMutationChargeAuthorizationUpdate = () =>
 			expiryDate: Date | null;
 			rfidTagId: number | null;
 		}) =>
-			hClient['charge-authorization'][':id']
-				.$patch({
-					param: { id: id.toString() },
-					json: {
-						chargerId,
-						expiryDate,
-						rfidTagId
-					}
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient['charge-authorization'][':id']
+					.$patch({
+						param: { id: id.toString() },
+						json: {
+							chargerId,
+							expiryDate,
+							rfidTagId
+						}
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Updating authorization...',
+					success: 'Charge authorization updated',
+					error: 'Error updating charge authorization'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: ['charge-authorization']
@@ -299,12 +381,20 @@ export const createMutationChargeAuthorizationUpdate = () =>
 
 export const createMutationChargeAuthorizationDelete = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({ id }: { id: number }) =>
-			hClient['charge-authorization'][':id']
-				.$delete({
-					param: { id: id.toString() }
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient['charge-authorization'][':id']
+					.$delete({
+						param: { id: id.toString() }
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Deleting authorization...',
+					success: 'Charge authorization deleted',
+					error: 'Error deleting charge authorization'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: ['charge-authorization']
@@ -363,12 +453,20 @@ export const createQueryTransactionsByConnectorDetail = (
 
 export const createMutationTransactionDelete = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({ id }: { id: number }) =>
-			hClient.transaction[':id']
-				.$delete({
-					param: { id: id.toString() }
-				})
-				.then((x) => x.json()),
+			toast.promise(
+				hClient.transaction[':id']
+					.$delete({
+						param: { id: id.toString() }
+					})
+					.then((x) => x.json()),
+				{
+					loading: 'Deleting transaction...',
+					success: 'Transaction deleted',
+					error: 'Error deleting transaction'
+				}
+			),
 		onSuccess() {
 			queryClient.invalidateQueries({
 				queryKey: queryKeys.transactionDetail
@@ -378,11 +476,19 @@ export const createMutationTransactionDelete = () =>
 
 export const createMutationChargerReset = () =>
 	createMutation({
+		throwOnError: true,
 		mutationFn: ({ id, type }: { id: number; type: 'Hard' | 'Soft' }) =>
-			hClient['charger'][':id']['reset']
-				.$post({
-					param: { id: id.toString() },
-					json: { type }
-				})
-				.then((x) => x.json())
+			toast.promise(
+				hClient['charger'][':id']['reset']
+					.$post({
+						param: { id: id.toString() },
+						json: { type }
+					})
+					.then((x) => x.json()),
+				{
+					loading: `Performing ${type.toLowerCase()} reset...`,
+					success: `${type} reset completed`,
+					error: `Error performing ${type.toLowerCase()} reset`
+				}
+			)
 	});

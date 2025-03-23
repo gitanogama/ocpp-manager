@@ -11,7 +11,6 @@
 	import BasePage from '$lib/components/BasePage.svelte';
 	import IconDeviceAirtag from '$lib/icons/tabler/IconDeviceAirtag.svelte';
 	import Scrollable from '$lib/components/Scrollable.svelte';
-	import { toast } from 'svelte-daisy-toast';
 
 	const queryRfidTags = createQueryRfidTagDetail(10000);
 	const mutationRfidTagCreate = createMutationRfidTagCreate();
@@ -51,17 +50,7 @@
 								rfidTag: fieldValues.rfidTag
 							},
 							{
-								onError: () => {
-									toast({
-										message: 'Error creating RFID Tag',
-										type: 'error'
-									});
-								},
 								onSuccess: () => {
-									toast({
-										message: 'RFID Tag created',
-										type: 'success'
-									});
 									closeDrawer();
 								}
 							}
@@ -105,17 +94,7 @@
 								rfidTag: fieldValues.rfidTag
 							},
 							{
-								onError: () => {
-									toast({
-										message: 'Error saving RFID Tag',
-										type: 'error'
-									});
-								},
 								onSuccess: () => {
-									toast({
-										message: 'RFID Tag saved',
-										type: 'success'
-									});
 									closeDrawer();
 								}
 							}
@@ -137,17 +116,7 @@
 						$mutationRfidTagDelete.mutate(
 							{ id: tag.id },
 							{
-								onError: () => {
-									toast({
-										message: 'Error deleting RFID Tag',
-										type: 'error'
-									});
-								},
 								onSuccess: () => {
-									toast({
-										message: 'RFID Tag deleted',
-										type: 'success'
-									});
 									closeDrawer();
 								}
 							}

@@ -5,7 +5,7 @@
 	import Scrollable from '$lib/components/Scrollable.svelte';
 	import { drawerStore } from '$lib/drawerStore';
 	import { z } from 'zod';
-	import { toast } from 'svelte-daisy-toast';
+
 	import { page } from '$app/state';
 	import { PUBLIC_DEV_BACKEND_URL } from '$env/static/public';
 	import { dev } from '$app/environment';
@@ -50,17 +50,7 @@
 						$mutationChargerCreate.mutate(
 							{ friendlyName: fieldValues.label, shortcode: fieldValues.shortcode },
 							{
-								onError: () => {
-									toast({
-										message: 'Error creating charger',
-										type: 'error'
-									});
-								},
 								onSuccess: () => {
-									toast({
-										message: 'Charger created',
-										type: 'success'
-									});
 									closeDrawer();
 								}
 							}
