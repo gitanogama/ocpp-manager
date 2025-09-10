@@ -2161,7 +2161,7 @@ var require_scan = __commonJS({
       let str = input;
       let index = -1;
       let start = 0;
-      let lastIndex = 0;
+      let lastIndex2 = 0;
       let isBrace = false;
       let isBracket = false;
       let isGlob = false;
@@ -2247,7 +2247,7 @@ var require_scan = __commonJS({
             start += 2;
             continue;
           }
-          lastIndex = index + 1;
+          lastIndex2 = index + 1;
           continue;
         }
         if (opts.noext !== true) {
@@ -2354,11 +2354,11 @@ var require_scan = __commonJS({
       if (start > 0) {
         prefix = str.slice(0, start);
         str = str.slice(start);
-        lastIndex -= start;
+        lastIndex2 -= start;
       }
-      if (base && isGlob === true && lastIndex > 0) {
-        base = str.slice(0, lastIndex);
-        glob = str.slice(lastIndex);
+      if (base && isGlob === true && lastIndex2 > 0) {
+        base = str.slice(0, lastIndex2);
+        glob = str.slice(lastIndex2);
       } else if (isGlob === true) {
         base = "";
         glob = str;
@@ -33042,27 +33042,27 @@ var require_utils7 = __commonJS({
       if (val == null) {
         return null;
       }
-      if (val instanceof Buffer) {
-        return val;
-      }
-      if (ArrayBuffer.isView(val)) {
-        var buf = Buffer.from(val.buffer, val.byteOffset, val.byteLength);
-        if (buf.length === val.byteLength) {
-          return buf;
-        }
-        return buf.slice(val.byteOffset, val.byteOffset + val.byteLength);
-      }
-      if (val instanceof Date) {
-        if (defaults.parseInputDatesAsUTC) {
-          return dateToStringUTC(val);
-        } else {
-          return dateToString(val);
-        }
-      }
-      if (Array.isArray(val)) {
-        return arrayString(val);
-      }
       if (typeof val === "object") {
+        if (val instanceof Buffer) {
+          return val;
+        }
+        if (ArrayBuffer.isView(val)) {
+          var buf = Buffer.from(val.buffer, val.byteOffset, val.byteLength);
+          if (buf.length === val.byteLength) {
+            return buf;
+          }
+          return buf.slice(val.byteOffset, val.byteOffset + val.byteLength);
+        }
+        if (val instanceof Date) {
+          if (defaults.parseInputDatesAsUTC) {
+            return dateToStringUTC(val);
+          } else {
+            return dateToString(val);
+          }
+        }
+        if (Array.isArray(val)) {
+          return arrayString(val);
+        }
         return prepareObject(val, seen);
       }
       return val.toString();
@@ -33078,26 +33078,19 @@ var require_utils7 = __commonJS({
       }
       return JSON.stringify(val);
     }
-    function pad(number, digits) {
-      number = "" + number;
-      while (number.length < digits) {
-        number = "0" + number;
-      }
-      return number;
-    }
     function dateToString(date) {
       var offset = -date.getTimezoneOffset();
       var year = date.getFullYear();
       var isBCYear = year < 1;
       if (isBCYear) year = Math.abs(year) + 1;
-      var ret = pad(year, 4) + "-" + pad(date.getMonth() + 1, 2) + "-" + pad(date.getDate(), 2) + "T" + pad(date.getHours(), 2) + ":" + pad(date.getMinutes(), 2) + ":" + pad(date.getSeconds(), 2) + "." + pad(date.getMilliseconds(), 3);
+      var ret = String(year).padStart(4, "0") + "-" + String(date.getMonth() + 1).padStart(2, "0") + "-" + String(date.getDate()).padStart(2, "0") + "T" + String(date.getHours()).padStart(2, "0") + ":" + String(date.getMinutes()).padStart(2, "0") + ":" + String(date.getSeconds()).padStart(2, "0") + "." + String(date.getMilliseconds()).padStart(3, "0");
       if (offset < 0) {
         ret += "-";
         offset *= -1;
       } else {
         ret += "+";
       }
-      ret += pad(Math.floor(offset / 60), 2) + ":" + pad(offset % 60, 2);
+      ret += String(Math.floor(offset / 60)).padStart(2, "0") + ":" + String(offset % 60).padStart(2, "0");
       if (isBCYear) ret += " BC";
       return ret;
     }
@@ -33105,7 +33098,7 @@ var require_utils7 = __commonJS({
       var year = date.getUTCFullYear();
       var isBCYear = year < 1;
       if (isBCYear) year = Math.abs(year) + 1;
-      var ret = pad(year, 4) + "-" + pad(date.getUTCMonth() + 1, 2) + "-" + pad(date.getUTCDate(), 2) + "T" + pad(date.getUTCHours(), 2) + ":" + pad(date.getUTCMinutes(), 2) + ":" + pad(date.getUTCSeconds(), 2) + "." + pad(date.getUTCMilliseconds(), 3);
+      var ret = String(year).padStart(4, "0") + "-" + String(date.getUTCMonth() + 1).padStart(2, "0") + "-" + String(date.getUTCDate()).padStart(2, "0") + "T" + String(date.getUTCHours()).padStart(2, "0") + ":" + String(date.getUTCMinutes()).padStart(2, "0") + ":" + String(date.getUTCSeconds()).padStart(2, "0") + "." + String(date.getUTCMilliseconds()).padStart(3, "0");
       ret += "+00:00";
       if (isBCYear) ret += " BC";
       return ret;
@@ -33174,6 +33167,10 @@ var require_utils_legacy = __commonJS({
     function sha256(text) {
       return nodeCrypto.createHash("sha256").update(text).digest();
     }
+    function hashByName(hashName, text) {
+      hashName = hashName.replace(/(\D)-/, "$1");
+      return nodeCrypto.createHash(hashName).update(text).digest();
+    }
     function hmacSha256(key, msg) {
       return nodeCrypto.createHmac("sha256", key).update(msg).digest();
     }
@@ -33185,6 +33182,7 @@ var require_utils_legacy = __commonJS({
       randomBytes: nodeCrypto.randomBytes,
       deriveKey,
       sha256,
+      hashByName,
       hmacSha256,
       md5
     };
@@ -33200,6 +33198,7 @@ var require_utils_webcrypto = __commonJS({
       randomBytes,
       deriveKey,
       sha256,
+      hashByName,
       hmacSha256,
       md5
     };
@@ -33226,6 +33225,9 @@ var require_utils_webcrypto = __commonJS({
     async function sha256(text) {
       return await subtleCrypto.digest("SHA-256", text);
     }
+    async function hashByName(hashName, text) {
+      return await subtleCrypto.digest(hashName, text);
+    }
     async function hmacSha256(keyBuffer, msg) {
       const key = await subtleCrypto.importKey("raw", keyBuffer, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
       return await subtleCrypto.sign("HMAC", key, textEncoder.encode(msg));
@@ -33251,24 +33253,144 @@ var require_utils8 = __commonJS({
   }
 });
 
+// node_modules/pg/lib/crypto/cert-signatures.js
+var require_cert_signatures = __commonJS({
+  "node_modules/pg/lib/crypto/cert-signatures.js"(exports2, module2) {
+    function x509Error(msg, cert) {
+      throw new Error("SASL channel binding: " + msg + " when parsing public certificate " + cert.toString("base64"));
+    }
+    function readASN1Length(data, index) {
+      let length = data[index++];
+      if (length < 128) return { length, index };
+      const lengthBytes = length & 127;
+      if (lengthBytes > 4) x509Error("bad length", data);
+      length = 0;
+      for (let i = 0; i < lengthBytes; i++) {
+        length = length << 8 | data[index++];
+      }
+      return { length, index };
+    }
+    function readASN1OID(data, index) {
+      if (data[index++] !== 6) x509Error("non-OID data", data);
+      const { length: OIDLength, index: indexAfterOIDLength } = readASN1Length(data, index);
+      index = indexAfterOIDLength;
+      lastIndex = index + OIDLength;
+      const byte1 = data[index++];
+      let oid = (byte1 / 40 >> 0) + "." + byte1 % 40;
+      while (index < lastIndex) {
+        let value = 0;
+        while (index < lastIndex) {
+          const nextByte = data[index++];
+          value = value << 7 | nextByte & 127;
+          if (nextByte < 128) break;
+        }
+        oid += "." + value;
+      }
+      return { oid, index };
+    }
+    function expectASN1Seq(data, index) {
+      if (data[index++] !== 48) x509Error("non-sequence data", data);
+      return readASN1Length(data, index);
+    }
+    function signatureAlgorithmHashFromCertificate(data, index) {
+      if (index === void 0) index = 0;
+      index = expectASN1Seq(data, index).index;
+      const { length: certInfoLength, index: indexAfterCertInfoLength } = expectASN1Seq(data, index);
+      index = indexAfterCertInfoLength + certInfoLength;
+      index = expectASN1Seq(data, index).index;
+      const { oid, index: indexAfterOID } = readASN1OID(data, index);
+      switch (oid) {
+        // RSA
+        case "1.2.840.113549.1.1.4":
+          return "MD5";
+        case "1.2.840.113549.1.1.5":
+          return "SHA-1";
+        case "1.2.840.113549.1.1.11":
+          return "SHA-256";
+        case "1.2.840.113549.1.1.12":
+          return "SHA-384";
+        case "1.2.840.113549.1.1.13":
+          return "SHA-512";
+        case "1.2.840.113549.1.1.14":
+          return "SHA-224";
+        case "1.2.840.113549.1.1.15":
+          return "SHA512-224";
+        case "1.2.840.113549.1.1.16":
+          return "SHA512-256";
+        // ECDSA
+        case "1.2.840.10045.4.1":
+          return "SHA-1";
+        case "1.2.840.10045.4.3.1":
+          return "SHA-224";
+        case "1.2.840.10045.4.3.2":
+          return "SHA-256";
+        case "1.2.840.10045.4.3.3":
+          return "SHA-384";
+        case "1.2.840.10045.4.3.4":
+          return "SHA-512";
+        // RSASSA-PSS: hash is indicated separately
+        case "1.2.840.113549.1.1.10":
+          index = indexAfterOID;
+          index = expectASN1Seq(data, index).index;
+          if (data[index++] !== 160) x509Error("non-tag data", data);
+          index = readASN1Length(data, index).index;
+          index = expectASN1Seq(data, index).index;
+          const { oid: hashOID } = readASN1OID(data, index);
+          switch (hashOID) {
+            // standalone hash OIDs
+            case "1.2.840.113549.2.5":
+              return "MD5";
+            case "1.3.14.3.2.26":
+              return "SHA-1";
+            case "2.16.840.1.101.3.4.2.1":
+              return "SHA-256";
+            case "2.16.840.1.101.3.4.2.2":
+              return "SHA-384";
+            case "2.16.840.1.101.3.4.2.3":
+              return "SHA-512";
+          }
+          x509Error("unknown hash OID " + hashOID, data);
+        // Ed25519 -- see https: return//github.com/openssl/openssl/issues/15477
+        case "1.3.101.110":
+        case "1.3.101.112":
+          return "SHA-512";
+        // Ed448 -- still not in pg 17.2 (if supported, digest would be SHAKE256 x 64 bytes)
+        case "1.3.101.111":
+        case "1.3.101.113":
+          x509Error("Ed448 certificate channel binding is not currently supported by Postgres");
+      }
+      x509Error("unknown OID " + oid, data);
+    }
+    module2.exports = { signatureAlgorithmHashFromCertificate };
+  }
+});
+
 // node_modules/pg/lib/crypto/sasl.js
 var require_sasl = __commonJS({
   "node_modules/pg/lib/crypto/sasl.js"(exports2, module2) {
     "use strict";
     var crypto = require_utils8();
-    function startSession(mechanisms) {
-      if (mechanisms.indexOf("SCRAM-SHA-256") === -1) {
-        throw new Error("SASL: Only mechanism SCRAM-SHA-256 is currently supported");
+    var { signatureAlgorithmHashFromCertificate } = require_cert_signatures();
+    function startSession(mechanisms, stream) {
+      const candidates = ["SCRAM-SHA-256"];
+      if (stream) candidates.unshift("SCRAM-SHA-256-PLUS");
+      const mechanism = candidates.find((candidate) => mechanisms.includes(candidate));
+      if (!mechanism) {
+        throw new Error("SASL: Only mechanism(s) " + candidates.join(" and ") + " are supported");
+      }
+      if (mechanism === "SCRAM-SHA-256-PLUS" && typeof stream.getPeerCertificate !== "function") {
+        throw new Error("SASL: Mechanism SCRAM-SHA-256-PLUS requires a certificate");
       }
       const clientNonce = crypto.randomBytes(18).toString("base64");
+      const gs2Header = mechanism === "SCRAM-SHA-256-PLUS" ? "p=tls-server-end-point" : stream ? "y" : "n";
       return {
-        mechanism: "SCRAM-SHA-256",
+        mechanism,
         clientNonce,
-        response: "n,,n=*,r=" + clientNonce,
+        response: gs2Header + ",,n=*,r=" + clientNonce,
         message: "SASLInitialResponse"
       };
     }
-    async function continueSession(session, password, serverData) {
+    async function continueSession(session, password, serverData, stream) {
       if (session.message !== "SASLInitialResponse") {
         throw new Error("SASL: Last message was not SASLInitialResponse");
       }
@@ -33289,7 +33411,16 @@ var require_sasl = __commonJS({
       }
       var clientFirstMessageBare = "n=*,r=" + session.clientNonce;
       var serverFirstMessage = "r=" + sv.nonce + ",s=" + sv.salt + ",i=" + sv.iteration;
-      var clientFinalMessageWithoutProof = "c=biws,r=" + sv.nonce;
+      let channelBinding = stream ? "eSws" : "biws";
+      if (session.mechanism === "SCRAM-SHA-256-PLUS") {
+        const peerCert = stream.getPeerCertificate().raw;
+        let hashName = signatureAlgorithmHashFromCertificate(peerCert);
+        if (hashName === "MD5" || hashName === "SHA-1") hashName = "SHA-256";
+        const certHash = await crypto.hashByName(hashName, peerCert);
+        const bindingData = Buffer.concat([Buffer.from("p=tls-server-end-point,,"), Buffer.from(certHash)]);
+        channelBinding = bindingData.toString("base64");
+      }
+      var clientFinalMessageWithoutProof = "c=" + channelBinding + ",r=" + sv.nonce;
       var authMessage = clientFirstMessageBare + "," + serverFirstMessage + "," + clientFinalMessageWithoutProof;
       var saltBytes = Buffer.from(sv.salt, "base64");
       var saltedPassword = await crypto.deriveKey(password, saltBytes, sv.iteration);
@@ -33881,7 +34012,12 @@ var require_query = __commonJS({
           return new Error("Query values must be an array");
         }
         if (this.requiresPreparation()) {
-          this.prepare(connection);
+          connection.stream.cork && connection.stream.cork();
+          try {
+            this.prepare(connection);
+          } finally {
+            connection.stream.uncork && connection.stream.uncork();
+          }
         } else {
           connection.query(this.text);
         }
@@ -33942,9 +34078,9 @@ var require_query = __commonJS({
   }
 });
 
-// node_modules/pg-protocol/dist/messages.js
+// node_modules/pg/node_modules/pg-protocol/dist/messages.js
 var require_messages = __commonJS({
-  "node_modules/pg-protocol/dist/messages.js"(exports2) {
+  "node_modules/pg/node_modules/pg-protocol/dist/messages.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.NoticeMessage = exports2.DataRowMessage = exports2.CommandCompleteMessage = exports2.ReadyForQueryMessage = exports2.NotificationResponseMessage = exports2.BackendKeyDataMessage = exports2.AuthenticationMD5Password = exports2.ParameterStatusMessage = exports2.ParameterDescriptionMessage = exports2.RowDescriptionMessage = exports2.Field = exports2.CopyResponse = exports2.CopyDataMessage = exports2.DatabaseError = exports2.copyDone = exports2.emptyQuery = exports2.replicationStart = exports2.portalSuspended = exports2.noData = exports2.closeComplete = exports2.bindComplete = exports2.parseComplete = void 0;
@@ -34107,9 +34243,9 @@ var require_messages = __commonJS({
   }
 });
 
-// node_modules/pg-protocol/dist/buffer-writer.js
+// node_modules/pg/node_modules/pg-protocol/dist/buffer-writer.js
 var require_buffer_writer = __commonJS({
-  "node_modules/pg-protocol/dist/buffer-writer.js"(exports2) {
+  "node_modules/pg/node_modules/pg-protocol/dist/buffer-writer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Writer = void 0;
@@ -34188,9 +34324,9 @@ var require_buffer_writer = __commonJS({
   }
 });
 
-// node_modules/pg-protocol/dist/serializer.js
+// node_modules/pg/node_modules/pg-protocol/dist/serializer.js
 var require_serializer = __commonJS({
-  "node_modules/pg-protocol/dist/serializer.js"(exports2) {
+  "node_modules/pg/node_modules/pg-protocol/dist/serializer.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.serialize = void 0;
@@ -34404,9 +34540,9 @@ var require_serializer = __commonJS({
   }
 });
 
-// node_modules/pg-protocol/dist/buffer-reader.js
+// node_modules/pg/node_modules/pg-protocol/dist/buffer-reader.js
 var require_buffer_reader = __commonJS({
-  "node_modules/pg-protocol/dist/buffer-reader.js"(exports2) {
+  "node_modules/pg/node_modules/pg-protocol/dist/buffer-reader.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.BufferReader = void 0;
@@ -34436,6 +34572,11 @@ var require_buffer_reader = __commonJS({
         this.offset += 4;
         return result;
       }
+      uint32() {
+        const result = this.buffer.readUInt32BE(this.offset);
+        this.offset += 4;
+        return result;
+      }
       string(length) {
         const result = this.buffer.toString(this.encoding, this.offset, this.offset + length);
         this.offset += length;
@@ -34459,9 +34600,9 @@ var require_buffer_reader = __commonJS({
   }
 });
 
-// node_modules/pg-protocol/dist/parser.js
+// node_modules/pg/node_modules/pg-protocol/dist/parser.js
 var require_parser = __commonJS({
-  "node_modules/pg-protocol/dist/parser.js"(exports2) {
+  "node_modules/pg/node_modules/pg-protocol/dist/parser.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.Parser = void 0;
@@ -34632,9 +34773,9 @@ var require_parser = __commonJS({
       }
       parseField() {
         const name = this.reader.cstring();
-        const tableID = this.reader.int32();
+        const tableID = this.reader.uint32();
         const columnID = this.reader.int16();
-        const dataTypeID = this.reader.int32();
+        const dataTypeID = this.reader.uint32();
         const dataTypeSize = this.reader.int16();
         const dataTypeModifier = this.reader.int32();
         const mode = this.reader.int16() === 0 ? "text" : "binary";
@@ -34750,9 +34891,9 @@ var require_parser = __commonJS({
   }
 });
 
-// node_modules/pg-protocol/dist/index.js
+// node_modules/pg/node_modules/pg-protocol/dist/index.js
 var require_dist3 = __commonJS({
-  "node_modules/pg-protocol/dist/index.js"(exports2) {
+  "node_modules/pg/node_modules/pg-protocol/dist/index.js"(exports2) {
     "use strict";
     Object.defineProperty(exports2, "__esModule", { value: true });
     exports2.DatabaseError = exports2.serialize = exports2.parse = void 0;
@@ -35366,6 +35507,7 @@ var require_client = __commonJS({
         this._connected = false;
         this._connectionError = false;
         this._queryable = true;
+        this.enableChannelBinding = Boolean(c.enableChannelBinding);
         this.connection = c.connection || new Connection({
           stream: c.stream,
           ssl: this.connectionParameters.ssl,
@@ -35415,6 +35557,9 @@ var require_client = __commonJS({
             con._ending = true;
             con.stream.destroy(new Error("timeout expired"));
           }, this._connectionTimeoutMillis);
+          if (this.connectionTimeoutHandle.unref) {
+            this.connectionTimeoutHandle.unref();
+          }
         }
         if (this.host && this.host.indexOf("/") === 0) {
           con.connect(this.host + "/.s.PGSQL." + this.port);
@@ -35542,7 +35687,7 @@ var require_client = __commonJS({
       _handleAuthSASL(msg) {
         this._checkPgPass(() => {
           try {
-            this.saslSession = sasl.startSession(msg.mechanisms);
+            this.saslSession = sasl.startSession(msg.mechanisms, this.enableChannelBinding && this.connection.stream);
             this.connection.sendSASLInitialResponseMessage(this.saslSession.mechanism, this.saslSession.response);
           } catch (err) {
             this.connection.emit("error", err);
@@ -35551,7 +35696,12 @@ var require_client = __commonJS({
       }
       async _handleAuthSASLContinue(msg) {
         try {
-          await sasl.continueSession(this.saslSession, this.password, msg.data);
+          await sasl.continueSession(
+            this.saslSession,
+            this.password,
+            msg.data,
+            this.enableChannelBinding && this.connection.stream
+          );
           this.connection.sendSCRAMClientFinalMessage(this.saslSession.response);
         } catch (err) {
           this.connection.emit("error", err);
@@ -36015,6 +36165,9 @@ var require_pg_pool = __commonJS({
             pendingItem.timedOut = true;
             response.callback(new Error("timeout exceeded when trying to connect"));
           }, this.options.connectionTimeoutMillis);
+          if (tid.unref) {
+            tid.unref();
+          }
           this._pendingQueue.push(pendingItem);
           return result;
         }
@@ -36045,7 +36198,7 @@ var require_pg_pool = __commonJS({
             this.log("client failed to connect", err);
             this._clients = this._clients.filter((c) => c !== client);
             if (timeoutHit) {
-              err.message = "Connection terminated due to connection timeout";
+              err = new Error("Connection terminated due to connection timeout", { cause: err });
             }
             this._pulseQueue();
             if (!pendingItem.timedOut) {
@@ -43536,9 +43689,9 @@ var require_color_name = __commonJS({
   }
 });
 
-// node_modules/is-arrayish/index.js
+// node_modules/simple-swizzle/node_modules/is-arrayish/index.js
 var require_is_arrayish = __commonJS({
-  "node_modules/is-arrayish/index.js"(exports2, module2) {
+  "node_modules/simple-swizzle/node_modules/is-arrayish/index.js"(exports2, module2) {
     module2.exports = function isArrayish(obj) {
       if (!obj || typeof obj === "string") {
         return false;
@@ -49330,9 +49483,11 @@ function parseRowValues(row, columns) {
     length: columns.size
   });
   let hasUndefinedOrComplexColumns = false;
+  let indexedRowColumns = rowColumns.length;
   for (const col of rowColumns) {
     const columnIdx = columns.get(col);
     if (isUndefined(columnIdx)) {
+      indexedRowColumns--;
       continue;
     }
     const value = row[col];
@@ -49341,7 +49496,7 @@ function parseRowValues(row, columns) {
     }
     rowValues[columnIdx] = value;
   }
-  const hasMissingColumns = rowColumns.length < columns.size;
+  const hasMissingColumns = indexedRowColumns < columns.size;
   if (hasMissingColumns || hasUndefinedOrComplexColumns) {
     const defaultValue = DefaultInsertValueNode.create();
     return ValueListNode.create(rowValues.map((it) => isUndefined(it) ? defaultValue : parseValueExpression(it)));
@@ -53185,6 +53340,10 @@ var ROOT_OPERATION_NODES = freeze({
   UpdateQueryNode: true,
   MergeQueryNode: true
 });
+var SCHEMALESS_FUNCTIONS = {
+  json_agg: true,
+  to_json: true
+};
 var WithSchemaTransformer = class extends OperationNodeTransformer {
   #schema;
   #schemableIds = /* @__PURE__ */ new Set();
@@ -53233,6 +53392,24 @@ var WithSchemaTransformer = class extends OperationNodeTransformer {
       ...transformed,
       table: TableNode.createWithSchema(this.#schema, transformed.table.table.identifier.name)
     };
+  }
+  transformAggregateFunction(node) {
+    return {
+      ...super.transformAggregateFunction({ ...node, aggregated: [] }),
+      aggregated: this.#transformTableArgsWithoutSchemas(node, "aggregated")
+    };
+  }
+  transformFunction(node) {
+    return {
+      ...super.transformFunction({ ...node, arguments: [] }),
+      arguments: this.#transformTableArgsWithoutSchemas(node, "arguments")
+    };
+  }
+  #transformTableArgsWithoutSchemas(node, argsKey) {
+    return SCHEMALESS_FUNCTIONS[node.func] ? node[argsKey].map((arg) => !TableNode.is(arg) || arg.table.schema ? this.transformNode(arg) : {
+      ...arg,
+      table: this.transformIdentifier(arg.table.identifier)
+    }) : this.transformNodeList(node[argsKey]);
   }
   #isRootOperationNode(node) {
     return node.kind in ROOT_OPERATION_NODES;
@@ -59881,10 +60058,10 @@ var DefaultQueryCompiler = class extends OperationNodeVisitor {
     this.append(")");
   }
   compileList(nodes, separator = ", ") {
-    const lastIndex = nodes.length - 1;
-    for (let i = 0; i <= lastIndex; i++) {
+    const lastIndex2 = nodes.length - 1;
+    for (let i = 0; i <= lastIndex2; i++) {
       this.visitNode(nodes[i]);
-      if (i < lastIndex) {
+      if (i < lastIndex2) {
         this.append(separator);
       }
     }
@@ -61326,7 +61503,7 @@ function createSnakeCaseMapper({ upperCase = false, underscoreBeforeDigits = fal
       const prevUpperChar = upper[i - 1];
       const lowerChar = lower[i];
       const prevLowerChar = lower[i - 1];
-      if (underscoreBeforeDigits && isDigit(char) && !isDigit(prevChar)) {
+      if (underscoreBeforeDigits && isDigit(char) && !isDigit(prevChar) && !out.endsWith("_")) {
         out += "_" + char;
         continue;
       }
@@ -61966,7 +62143,7 @@ var chalkStderr = createChalk({ level: stderrColor ? stderrColor.level : 0 });
 var source_default = chalk;
 
 // src/lib/globals/logger.ts
-var logDir = import_path.default.join(import_path.default.dirname(process.cwd()), "logs");
+var logDir = import_path.default.join(process.cwd(), "logs");
 if (!import_fs.default.existsSync(logDir)) {
   import_fs.default.mkdirSync(logDir, { recursive: true });
 }
